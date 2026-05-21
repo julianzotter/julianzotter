@@ -20,23 +20,38 @@
   }
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text);
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; line-height: 1.5; }
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; line-height: 1.55; }
   a { color: var(--accent-4); }
+
+  /* ---- Header ---- */
   header {
     padding: 28px 32px 18px;
     border-bottom: 1px solid var(--line);
     background: linear-gradient(180deg, #0e1612 0%, #0b0f0c 100%);
+    position: sticky; top: 0; z-index: 20;
   }
   .brand { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
   .brand h1 { margin: 0; font-size: 22px; letter-spacing: 0.5px; }
-  .brand .tag {
+  .tag {
     display: inline-block; padding: 3px 10px; border-radius: 999px;
     background: rgba(126,231,135,0.12); color: var(--accent);
     border: 1px solid rgba(126,231,135,0.35); font-size: 12px;
   }
+  .tag.amber { border-color: rgba(240,180,41,0.4); color: var(--accent-2); background: rgba(240,180,41,0.08); }
   .subtitle { color: var(--muted); margin: 6px 0 0; font-size: 14px; }
-  main { padding: 24px 32px 80px; max-width: 1320px; margin: 0 auto; }
 
+  /* ---- Nav ---- */
+  nav { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 6px; }
+  nav a {
+    font-size: 12px; text-decoration: none; color: var(--muted);
+    padding: 5px 11px; border: 1px solid var(--line); border-radius: 999px;
+    transition: .15s;
+  }
+  nav a:hover { color: var(--accent); border-color: rgba(126,231,135,0.4); background: rgba(126,231,135,0.06); }
+
+  main { padding: 24px 32px 80px; max-width: 1340px; margin: 0 auto; }
+
+  /* ---- KPI ---- */
   .kpi-grid {
     display: grid; gap: 14px;
     grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
@@ -45,115 +60,132 @@
   .kpi {
     background: var(--card); border: 1px solid var(--line); border-radius: 14px;
     padding: 16px 18px; position: relative; overflow: hidden;
+    transition: .15s;
+  }
+  .kpi:hover { border-color: rgba(126,231,135,0.4); transform: translateY(-2px); }
+  .kpi::after {
+    content: ""; position: absolute; right: -20px; top: -20px; width: 70px; height: 70px;
+    background: radial-gradient(circle, rgba(126,231,135,0.10), transparent 70%);
   }
   .kpi .label { color: var(--muted); font-size: 12px; letter-spacing: 0.6px; text-transform: uppercase; }
   .kpi .value { font-size: 26px; font-weight: 700; margin-top: 6px; }
   .kpi .unit  { color: var(--muted); font-size: 13px; margin-left: 4px; }
   .kpi .delta { font-size: 12px; margin-top: 4px; color: var(--accent); }
-  .kpi.neg .delta { color: var(--accent-3); }
 
+  /* ---- Section ---- */
   .section-title {
     display: flex; align-items: center; gap: 10px;
-    margin: 22px 0 12px; font-size: 15px; letter-spacing: 0.6px; text-transform: uppercase; color: var(--muted);
+    margin: 30px 0 12px; font-size: 15px; letter-spacing: 0.6px; text-transform: uppercase; color: var(--muted);
+    scroll-margin-top: 130px;
   }
-  .section-title::before {
-    content: ""; width: 8px; height: 8px; background: var(--accent); border-radius: 2px;
-  }
+  .section-title::before { content: ""; width: 8px; height: 8px; background: var(--accent); border-radius: 2px; }
 
-  .grid {
-    display: grid; gap: 14px;
-    grid-template-columns: repeat(12, 1fr);
-  }
+  /* ---- Grid + cards ---- */
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(12, 1fr); }
   .card {
     background: var(--card); border: 1px solid var(--line); border-radius: 14px;
     padding: 18px 20px;
   }
-  .card h3 {
-    margin: 0 0 10px; font-size: 15px; letter-spacing: 0.3px;
-    display: flex; align-items: center; gap: 8px;
-  }
-  .card h3 .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
+  .card h3 { margin: 0 0 10px; font-size: 15px; letter-spacing: 0.3px;
+    display: flex; align-items: center; gap: 8px; }
+  .card h3 .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); flex: none; }
+  .col-3 { grid-column: span 3; }
   .col-4 { grid-column: span 4; }
   .col-5 { grid-column: span 5; }
   .col-6 { grid-column: span 6; }
   .col-7 { grid-column: span 7; }
   .col-8 { grid-column: span 8; }
   .col-12 { grid-column: span 12; }
-  @media (max-width: 980px) {
-    .col-4, .col-5, .col-6, .col-7, .col-8 { grid-column: span 12; }
+  @media (max-width: 1080px) {
+    .col-3, .col-4, .col-5, .col-7, .col-8 { grid-column: span 6; }
+  }
+  @media (max-width: 720px) {
+    .col-3, .col-4, .col-5, .col-6, .col-7, .col-8 { grid-column: span 12; }
+    main { padding: 20px 18px 70px; }
+    header { padding: 22px 18px 16px; }
   }
 
+  /* ---- Tables ---- */
   table.facts { width: 100%; border-collapse: collapse; font-size: 14px; }
   table.facts td { padding: 8px 6px; border-bottom: 1px dashed var(--line); vertical-align: top; }
   table.facts td:first-child { color: var(--muted); width: 46%; }
   table.facts tr:last-child td { border-bottom: none; }
 
-  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-  .chip {
-    font-size: 12px; padding: 4px 9px; border-radius: 999px;
-    background: rgba(255,255,255,0.04); color: var(--text);
-    border: 1px solid var(--line);
-  }
-  .chip.acc { color: var(--accent); border-color: rgba(126,231,135,0.4); background: rgba(126,231,135,0.08); }
-  .chip.warn { color: var(--accent-2); border-color: rgba(240,180,41,0.4); background: rgba(240,180,41,0.08); }
-  .chip.alt { color: var(--accent-4); border-color: rgba(107,193,255,0.4); background: rgba(107,193,255,0.08); }
+  table.matrix { width: 100%; border-collapse: collapse; font-size: 13px; }
+  table.matrix th, table.matrix td { padding: 9px 10px; text-align: left; border-bottom: 1px solid var(--line); }
+  table.matrix th { color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600; }
+  table.matrix tbody tr:hover { background: rgba(126,231,135,0.04); }
+  table.matrix td:first-child { font-weight: 600; }
 
+  /* ---- Chips ---- */
+  .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+  .chip { font-size: 12px; padding: 4px 9px; border-radius: 999px;
+    background: rgba(255,255,255,0.04); color: var(--text); border: 1px solid var(--line); }
+  .chip.acc  { color: var(--accent);   border-color: rgba(126,231,135,0.4); background: rgba(126,231,135,0.08); }
+  .chip.warn { color: var(--accent-2); border-color: rgba(240,180,41,0.4);  background: rgba(240,180,41,0.08); }
+  .chip.alt  { color: var(--accent-4); border-color: rgba(107,193,255,0.4); background: rgba(107,193,255,0.08); }
+
+  /* ---- Timeline ---- */
   .timeline { position: relative; margin: 6px 0 0; padding-left: 18px; }
-  .timeline::before {
-    content: ""; position: absolute; left: 6px; top: 4px; bottom: 4px; width: 2px;
-    background: var(--line);
-  }
+  .timeline::before { content: ""; position: absolute; left: 6px; top: 4px; bottom: 4px; width: 2px; background: var(--line); }
   .tl-item { position: relative; padding: 6px 0 12px; }
-  .tl-item::before {
-    content: ""; position: absolute; left: -16px; top: 10px; width: 10px; height: 10px;
-    border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--bg);
-  }
+  .tl-item::before { content: ""; position: absolute; left: -16px; top: 10px; width: 10px; height: 10px;
+    border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--bg); }
   .tl-item.warn::before { background: var(--accent-2); }
-  .tl-item.alt::before { background: var(--accent-4); }
+  .tl-item.alt::before  { background: var(--accent-4); }
   .tl-item .yr { font-size: 12px; color: var(--muted); letter-spacing: 0.5px; }
   .tl-item .ti { font-weight: 600; }
   .tl-item .de { font-size: 13px; color: var(--muted); }
 
-  .quote {
-    border-left: 3px solid var(--accent); padding: 6px 14px; color: var(--muted);
-    font-style: italic; margin: 8px 0 0;
-  }
+  .quote { border-left: 3px solid var(--accent); padding: 6px 14px; color: var(--muted); font-style: italic; margin: 8px 0 0; }
 
+  /* ---- Bars ---- */
   .bar { height: 8px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; margin-top: 6px; }
-  .bar > span { display: block; height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 999px; }
+  .bar > span { display: block; height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2)); border-radius: 999px; }
   .bar-row { display: grid; grid-template-columns: 1fr 60px; gap: 10px; align-items: center; margin-top: 10px; font-size: 13px; }
-  .bar-row .lbl { color: var(--text); }
   .bar-row .pct { color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
 
+  /* ---- Story ---- */
   .story p { margin: 0 0 8px; font-size: 14px; }
   .story .lead { font-size: 15px; color: var(--text); }
-  .story strong.k { color: var(--accent); }
+  .story strong.k  { color: var(--accent); }
   .story strong.k2 { color: var(--accent-2); }
   .story strong.k3 { color: var(--accent-3); }
   .story strong.k4 { color: var(--accent-4); }
 
-  .layered {
-    display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start;
-    padding: 8px 0; border-bottom: 1px dashed var(--line);
-  }
+  /* ---- Layered ---- */
+  .layered { display: grid; grid-template-columns: 28px 1fr; gap: 10px; align-items: start;
+    padding: 8px 0; border-bottom: 1px dashed var(--line); }
   .layered:last-child { border-bottom: none; }
-  .layered .n {
-    width: 28px; height: 28px; border-radius: 8px; background: rgba(126,231,135,0.12);
+  .layered .n { width: 28px; height: 28px; border-radius: 8px; background: rgba(126,231,135,0.12);
     color: var(--accent); display: flex; align-items: center; justify-content: center;
-    font-weight: 700; font-size: 13px; border: 1px solid rgba(126,231,135,0.35);
-  }
+    font-weight: 700; font-size: 13px; border: 1px solid rgba(126,231,135,0.35); }
   .layered h4 { margin: 0 0 2px; font-size: 14px; }
   .layered p  { margin: 0; color: var(--muted); font-size: 13px; }
 
-  footer {
-    margin-top: 36px; padding: 18px 32px; border-top: 1px solid var(--line);
-    color: var(--muted); font-size: 12px; text-align: center;
+  /* ---- Museum cards ---- */
+  .museum {
+    background: var(--card-2); border: 1px solid var(--line); border-radius: 12px;
+    padding: 14px 16px; display: flex; flex-direction: column; gap: 8px;
+    transition: .15s;
   }
-  .ask {
-    display: inline-block; margin-top: 6px; padding: 8px 12px; border-radius: 10px;
+  .museum:hover { border-color: rgba(107,193,255,0.45); transform: translateY(-2px); }
+  .museum .src { font-size: 11px; text-transform: uppercase; letter-spacing: 0.6px; color: var(--accent-4); }
+  .museum h4 { margin: 0; font-size: 14px; }
+  .museum .combo { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; font-size: 12px; }
+  .museum .pill { padding: 3px 8px; border-radius: 6px; background: rgba(255,255,255,0.05); border: 1px solid var(--line); }
+  .museum .pill.hist { color: var(--accent-2); border-color: rgba(240,180,41,0.35); }
+  .museum .pill.new  { color: var(--accent);   border-color: rgba(126,231,135,0.35); }
+  .museum .arrow { color: var(--muted); }
+  .museum .note { font-size: 12px; color: var(--muted); margin: 0; }
+
+  .ask { display: inline-block; margin-top: 6px; padding: 8px 12px; border-radius: 10px;
     border: 1px dashed var(--accent-2); color: var(--accent-2); font-weight: 600; font-size: 13px;
-    background: rgba(240,180,41,0.06);
-  }
+    background: rgba(240,180,41,0.06); }
+
+  footer { margin-top: 36px; padding: 18px 32px; border-top: 1px solid var(--line);
+    color: var(--muted); font-size: 12px; text-align: center; }
 </style>
 </head>
 <body>
@@ -162,16 +194,25 @@
   <div class="brand">
     <h1>ZotterConsult · Material Transformer</h1>
     <span class="tag">BioTechnology · ZeroImpact · LowEmission</span>
-    <span class="tag" style="border-color: rgba(240,180,41,0.4); color: var(--accent-2); background: rgba(240,180,41,0.08);">Back to the Future</span>
+    <span class="tag amber">Back to the Future</span>
   </div>
   <p class="subtitle">
     Future Design aus historischem Wissen · Carbon-Reduced Curtain Walls · Adaptive Fire-Protection Façades · Zero Waste Construction.
   </p>
+  <nav>
+    <a href="#kpi">Key Values</a>
+    <a href="#story">Story</a>
+    <a href="#facts">Hardfacts</a>
+    <a href="#museum">Museum-Materialien</a>
+    <a href="#impl">Implementierung</a>
+    <a href="#actors">Akteure</a>
+  </nav>
 </header>
 
 <main>
 
   <!-- KPI ROW -->
+  <div class="section-title" id="kpi">Key Values · Live Snapshot</div>
   <div class="kpi-grid">
     <div class="kpi">
       <div class="label">CO₂-Reduktion</div>
@@ -181,7 +222,7 @@
     <div class="kpi">
       <div class="label">Reuse-Anteil</div>
       <div class="value">92<span class="unit">%</span></div>
-      <div class="delta">Bauteile rückbau- & remontierbar</div>
+      <div class="delta">Bauteile rückbau- &amp; remontierbar</div>
     </div>
     <div class="kpi">
       <div class="label">Bio-Composite</div>
@@ -206,7 +247,7 @@
   </div>
 
   <!-- STORY -->
-  <div class="section-title">Story · Back to the Future</div>
+  <div class="section-title" id="story">Story · Back to the Future</div>
   <div class="grid">
     <div class="card col-8 story">
       <h3><span class="dot"></span> Warum „Back to the Future"?</h3>
@@ -216,7 +257,7 @@
       </p>
       <p>
         <strong class="k3">Carl Rabitz, Malermeister Berlin (1878)</strong> — das Rabitz-Geflecht: dünn, leicht, brandhemmend,
-        formbar. Putzträger als <em>Adaptive Skin</em> — heute mit Bio-Mörtel & Mycel-Bindern reaktiviert.
+        formbar. Putzträger als <em>Adaptive Skin</em> — heute mit Bio-Mörtel &amp; Mycel-Bindern reaktiviert.
       </p>
       <p>
         <strong class="k4">Shibam (Jemen)</strong> — die „Manhattan der Wüste" aus Lehm: 500 Jahre Hochhausbau, passive Kühlung,
@@ -256,7 +297,7 @@
         <div class="tl-item alt">
           <div class="yr">heute</div>
           <div class="ti">Citrus · Niger-Funghi</div>
-          <div class="de">Pektin- & Mycel-Binder: biogene Klebstoffe & Dämmung.</div>
+          <div class="de">Pektin- &amp; Mycel-Binder: biogene Klebstoffe &amp; Dämmung.</div>
         </div>
         <div class="tl-item">
           <div class="yr">2026 →</div>
@@ -268,7 +309,7 @@
   </div>
 
   <!-- HARDFACTS -->
-  <div class="section-title">Hardfacts · Key Values</div>
+  <div class="section-title" id="facts">Hardfacts · Key Values</div>
   <div class="grid">
     <div class="card col-6">
       <h3><span class="dot"></span> Material-Stack</h3>
@@ -299,15 +340,15 @@
 
     <div class="card col-5">
       <h3><span class="dot" style="background: var(--accent-2)"></span> ZeroImpact Score</h3>
-      <div class="bar-row"><div class="lbl">Kreislauffähigkeit</div><div class="pct">96%</div></div>
+      <div class="bar-row"><div>Kreislauffähigkeit</div><div class="pct">96%</div></div>
       <div class="bar"><span style="width:96%"></span></div>
-      <div class="bar-row"><div class="lbl">Regionaler Stoffstrom</div><div class="pct">88%</div></div>
+      <div class="bar-row"><div>Regionaler Stoffstrom</div><div class="pct">88%</div></div>
       <div class="bar"><span style="width:88%"></span></div>
-      <div class="bar-row"><div class="lbl">CO₂-Bindung</div><div class="pct">82%</div></div>
+      <div class="bar-row"><div>CO₂-Bindung</div><div class="pct">82%</div></div>
       <div class="bar"><span style="width:82%"></span></div>
-      <div class="bar-row"><div class="lbl">Reparierbarkeit</div><div class="pct">94%</div></div>
+      <div class="bar-row"><div>Reparierbarkeit</div><div class="pct">94%</div></div>
       <div class="bar"><span style="width:94%"></span></div>
-      <div class="bar-row"><div class="lbl">Toxizität (invers)</div><div class="pct">99%</div></div>
+      <div class="bar-row"><div>Toxizität (invers)</div><div class="pct">99%</div></div>
       <div class="bar"><span style="width:99%"></span></div>
     </div>
 
@@ -315,7 +356,7 @@
       <h3><span class="dot"></span> Implementierung · 5 Layer Logic</h3>
       <div class="layered">
         <div class="n">1</div>
-        <div><h4>Diagnose & Bestand</h4><p>Analyse von Gebäude, Klima, regionalen Roh- und Reststoffen.</p></div>
+        <div><h4>Diagnose &amp; Bestand</h4><p>Analyse von Gebäude, Klima, regionalen Roh- und Reststoffen.</p></div>
       </div>
       <div class="layered">
         <div class="n">2</div>
@@ -331,13 +372,150 @@
       </div>
       <div class="layered">
         <div class="n">5</div>
-        <div><h4>ReUse & ReGrow</h4><p>Sortenreiner Rückbau, Kompostierung, Re-Kultivierung Mycel.</p></div>
+        <div><h4>ReUse &amp; ReGrow</h4><p>Sortenreiner Rückbau, Kompostierung, Re-Kultivierung Mycel.</p></div>
       </div>
     </div>
   </div>
 
+  <!-- MUSEUM-BASED MATERIAL COMBINATIONS -->
+  <div class="section-title" id="museum">Museum-basierte Materialkombinationen</div>
+  <div class="grid">
+    <div class="card col-12">
+      <h3><span class="dot" style="background: var(--accent-4)"></span> Archiv-Wissen → Transformer-Rezeptur</h3>
+      <p style="margin:0 0 4px;color:var(--muted);font-size:13px">
+        Jede Kombination liest ein museal dokumentiertes Bauverfahren neu — historisches Material
+        <span style="color:var(--muted)">→</span> biogene Transformer-Komponente. Back to the Future als Materialforschung.
+      </p>
+    </div>
+
+    <div class="card col-4 museum">
+      <div class="src">Deutsches Technikmuseum · Berlin</div>
+      <h4>Rabitz-Drahtgeflecht (1878)</h4>
+      <div class="combo">
+        <span class="pill hist">Stahl-Geflecht + Gipsputz</span>
+        <span class="arrow">→</span>
+        <span class="pill new">Hanf-/Flachsgeflecht + Mycel-Lehm</span>
+      </div>
+      <p class="note">Brandhemmender Putzträger, jetzt metallfrei &amp; kompostierbar.</p>
+    </div>
+
+    <div class="card col-4 museum">
+      <div class="src">UNESCO-Welterbe · Shibam (Jemen)</div>
+      <h4>Lehmziegel-Hochhaus</h4>
+      <div class="combo">
+        <span class="pill hist">Stroh-Lehm-Ziegel</span>
+        <span class="arrow">→</span>
+        <span class="pill new">Pilz-Chitosan-stabilisierter Lehm</span>
+      </div>
+      <p class="note">Passive Kühlmasse mit erhöhter Druck- &amp; Witterungsfestigkeit.</p>
+    </div>
+
+    <div class="card col-4 museum">
+      <div class="src">Pergamonmuseum · Antikensammlung</div>
+      <h4>Opus caementicium (Römerbeton)</h4>
+      <div class="combo">
+        <span class="pill hist">Kalk + Puzzolan-Asche</span>
+        <span class="arrow">→</span>
+        <span class="pill new">Bio-Kalk + Citrus-Pektin-Gel</span>
+      </div>
+      <p class="note">Selbstheilende Mineralmatrix ohne Zement-Klinker.</p>
+    </div>
+
+    <div class="card col-4 museum">
+      <div class="src">Vitra Design Museum · Weil a.&nbsp;Rh.</div>
+      <h4>Bugholz- &amp; Schichtholz-Technik</h4>
+      <div class="combo">
+        <span class="pill hist">Dampf-gebogenes Vollholz</span>
+        <span class="arrow">→</span>
+        <span class="pill new">Mycel-laminiertes Faserschichtholz</span>
+      </div>
+      <p class="note">Tragende, gekrümmte Fassadenrippen — leimfrei verbunden.</p>
+    </div>
+
+    <div class="card col-4 museum">
+      <div class="src">Bauhaus-Archiv · Berlin</div>
+      <h4>Modul- &amp; Vorfertigungsprinzip</h4>
+      <div class="combo">
+        <span class="pill hist">Standardisiertes Bauelement</span>
+        <span class="arrow">→</span>
+        <span class="pill new">Steckbares Bio-Composite-Panel</span>
+      </div>
+      <p class="note">Sortenreine Demontage, Re-Use ohne Materialverlust.</p>
+    </div>
+
+    <div class="card col-4 museum">
+      <div class="src">Freilichtmuseum · Vernakuläre Bauten</div>
+      <h4>Fachwerk-Gefache</h4>
+      <div class="combo">
+        <span class="pill hist">Weidengeflecht + Lehmbewurf</span>
+        <span class="arrow">→</span>
+        <span class="pill new">Hanfgeflecht + Citrus-Lehm-Bewurf</span>
+      </div>
+      <p class="note">Diffusionsoffene, atmende Ausfachung der Curtain Wall.</p>
+    </div>
+
+    <div class="card col-12">
+      <h3><span class="dot"></span> Kombinations-Matrix</h3>
+      <table class="matrix">
+        <thead>
+          <tr>
+            <th>Museum-Quelle</th>
+            <th>Historisches Material</th>
+            <th>Transformer-Komponente</th>
+            <th>Funktion in der Fassade</th>
+            <th>ZeroImpact-Gewinn</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Technikmuseum Berlin</td>
+            <td>Rabitz-Stahlgeflecht</td>
+            <td>Hanf-/Flachsgeflecht</td>
+            <td>Adaptive Skin / Putzträger</td>
+            <td>metallfrei · kompostierbar</td>
+          </tr>
+          <tr>
+            <td>Shibam (UNESCO)</td>
+            <td>Stroh-Lehm-Ziegel</td>
+            <td>Chitosan-Lehm-Block</td>
+            <td>Speichermasse · Kühlung</td>
+            <td>−210 kg CO₂e/m²</td>
+          </tr>
+          <tr>
+            <td>Pergamonmuseum</td>
+            <td>Opus caementicium</td>
+            <td>Bio-Kalk + Citrus-Pektin</td>
+            <td>selbstheilende Fugenmatrix</td>
+            <td>zementklinker-frei</td>
+          </tr>
+          <tr>
+            <td>Vitra Design Museum</td>
+            <td>Bug-/Schichtholz</td>
+            <td>Mycel-Faserschichtholz</td>
+            <td>tragende Fassadenrippe</td>
+            <td>leimfrei · biogen</td>
+          </tr>
+          <tr>
+            <td>Bauhaus-Archiv</td>
+            <td>Standard-Bauelement</td>
+            <td>Steck-Bio-Panel</td>
+            <td>modulare Curtain-Wall-Einheit</td>
+            <td>92 % Re-Use</td>
+          </tr>
+          <tr>
+            <td>Freilichtmuseum</td>
+            <td>Weide + Lehmbewurf</td>
+            <td>Hanf + Citrus-Lehm</td>
+            <td>diffusionsoffene Ausfachung</td>
+            <td>atmend · schadstofffrei</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <!-- ROLES -->
-  <div class="section-title">Akteure · Referenzen</div>
+  <div class="section-title" id="actors">Akteure · Referenzen</div>
   <div class="grid">
     <div class="card col-4">
       <h3><span class="dot" style="background: var(--accent-3)"></span> Carl Rabitz</h3>
@@ -349,13 +527,13 @@
     <div class="card col-4">
       <h3><span class="dot" style="background: var(--accent-2)"></span> Shibam (Jemen)</h3>
       <p style="margin:0;color:var(--muted);font-size:13px">
-        UNESCO-Welterbe · Lehmhochhausstadt · 500 Jahre passives Klima- & Materialwissen.
+        UNESCO-Welterbe · Lehmhochhausstadt · 500 Jahre passives Klima- &amp; Materialwissen.
       </p>
     </div>
     <div class="card col-4">
       <h3><span class="dot" style="background: var(--accent-4)"></span> Niger · Citrus · Funghi</h3>
       <p style="margin:0;color:var(--muted);font-size:13px">
-        Pektin & Mycel als biogene Binder & Dämmstoffe — afrikanische Rohstoffkette,
+        Pektin &amp; Mycel als biogene Binder &amp; Dämmstoffe — afrikanische Rohstoffkette,
         Low-Tech Kultivierung.
       </p>
     </div>
@@ -363,7 +541,7 @@
     <div class="card col-12">
       <h3><span class="dot"></span> Ask</h3>
       <p style="margin:0">
-        Architektonische Vertiefung & bauphysikalische Prüfung:
+        Architektonische Vertiefung &amp; bauphysikalische Prüfung:
         <span class="ask">ASK ARCH. HELMUT KRAPPMAIER</span>
       </p>
     </div>

@@ -6,6 +6,28 @@ Typen: `ingest` | `query` | `lint` | `conflict` | `schema-update`
 
 ---
 
+## [2026-07-25] schema-update | SCAN ROUTINE + APPROVAL LAYER implementiert
+
+**Typ:** Infrastruktur-Update (kein neuer Ingest)  
+**Confidence:** HIGH
+
+**Änderungen:**
+1. `scripts/scan_dirlist.py` — Windows-DIRLIST-Parser mit Auto-Clustering (10 Cluster), Priority (P0–PX), Authority Class (A–E), Semantic Suggest
+2. `wiki/source_registry.jsonl` — 145 Einträge aus Google Drive `00_WORKFLOW_PATTERN_REGISTRY`, auto-generiert via scan_dirlist.py
+3. `wiki/approval-dashboard.html` — Standalone HTML Dashboard (kein CDN), embeds registry JSON, localStorage-Approval-Workflow, Cluster-Tabs, Semantic Search, JSONL-Export
+
+**Registry-Verteilung:**
+- engineering-ec2: 35 | llm-engineering: 19 | knowledge-management: 17 | registry-index: 16
+- ai-os-dashboards: 26 | workflow-automation: 7 | images-visuals: 11 | bookmarks-links: 6
+- tools-code: 4 | zotterconsult-projects: 4
+
+**Priority-Verteilung:** P0: 11 | P1: 5 | P2: 27 | P3: 72 | P4: 10 | PX: 20
+
+**Betroffene Seiten:** wiki/index.md (Statistik aktualisiert)  
+**Widersprüche:** keine
+
+---
+
 ## [2026-07-25] ingest | karpathy/llm-wiki.md (Gist: julianzotter/a4a1fe466edbb08e2bede1cb99ebe264)
 
 **Quelle:** Gist — julianzotter/llm-wiki.md (fork von karpathy/llm-wiki.md)  

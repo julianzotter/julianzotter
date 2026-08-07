@@ -1,0 +1,65 @@
+{
+  "HOLZBAU": [
+    {"priority":10,"name":"dataholz.eu Tragwerke","url":"https://www.dataholz.eu/tragwerke","domain":"Holzbau Daten AT"},
+    {"priority":9, "name":"Repositorium TU Wien EC5","url":"https://repositum.tuwien.at","domain":"Akademisch"},
+    {"priority":8, "name":"GitHub pyec5","url":"https://github.com/topics/ec5","domain":"Open Source"},
+    {"priority":7, "name":"arXiv timber structures","url":"https://arxiv.org/search/?query=timber+beam+EC5","domain":"Forschung"},
+    {"priority":6, "name":"HuggingFace timber models","url":"https://huggingface.co/models?search=timber","domain":"KI-Modelle"},
+    {"priority":5, "name":"c't heise Holzbau KI","url":"https://www.heise.de/suche/?q=holzbau+ki","domain":"Fachmagazin"},
+    {"priority":4, "name":"Reddit r/StructuralEngineering","url":"https://www.reddit.com/r/StructuralEngineering","domain":"Community"}
+  ],
+  "BETONBAU": [
+    {"priority":10,"name":"JRC Eurocodes EC2 Online","url":"https://eurocodes.jrc.ec.europa.eu/showpage.php?id=132","domain":"Normen EU"},
+    {"priority":9, "name":"DAfStb Hefte EC2","url":"https://www.dafstb.de/publikationen","domain":"Fachverband"},
+    {"priority":8, "name":"Austrian Standards EC2","url":"https://www.austrian-standards.at","domain":"Normen AT"},
+    {"priority":7, "name":"GitHub rc-py sectionproperties","url":"https://github.com/sectionproperties/sectionproperties","domain":"Open Source"},
+    {"priority":6, "name":"arXiv reinforced concrete","url":"https://arxiv.org/search/?query=reinforced+concrete+EC2","domain":"Forschung"},
+    {"priority":5, "name":"ResearchGate EC2 Bemessung","url":"https://www.researchgate.net/search?q=EC2+bemessung","domain":"Forschung"},
+    {"priority":4, "name":"ScienceDirect concrete structures","url":"https://www.sciencedirect.com/search?qs=concrete+structure+eurocode","domain":"Journals"}
+  ],
+  "STAHLBAU": [
+    {"priority":10,"name":"JRC Eurocodes EC3","url":"https://eurocodes.jrc.ec.europa.eu/showpage.php?id=133","domain":"Normen EU"},
+    {"priority":9, "name":"GitHub pysteel","url":"https://github.com/topics/eurocode3","domain":"Open Source"},
+    {"priority":8, "name":"arXiv steel structures","url":"https://arxiv.org/search/?query=steel+structure+EC3","domain":"Forschung"},
+    {"priority":7, "name":"Austrian Standards EC3","url":"https://www.austrian-standards.at","domain":"Normen AT"},
+    {"priority":6, "name":"ScienceDirect steel","url":"https://www.sciencedirect.com/search?qs=steel+structure+eurocode3","domain":"Journals"},
+    {"priority":5, "name":"Reddit r/StructuralEngineering","url":"https://www.reddit.com/r/StructuralEngineering","domain":"Community"},
+    {"priority":4, "name":"ResearchGate EC3","url":"https://www.researchgate.net/search?q=EC3+stahlbau","domain":"Forschung"}
+  ],
+  "BIM": [
+    {"priority":10,"name":"buildingSMART IFC4","url":"https://www.buildingsmart.org/standards/bsi-standards/industry-foundation-classes","domain":"Standards"},
+    {"priority":9, "name":"IfcOpenShell GitHub","url":"https://github.com/IfcOpenShell/IfcOpenShell","domain":"Open Source"},
+    {"priority":8, "name":"Speckle Systems","url":"https://speckle.systems","domain":"BIM Platform"},
+    {"priority":7, "name":"arXiv BIM IFC","url":"https://arxiv.org/search/?query=BIM+IFC+building","domain":"Forschung"},
+    {"priority":6, "name":"HuggingFace BIM models","url":"https://huggingface.co/models?search=BIM","domain":"KI-Modelle"},
+    {"priority":5, "name":"GitHub three.js IFC viewer","url":"https://github.com/IFCjs/web-ifc-viewer","domain":"Open Source"},
+    {"priority":4, "name":"Reddit r/bim","url":"https://www.reddit.com/r/bim","domain":"Community"}
+  ],
+  "FERTIGTEIL": [
+    {"priority":10,"name":"Austrian Standards EN 13747","url":"https://www.austrian-standards.at","domain":"Normen AT"},
+    {"priority":9, "name":"FDB Fertigteilbau","url":"https://www.fdb.de","domain":"Fachverband"},
+    {"priority":8, "name":"arXiv precast concrete","url":"https://arxiv.org/search/?query=precast+concrete","domain":"Forschung"},
+    {"priority":7, "name":"JRC EC2 Fertigteile","url":"https://eurocodes.jrc.ec.europa.eu","domain":"Normen EU"},
+    {"priority":6, "name":"ScienceDirect precast","url":"https://www.sciencedirect.com/search?qs=precast+concrete+eurocode","domain":"Journals"},
+    {"priority":5, "name":"GitHub ifcopenshell precast","url":"https://github.com/IfcOpenShell/IfcOpenShell","domain":"Open Source"},
+    {"priority":4, "name":"ResearchGate Fertigteil","url":"https://www.researchgate.net/search?q=fertigteil+beton","domain":"Forschung"}
+  ],
+  "KI-WERKZEUG": [
+    {"priority":10,"name":"arXiv cs.LG LLM","url":"https://arxiv.org/list/cs.LG/recent","domain":"Forschung"},
+    {"priority":9, "name":"HuggingFace Models","url":"https://huggingface.co/models","domain":"KI-Modelle"},
+    {"priority":8, "name":"GitHub aipyapp","url":"https://github.com/knownsec/aipyapp","domain":"Open Source"},
+    {"priority":7, "name":"GitHub ScrapeGraphAI","url":"https://github.com/ScrapeGraphAI/Scrapegraph-ai","domain":"Open Source"},
+    {"priority":6, "name":"Reddit r/MachineLearning","url":"https://www.reddit.com/r/MachineLearning","domain":"Community"},
+    {"priority":5, "name":"Anthropic Claude Docs","url":"https://docs.anthropic.com","domain":"LLM Platform"},
+    {"priority":4, "name":"c't heise KI","url":"https://www.heise.de/thema/Kuenstliche-Intelligenz","domain":"Fachmagazin"}
+  ],
+  "ALLGEMEIN": [
+    {"priority":10,"name":"GitHub trending","url":"https://github.com/trending","domain":"Open Source"},
+    {"priority":9, "name":"arXiv cs recent","url":"https://arxiv.org/list/cs/recent","domain":"Forschung"},
+    {"priority":8, "name":"HuggingFace trending","url":"https://huggingface.co/models?sort=trending","domain":"KI-Modelle"},
+    {"priority":7, "name":"StackOverflow","url":"https://stackoverflow.com","domain":"Community"},
+    {"priority":6, "name":"Reddit r/programming","url":"https://www.reddit.com/r/programming","domain":"Community"},
+    {"priority":5, "name":"c't heise.de","url":"https://www.heise.de","domain":"Fachmagazin"},
+    {"priority":4, "name":"DevDocs","url":"https://devdocs.io","domain":"Developer Docs"}
+  ]
+}

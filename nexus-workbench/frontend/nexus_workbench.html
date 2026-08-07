@@ -1,0 +1,1355 @@
+<title>NEXUS WORKBENCH v1.0 — Generative KI-Werkstatt</title>
+<style>
+:root {
+  --ink:    #08111e;
+  --panel:  #0e1a2a;
+  --plate:  #162235;
+  --rim:    #1e3048;
+  --rim2:   #253a58;
+  --teal:   #00cba8;
+  --teal2:  #009e84;
+  --ember:  #ff5920;
+  --gold:   #f0a500;
+  --leaf:   #2ed999;
+  --red:    #ff3d3d;
+  --mist:   #6e8ca8;
+  --txt:    #b8cedd;
+  --txt2:   #7a9ab8;
+  --mono: ui-monospace,'Cascadia Code','Fira Code','Consolas','Courier New',monospace;
+  --h: 100vh;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden;background:var(--ink);color:var(--txt);font-family:var(--mono);font-size:12px;line-height:1.45}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--rim2);border-radius:3px}
+button{font-family:var(--mono);cursor:pointer;border:none;outline:none}
+textarea,input{font-family:var(--mono);outline:none}
+
+/* ── LAYOUT ─────────────────────────────────────────── */
+#app{display:grid;grid-template-rows:38px 36px 1fr 30px;height:100vh;overflow:hidden}
+
+/* ── HEADER ─────────────────────────────────────────── */
+#hdr{
+  background:linear-gradient(90deg,var(--panel) 0%,var(--plate) 50%,var(--panel) 100%);
+  border-bottom:1px solid var(--teal2);
+  display:flex;align-items:center;gap:10px;padding:0 12px;flex-shrink:0;
+}
+.logo{font-size:14px;font-weight:700;color:var(--teal);letter-spacing:3px;text-shadow:0 0 18px rgba(0,203,168,.45)}
+.logo-sub{font-size:9px;color:var(--mist);letter-spacing:2px;margin-top:1px}
+.hdr-badge{font-size:9px;padding:2px 7px;border-radius:2px;border:1px solid;letter-spacing:1px}
+.hb-teal{border-color:var(--teal2);color:var(--teal);background:rgba(0,203,168,.08)}
+.hb-ember{border-color:rgba(255,89,32,.4);color:var(--ember);background:rgba(255,89,32,.08)}
+.hb-gold{border-color:rgba(240,165,0,.4);color:var(--gold);background:rgba(240,165,0,.08)}
+.hdrsep{flex:1}
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--leaf);box-shadow:0 0 8px var(--leaf);animation:pls 2s ease-in-out infinite}
+@keyframes pls{0%,100%{opacity:1}50%{opacity:.35}}
+.hdr-stat{display:flex;align-items:center;gap:5px;font-size:10px;color:var(--mist)}
+#sys-time{font-size:10px;color:var(--txt2);font-variant-numeric:tabular-nums}
+
+/* ── TOOLBAR ─────────────────────────────────────────── */
+#toolbar{
+  background:var(--panel);border-bottom:1px solid var(--rim);
+  display:flex;align-items:center;gap:5px;padding:0 10px;flex-shrink:0;
+}
+.tb{background:var(--plate);border:1px solid var(--rim);color:var(--txt2);padding:3px 9px;font-size:10px;letter-spacing:.5px;border-radius:2px;transition:all .15s}
+.tb:hover,.tb.on{border-color:var(--teal);color:var(--teal);background:rgba(0,203,168,.07)}
+.tbsep{width:1px;height:20px;background:var(--rim);margin:0 3px}
+#scope-val{color:var(--gold);font-size:10px;letter-spacing:.5px}
+#scope-lbl{color:var(--mist);font-size:10px}
+#maingoal-inp{
+  flex:1;max-width:280px;background:var(--plate);border:1px solid var(--rim);color:var(--txt);
+  padding:4px 8px;font-size:11px;border-radius:2px;
+}
+#maingoal-inp:focus{border-color:var(--teal)}
+#maingoal-inp::placeholder{color:var(--txt2)}
+.go-btn{
+  background:linear-gradient(135deg,var(--ember),#c03a0a);color:#fff;
+  padding:5px 18px;font-size:12px;font-weight:700;letter-spacing:2px;border-radius:2px;
+  box-shadow:0 0 16px rgba(255,89,32,.35);transition:all .15s;
+}
+.go-btn:hover{box-shadow:0 0 28px rgba(255,89,32,.6);transform:scale(1.02)}
+.go-btn:active{transform:scale(.99)}
+.go-btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+/* ── WORKSPACE ─────────────────────────────────────────── */
+#workspace{display:grid;grid-template-columns:190px 230px 1fr 300px;border-top:none;overflow:hidden;min-height:0;background:var(--rim)}
+.pane{background:var(--panel);display:flex;flex-direction:column;overflow:hidden;position:relative}
+.pane+.pane{border-left:1px solid var(--rim)}
+.pane-hdr{background:var(--plate);border-bottom:1px solid var(--rim);padding:5px 9px;display:flex;align-items:center;gap:6px;flex-shrink:0}
+.pane-title{font-size:9px;font-weight:700;color:var(--mist);letter-spacing:2px;text-transform:uppercase}
+.ptag{font-size:8px;padding:1px 5px;border-radius:2px;border:1px solid;letter-spacing:.5px}
+.pt-teal{border-color:rgba(0,203,168,.35);color:var(--teal);background:rgba(0,203,168,.07)}
+.pt-ember{border-color:rgba(255,89,32,.35);color:var(--ember);background:rgba(255,89,32,.07)}
+.pt-gold{border-color:rgba(240,165,0,.35);color:var(--gold);background:rgba(240,165,0,.07)}
+.pt-leaf{border-color:rgba(46,217,153,.35);color:var(--leaf);background:rgba(46,217,153,.07)}
+.pane-body{flex:1;overflow-y:auto;padding:8px;overflow-x:hidden}
+.pane-fill{flex:1;overflow:hidden;position:relative}
+
+/* ── PANE 1: INPUT ─────────────────────────────────────── */
+.mode-tabs{display:flex;gap:3px;margin-bottom:8px;flex-wrap:wrap}
+.mtab{font-size:9px;padding:3px 7px;border-radius:2px;border:1px solid var(--rim);color:var(--txt2);background:var(--plate);transition:all .15s;letter-spacing:.5px}
+.mtab:hover,.mtab.on{border-color:var(--teal);color:var(--teal);background:rgba(0,203,168,.07)}
+.mode-panel{display:none}
+.mode-panel.on{display:block}
+#prompt-txt{
+  width:100%;height:100px;background:var(--plate);border:1px solid var(--rim);color:var(--txt);
+  padding:7px 8px;font-size:11px;resize:none;border-radius:2px;
+}
+#prompt-txt:focus{border-color:var(--teal)}
+.char-count{font-size:9px;color:var(--txt2);text-align:right;margin-top:3px}
+.voice-wrap{text-align:center;padding:12px 8px}
+.mic-btn{
+  width:56px;height:56px;border-radius:50%;
+  background:radial-gradient(circle,rgba(255,89,32,.15),transparent);
+  border:2px solid var(--ember);color:var(--ember);font-size:22px;
+  display:inline-flex;align-items:center;justify-content:center;transition:all .2s;cursor:pointer;
+}
+.mic-btn.rec{border-color:var(--red);color:var(--red);animation:mic-p 1s ease-in-out infinite}
+@keyframes mic-p{0%,100%{box-shadow:0 0 8px rgba(255,61,61,.3)}50%{box-shadow:0 0 24px rgba(255,61,61,.7)}}
+.voice-status{font-size:10px;color:var(--mist);margin-top:8px}
+#voice-transcript{font-size:10px;color:var(--txt);background:var(--plate);border:1px solid var(--rim);border-radius:2px;padding:5px;margin-top:6px;min-height:40px;word-break:break-word}
+#sketch-canvas{width:100%;border:1px solid var(--rim);background:var(--ink);cursor:crosshair;border-radius:2px;display:block;touch-action:none}
+.sk-tools{display:flex;gap:4px;margin-top:4px}
+.sk-btn{font-size:9px;padding:2px 7px;border:1px solid var(--rim);color:var(--txt2);background:var(--plate);border-radius:2px}
+.sk-btn:hover{border-color:var(--teal);color:var(--teal)}
+#color-pick{width:24px;height:22px;border:1px solid var(--rim);border-radius:2px;background:none;cursor:pointer;padding:1px}
+.drop-zone{
+  border:2px dashed var(--rim2);border-radius:3px;padding:20px 8px;text-align:center;
+  color:var(--txt2);font-size:10px;transition:all .2s;cursor:pointer;
+}
+.drop-zone:hover,.drop-zone.drag{border-color:var(--teal);color:var(--teal)}
+.link-inp{width:100%;background:var(--plate);border:1px solid var(--rim);color:var(--txt);padding:6px 8px;font-size:10px;border-radius:2px;margin-bottom:5px}
+.link-inp:focus{border-color:var(--teal)}
+.tpl-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+.tpl-card{background:var(--plate);border:1px solid var(--rim);border-radius:2px;padding:7px;cursor:pointer;transition:all .15s}
+.tpl-card:hover{border-color:var(--teal);background:rgba(0,203,168,.05)}
+.tpl-card.sel{border-color:var(--teal);background:rgba(0,203,168,.1)}
+.tpl-icon{font-size:18px;margin-bottom:3px}
+.tpl-name{font-size:10px;font-weight:700;color:var(--txt)}
+.tpl-tag{font-size:8px;color:var(--mist)}
+.task-box{background:rgba(0,203,168,.05);border:1px solid rgba(0,203,168,.2);border-radius:2px;padding:6px 8px;margin-top:8px}
+.task-lbl{font-size:8px;color:var(--mist);letter-spacing:1.5px;margin-bottom:3px}
+.task-txt{font-size:10px;color:var(--teal);word-break:break-word}
+
+/* ── PANE 2: SIGNAL + RESEARCH ─────────────────────────── */
+.sm-card{background:var(--plate);border:1px solid var(--rim);border-radius:2px;padding:7px;margin-bottom:7px}
+.sm-formula{font-size:8px;color:var(--mist);margin-bottom:6px;letter-spacing:.3px}
+.sm-score-row{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
+.sm-score{font-size:26px;font-weight:700;color:var(--teal);text-shadow:0 0 16px rgba(0,203,168,.4);font-variant-numeric:tabular-nums;transition:all .5s}
+.sm-risk{font-size:9px;padding:2px 6px;border-radius:2px;border:1px solid;font-weight:700;letter-spacing:1px}
+.risk-low{border-color:rgba(46,217,153,.4);color:var(--leaf);background:rgba(46,217,153,.1)}
+.risk-med{border-color:rgba(240,165,0,.4);color:var(--gold);background:rgba(240,165,0,.1)}
+.risk-high{border-color:rgba(255,61,61,.4);color:var(--red);background:rgba(255,61,61,.1)}
+.sm-signals{display:flex;flex-direction:column;gap:4px}
+.sm-sig{display:flex;align-items:center;gap:5px}
+.sig-k{width:14px;font-size:9px;font-weight:700;color:var(--mist);flex-shrink:0}
+.sig-track{flex:1;height:5px;background:var(--ink);border-radius:3px;overflow:hidden}
+.sig-fill{height:100%;border-radius:3px;width:0;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.fill-R{background:linear-gradient(90deg,#0088cc,var(--teal))}
+.fill-E{background:linear-gradient(90deg,var(--leaf),#00aa77)}
+.fill-C{background:linear-gradient(90deg,var(--gold),#cc8800)}
+.fill-A{background:linear-gradient(90deg,#9966dd,#7744bb)}
+.fill-U{background:linear-gradient(90deg,var(--red),#cc2200)}
+.sig-v{width:30px;font-size:9px;text-align:right;color:var(--txt2);font-variant-numeric:tabular-nums}
+.scope-row{display:flex;align-items:center;gap:5px;margin-top:5px}
+.scope-k{font-size:8px;color:var(--mist)}
+.scope-v{font-size:9px;color:var(--gold);letter-spacing:1px}
+
+.src-hdr-row{display:flex;align-items:center;gap:5px;margin-bottom:5px}
+.src-hdr-title{font-size:9px;color:var(--mist);letter-spacing:1.5px;text-transform:uppercase}
+.src-count{font-size:9px;color:var(--txt2);margin-left:auto}
+#source-list{display:flex;flex-direction:column;gap:4px}
+.src-item{background:var(--plate);border:1px solid var(--rim);border-radius:2px;padding:5px 7px;cursor:pointer;transition:all .2s}
+.src-item:hover{border-color:var(--rim2)}
+.src-item.loading{border-color:var(--gold);animation:src-blink .7s ease-in-out infinite}
+.src-item.done{border-color:rgba(46,217,153,.4)}
+@keyframes src-blink{0%,100%{opacity:1}50%{opacity:.55}}
+.src-top{display:flex;align-items:center;gap:5px;margin-bottom:2px}
+.src-p{font-size:8px;font-weight:700;padding:1px 4px;border-radius:2px;background:rgba(0,203,168,.12);color:var(--teal);letter-spacing:.5px;flex-shrink:0}
+.src-name{font-size:10px;font-weight:600;color:var(--txt);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.src-st{font-size:8px;font-variant-numeric:tabular-nums}
+.src-st.ok{color:var(--leaf)}
+.src-st.ld{color:var(--gold)}
+.src-st.pd{color:var(--mist)}
+.src-url{font-size:8px;color:var(--txt2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.src-tok{font-size:8px;color:var(--mist);margin-top:1px}
+
+.tok-budget{background:var(--plate);border:1px solid var(--rim);border-radius:2px;padding:5px 7px;margin-top:6px}
+.tok-row{display:flex;justify-content:space-between;font-size:8px;color:var(--mist);margin-bottom:4px}
+.tok-track{height:4px;background:var(--ink);border-radius:2px;overflow:hidden}
+.tok-fill{height:100%;background:linear-gradient(90deg,var(--teal),var(--leaf));width:0;transition:width 1s ease;border-radius:2px}
+
+/* ── PANE 3: COT + CODE ─────────────────────────────── */
+.cot-steps{display:flex;flex-direction:column;gap:3px;margin-bottom:8px}
+.cot-step{background:var(--plate);border:1px solid var(--rim);border-left:3px solid transparent;border-radius:2px;padding:5px 7px;transition:all .3s}
+.cot-step.pending .cot-sname,.cot-step.pending .cot-num{color:var(--mist)}
+.cot-step.active{border-left-color:var(--teal);background:rgba(0,203,168,.04)}
+.cot-step.active .cot-sname{color:var(--teal)}
+.cot-step.active .cot-num{border-color:var(--teal);color:var(--teal);background:rgba(0,203,168,.12)}
+.cot-step.done{border-left-color:var(--leaf)}
+.cot-step.done .cot-sname{color:var(--leaf)}
+.cot-step.done .cot-num{border-color:var(--leaf);color:var(--leaf);background:rgba(46,217,153,.12)}
+.cot-step-top{display:flex;align-items:center;gap:6px}
+.cot-num{width:16px;height:16px;border-radius:50%;border:1px solid var(--rim);font-size:8px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;color:var(--rim2);transition:all .3s}
+.cot-sname{font-size:10px;font-weight:600;transition:color .3s;letter-spacing:.3px}
+.cot-detail{font-size:9px;color:var(--txt2);margin-top:2px;display:none}
+.cot-step.active .cot-detail,.cot-step.done .cot-detail{display:block}
+
+.eng-box{background:var(--plate);border:1px solid rgba(153,102,221,.35);border-radius:2px;padding:7px;margin-bottom:7px}
+.eng-hdr{font-size:8px;color:#9966dd;letter-spacing:1.5px;margin-bottom:5px;text-transform:uppercase}
+.eng-entry{margin-bottom:5px;padding-bottom:5px;border-bottom:1px solid var(--rim)}
+.eng-entry:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.eng-key{font-size:9px;color:#9966dd;margin-bottom:2px}
+.eng-val{font-size:10px;color:var(--txt);background:rgba(153,102,221,.06);padding:3px 5px;border-radius:2px}
+.eng-meta{display:flex;gap:8px;font-size:8px;margin-top:2px}
+.em-conf{color:var(--leaf)}
+.em-src{color:var(--mist)}
+
+.code-wrap{background:#050d18;border:1px solid var(--rim);border-radius:2px;overflow:auto;max-height:180px}
+.code-lbl{font-size:8px;color:var(--mist);padding:4px 8px 0;letter-spacing:1px}
+.code-blk{padding:6px 10px 8px;font-size:10px;line-height:1.7;white-space:pre;overflow-x:auto}
+.kw{color:#ff79c6}.fn{color:#50fa7b}.st{color:#f1fa8c}.cm{color:#4a6580}.num{color:#bd93f9}.op{color:var(--teal)}.kt{color:var(--gold)}
+
+.moe-box{background:var(--plate);border:1px solid var(--rim);border-radius:2px;padding:7px;margin-top:7px}
+.moe-title{font-size:8px;color:var(--mist);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px}
+.moe-list{display:flex;flex-direction:column;gap:3px}
+.moe-exp{display:flex;align-items:center;gap:6px;padding:3px 5px;border-radius:2px;border:1px solid var(--rim);background:var(--ink);transition:all .3s}
+.moe-exp.on{border-color:rgba(0,203,168,.35);background:rgba(0,203,168,.06)}
+.moe-dot{width:6px;height:6px;border-radius:50%;background:var(--rim2);flex-shrink:0;transition:all .3s}
+.moe-exp.on .moe-dot{background:var(--teal);box-shadow:0 0 6px var(--teal)}
+.moe-nm{font-size:10px;flex:1;color:var(--txt2);transition:color .3s}
+.moe-exp.on .moe-nm{color:var(--teal)}
+.moe-sc{font-size:9px;color:var(--mist);font-variant-numeric:tabular-nums}
+.moe-exp.on .moe-sc{color:var(--gold)}
+.moe-stats{display:flex;gap:8px;margin-top:5px;font-size:8px;color:var(--mist)}
+.moe-stat-v{color:var(--txt2)}
+
+/* ── PANE 4: 3D VIEWER ─────────────────────────────── */
+#canvas-3d{width:100%;height:100%;display:block;cursor:grab}
+#canvas-3d:active{cursor:grabbing}
+.viewer-overlay{position:absolute;top:7px;left:7px;display:flex;flex-direction:column;gap:4px;pointer-events:none;z-index:2}
+.vinfo{background:rgba(8,17,30,.82);border:1px solid var(--rim);border-radius:2px;padding:3px 7px;font-size:9px;color:var(--txt2);backdrop-filter:blur(2px)}
+.vinfo b{color:var(--teal)}
+.viewer-bottom{background:var(--plate);border-top:1px solid var(--rim);padding:4px 8px;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.vc-btn{font-size:9px;padding:2px 7px;border:1px solid var(--rim);color:var(--txt2);background:var(--ink);border-radius:2px}
+.vc-btn:hover{border-color:var(--teal);color:var(--teal)}
+.stress-leg{margin-left:auto;display:flex;align-items:center;gap:5px}
+.stress-bar-grad{width:60px;height:6px;border-radius:3px;background:linear-gradient(90deg,#003399,#00cba8,#f0a500,#ff3300)}
+.stress-lbl{font-size:8px;color:var(--mist)}
+
+/* ── STATUS BAR ─────────────────────────────────────── */
+#statusbar{
+  background:var(--plate);border-top:1px solid var(--teal2);
+  display:flex;align-items:center;gap:6px;padding:0 10px;flex-shrink:0;
+}
+.exp-btn{font-size:9px;font-weight:700;padding:3px 9px;border:1px solid var(--rim);color:var(--mist);background:var(--ink);border-radius:2px;letter-spacing:.5px;transition:all .15s}
+.exp-btn:hover:not(:disabled){border-color:var(--ember);color:var(--ember);background:rgba(255,89,32,.07)}
+.exp-btn:disabled{opacity:.3;cursor:not-allowed}
+.sb-sep{flex:1}
+.audit-hash{font-size:8px;color:var(--mist);letter-spacing:.5px}
+.audit-hash span{color:var(--txt2)}
+.sb-time{font-size:9px;color:var(--mist);font-variant-numeric:tabular-nums}
+
+/* ── ANIMATIONS ─────────────────────────────────────── */
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{display:inline-block;animation:spin .8s linear infinite}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
+.fadein{animation:fadeIn .3s ease}
+
+/* ── LIGHT THEME ─────────────────────────────────────── */
+@media(prefers-color-scheme:light){
+  :root:not([data-theme="dark"]){
+    --ink:#f0f4f8;--panel:#ffffff;--plate:#e8eef5;--rim:#cdd8e5;--rim2:#b0c0d0;
+    --teal:#007a66;--teal2:#005c4e;--ember:#cc3a00;--gold:#a06800;--leaf:#1a9960;
+    --red:#cc0000;--mist:#5a7a95;--txt:#1a2d3d;--txt2:#4a6580;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#08111e;--panel:#0e1a2a;--plate:#162235;--rim:#1e3048;--rim2:#253a58;
+  --teal:#00cba8;--teal2:#009e84;--ember:#ff5920;--gold:#f0a500;--leaf:#2ed999;
+  --red:#ff3d3d;--mist:#6e8ca8;--txt:#b8cedd;--txt2:#7a9ab8;
+}
+:root[data-theme="light"]{
+  --ink:#f0f4f8;--panel:#ffffff;--plate:#e8eef5;--rim:#cdd8e5;--rim2:#b0c0d0;
+  --teal:#007a66;--teal2:#005c4e;--ember:#cc3a00;--gold:#a06800;--leaf:#1a9960;
+  --red:#cc0000;--mist:#5a7a95;--txt:#1a2d3d;--txt2:#4a6580;
+}
+</style>
+
+<div id="app">
+
+<!-- HEADER -->
+<header id="hdr">
+  <div>
+    <div class="logo">NEXUS WORKBENCH</div>
+    <div class="logo-sub">AI-OS v1.0 · GENERATIVE KI-WERKSTATT</div>
+  </div>
+  <span class="hdr-badge hb-teal">MoE AKTIV</span>
+  <span class="hdr-badge hb-ember">COT ENGINE</span>
+  <span class="hdr-badge hb-gold">ENGRAM O(1)</span>
+  <div class="hdrsep"></div>
+  <div class="hdr-stat"><div class="pulse-dot"></div><span>SYSTEM ONLINE</span></div>
+  <div id="sys-time">--:--:--</div>
+</header>
+
+<!-- TOOLBAR -->
+<div id="toolbar">
+  <button class="tb on" id="tb-text" onclick="setMode('text')">📄 TEXT</button>
+  <button class="tb" id="tb-voice" onclick="setMode('voice')">🎤 VOICE</button>
+  <button class="tb" id="tb-sketch" onclick="setMode('sketch')">✏️ SKETCH</button>
+  <button class="tb" id="tb-upload" onclick="setMode('upload')">📁 UPLOAD</button>
+  <button class="tb" id="tb-link" onclick="setMode('link')">🔗 LINK</button>
+  <button class="tb" id="tb-tpl" onclick="setMode('tpl')">📋 TEMPLATE</button>
+  <div class="tbsep"></div>
+  <span class="scope-lbl">SCOPE:</span>
+  <span id="scope-val">ALLGEMEIN</span>
+  <div class="tbsep"></div>
+  <input type="text" id="maingoal-inp" placeholder="MAINGOAL: z.B. &quot;Holzträger GL24h 6m EC5 Bemessung&quot;" />
+  <button class="go-btn" id="go-btn" onclick="runNexus()">▶ GO</button>
+</div>
+
+<!-- WORKSPACE -->
+<div id="workspace">
+
+  <!-- PANE 1: INPUT -->
+  <div class="pane">
+    <div class="pane-hdr">
+      <div class="pane-title">INPUT CANVAS</div>
+      <span class="ptag pt-teal">MULTIMODAL</span>
+    </div>
+    <div class="pane-body">
+      <div class="mode-tabs">
+        <button class="mtab on" onclick="selTab('text',this)">TXT</button>
+        <button class="mtab" onclick="selTab('voice',this)">🎤</button>
+        <button class="mtab" onclick="selTab('sketch',this)">✏️</button>
+        <button class="mtab" onclick="selTab('upload',this)">📁</button>
+        <button class="mtab" onclick="selTab('link',this)">🔗</button>
+        <button class="mtab" onclick="selTab('tpl',this)">📋</button>
+      </div>
+
+      <div class="mode-panel on" id="mp-text">
+        <textarea id="prompt-txt" placeholder="Aufgabe eingeben...&#10;z.B. Bemesse GL24h Träger 6m q=5kN/m&#10;     IFC-Export für Revit&#10;     EC2 Bemessung C30/37 24/44" oninput="onPromptInput()"></textarea>
+        <div class="char-count"><span id="char-ct">0</span> / 2048</div>
+      </div>
+
+      <div class="mode-panel" id="mp-voice">
+        <div class="voice-wrap">
+          <button class="mic-btn" id="mic-btn" onclick="toggleVoice()" title="Mikrofon">🎤</button>
+          <div class="voice-status" id="voice-status">Klicken zum Starten</div>
+          <div id="voice-transcript">Gesprochener Text erscheint hier...</div>
+        </div>
+      </div>
+
+      <div class="mode-panel" id="mp-sketch">
+        <canvas id="sketch-canvas" width="170" height="130"></canvas>
+        <div class="sk-tools">
+          <button class="sk-btn" onclick="sk_clear()">CLR</button>
+          <button class="sk-btn" onclick="sk_undo()">UNDO</button>
+          <input type="color" id="color-pick" value="#00cba8">
+          <button class="sk-btn" style="margin-left:auto" onclick="useSketch()">USE →</button>
+        </div>
+      </div>
+
+      <div class="mode-panel" id="mp-upload">
+        <div class="drop-zone" id="drop-zone" onclick="document.getElementById('file-inp').click()"
+          ondragover="event.preventDefault();this.classList.add('drag')"
+          ondragleave="this.classList.remove('drag')"
+          ondrop="handleDrop(event)">
+          <input type="file" id="file-inp" style="display:none" multiple onchange="handleFiles(this.files)">
+          <div style="font-size:20px;margin-bottom:6px">📁</div>
+          PDF · IFC · DXF · CSV<br>Klicken oder ziehen
+        </div>
+        <div id="file-list" style="margin-top:5px;font-size:9px;color:var(--txt2)"></div>
+      </div>
+
+      <div class="mode-panel" id="mp-link">
+        <input class="link-inp" type="text" placeholder="URL eingeben..." id="link-url">
+        <button class="sk-btn" style="width:100%;text-align:center;padding:5px" onclick="useLink()">ANALYSIERE LINK</button>
+        <div id="link-preview" style="font-size:9px;color:var(--mist);margin-top:5px"></div>
+      </div>
+
+      <div class="mode-panel" id="mp-tpl">
+        <div class="tpl-grid">
+          <div class="tpl-card" onclick="selTpl('HOLZBAU','EC5 Bemessung GL24h',this)"><div class="tpl-icon">🌲</div><div class="tpl-name">HOLZBAU</div><div class="tpl-tag">EC5 · GL24h</div></div>
+          <div class="tpl-card" onclick="selTpl('BETONBAU','EC2 Bemessung C30/37',this)"><div class="tpl-icon">🏗</div><div class="tpl-name">BETONBAU</div><div class="tpl-tag">EC2 · C30/37</div></div>
+          <div class="tpl-card" onclick="selTpl('STAHLBAU','EC3 Bemessung S355',this)"><div class="tpl-icon">⚙️</div><div class="tpl-name">STAHLBAU</div><div class="tpl-tag">EC3 · S355</div></div>
+          <div class="tpl-card" onclick="selTpl('BIM','IFC Export + 3D',this)"><div class="tpl-icon">📐</div><div class="tpl-name">BIM / IFC</div><div class="tpl-tag">IFC · DXF</div></div>
+          <div class="tpl-card" onclick="selTpl('KI-WERKZEUG','LLM Agent Workflow',this)"><div class="tpl-icon">🤖</div><div class="tpl-name">KI-AGENT</div><div class="tpl-tag">MoE · COT</div></div>
+          <div class="tpl-card" onclick="selTpl('FERTIGTEIL','FT Elementdecke EC2',this)"><div class="tpl-icon">🧱</div><div class="tpl-name">FERTIGTEIL</div><div class="tpl-tag">EN13747</div></div>
+        </div>
+      </div>
+
+      <div class="task-box" id="task-box" style="display:none">
+        <div class="task-lbl">AKTIVER TASK</div>
+        <div class="task-txt" id="task-display"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANE 2: SIGNAL MATRIX + RESEARCH -->
+  <div class="pane">
+    <div class="pane-hdr">
+      <div class="pane-title">SIGNAL MATRIX</div>
+      <span class="ptag pt-gold">LIVE RESEARCH</span>
+    </div>
+    <div class="pane-body">
+      <div class="sm-card">
+        <div class="sm-formula">S = 0.35·R + 0.30·E + 0.20·C + 0.10·A − 0.05·U</div>
+        <div class="sm-score-row">
+          <div class="sm-score" id="sm-score">0.000</div>
+          <span class="sm-risk risk-low" id="sm-risk">IDLE</span>
+        </div>
+        <div class="sm-signals">
+          <div class="sm-sig"><span class="sig-k">R</span><div class="sig-track"><div class="sig-fill fill-R" id="sig-R" style="width:0%"></div></div><span class="sig-v" id="sv-R">0.00</span></div>
+          <div class="sm-sig"><span class="sig-k">E</span><div class="sig-track"><div class="sig-fill fill-E" id="sig-E" style="width:0%"></div></div><span class="sig-v" id="sv-E">0.00</span></div>
+          <div class="sm-sig"><span class="sig-k">C</span><div class="sig-track"><div class="sig-fill fill-C" id="sig-C" style="width:0%"></div></div><span class="sig-v" id="sv-C">0.00</span></div>
+          <div class="sm-sig"><span class="sig-k">A</span><div class="sig-track"><div class="sig-fill fill-A" id="sig-A" style="width:0%"></div></div><span class="sig-v" id="sv-A">0.00</span></div>
+          <div class="sm-sig"><span class="sig-k">U</span><div class="sig-track"><div class="sig-fill fill-U" id="sig-U" style="width:0%"></div></div><span class="sig-v" id="sv-U">0.00</span></div>
+        </div>
+        <div class="scope-row"><span class="scope-k">SCOPE:</span><span class="scope-v" id="scope-tag">—</span></div>
+      </div>
+
+      <div class="src-hdr-row">
+        <div class="src-hdr-title">DEEP-WEB QUELLEN</div>
+        <div class="src-count" id="src-count">0 gefunden</div>
+      </div>
+      <div id="source-list"></div>
+
+      <div class="tok-budget">
+        <div class="tok-row"><span>SEEDCONTEXT</span><span id="tok-val">0 / 8192 Token</span></div>
+        <div class="tok-track"><div class="tok-fill" id="tok-fill"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANE 3: COT + CODE -->
+  <div class="pane">
+    <div class="pane-hdr">
+      <div class="pane-title">COT WORKFLOW</div>
+      <span class="ptag pt-ember">VIBECODE ENGINE</span>
+    </div>
+    <div class="pane-body">
+      <div class="cot-steps" id="cot-steps">
+        <div class="cot-step pending" id="cs-PLAN"><div class="cot-step-top"><div class="cot-num">1</div><div class="cot-sname">PLAN — Aufgabe zerlegen</div></div><div class="cot-detail">Orchestrator analysiert Task → Scope → Teilschritte</div></div>
+        <div class="cot-step pending" id="cs-RESEARCH"><div class="cot-step-top"><div class="cot-num">2</div><div class="cot-sname">RESEARCH — SeedContext destillieren</div></div><div class="cot-detail">Top-5 Quellen scrapen → 8k Token VIBECODE-QUELLE</div></div>
+        <div class="cot-step pending" id="cs-CODE"><div class="cot-step-top"><div class="cot-num">3</div><div class="cot-sname">CODE-GEN — aipyapp Solver</div></div><div class="cot-detail">Python-Solver aus Engram + SeedContext generieren</div></div>
+        <div class="cot-step pending" id="cs-EXEC"><div class="cot-step-top"><div class="cot-num">4</div><div class="cot-sname">EXECUTE — Berechnung</div></div><div class="cot-detail">Solver ausführen → MRd / VRd / Verformung</div></div>
+        <div class="cot-step pending" id="cs-REVIEW"><div class="cot-step-top"><div class="cot-num">5</div><div class="cot-sname">PEER-REVIEW — 2. Agent</div></div><div class="cot-detail">4-Augen-Check: Norm-Zitate, Lastfälle, Gate</div></div>
+        <div class="cot-step pending" id="cs-3D"><div class="cot-step-top"><div class="cot-num">6</div><div class="cot-sname">3D-GENERATE — glTF Export</div></div><div class="cot-detail">Parametrisches 3D-Modell → Stress-Heatmap → IFC</div></div>
+      </div>
+
+      <div class="eng-box" id="engram-box">
+        <div class="eng-hdr">⬡ ENGRAM O(1) LOOKUP</div>
+        <div id="engram-entries"><div style="font-size:9px;color:var(--mist)">Wartet auf Task...</div></div>
+      </div>
+
+      <div class="code-wrap" id="code-wrap" style="display:none">
+        <div class="code-lbl">GENERATED PYTHON SOLVER</div>
+        <div class="code-blk" id="code-blk"></div>
+      </div>
+
+      <div class="moe-box">
+        <div class="moe-title">MoE ROUTING — EXPERTENAUSWAHL</div>
+        <div class="moe-list" id="moe-list">
+          <div class="moe-exp" data-id="E-STATIK"><div class="moe-dot"></div><div class="moe-nm">E-STATIK</div><div class="moe-sc">—</div></div>
+          <div class="moe-exp" data-id="E-NORMEN"><div class="moe-dot"></div><div class="moe-nm">E-NORMEN</div><div class="moe-sc">—</div></div>
+          <div class="moe-exp" data-id="E-BIM"><div class="moe-dot"></div><div class="moe-nm">E-CAD/BIM</div><div class="moe-sc">—</div></div>
+          <div class="moe-exp" data-id="E-MAT"><div class="moe-dot"></div><div class="moe-nm">E-MATERIAL</div><div class="moe-sc">—</div></div>
+          <div class="moe-exp" data-id="E-KI"><div class="moe-dot"></div><div class="moe-nm">E-KI/LLM</div><div class="moe-sc">—</div></div>
+          <div class="moe-exp" data-id="E-RPT"><div class="moe-dot"></div><div class="moe-nm">E-REPORT</div><div class="moe-sc">—</div></div>
+        </div>
+        <div class="moe-stats">
+          <span>AKTIV: <span class="moe-stat-v" id="moe-active-count">0/6</span></span>
+          <span>SPARSITY: <span class="moe-stat-v" id="moe-sparsity">—</span></span>
+          <span>TOKENS: <span class="moe-stat-v" id="moe-tokens">—</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PANE 4: 3D VIEWER -->
+  <div class="pane">
+    <div class="pane-hdr">
+      <div class="pane-title">3D VIEWER</div>
+      <span class="ptag pt-leaf">WebGL · STRESS</span>
+    </div>
+    <div class="pane-fill">
+      <canvas id="canvas-3d"></canvas>
+      <div class="viewer-overlay">
+        <div class="vinfo">TRÄGER <b id="v-mat">GL24h</b> · <b id="v-span">6.0m</b> · <b id="v-sect">14/28</b></div>
+        <div class="vinfo">M<sub>Ed</sub>: <b id="v-med">—</b> kNm · V<sub>Ed</sub>: <b id="v-ved">—</b> kN</div>
+        <div class="vinfo">η<sub>m</sub>: <b id="v-etam">—</b> · η<sub>v</sub>: <b id="v-etav">—</b> · w: <b id="v-w">—</b>mm</div>
+      </div>
+    </div>
+    <div class="viewer-bottom">
+      <button class="vc-btn" onclick="resetView()">RESET</button>
+      <button class="vc-btn" onclick="toggleWire()">WIRE</button>
+      <button class="vc-btn" onclick="animateLoad()">LOAD</button>
+      <div class="stress-leg">
+        <span class="stress-lbl">0%</span>
+        <div class="stress-bar-grad"></div>
+        <span class="stress-lbl">100%</span>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /workspace -->
+
+<!-- STATUS BAR -->
+<div id="statusbar">
+  <button class="exp-btn" id="exp-ifc" disabled>IFC</button>
+  <button class="exp-btn" id="exp-dxf" disabled>DXF</button>
+  <button class="exp-btn" id="exp-svg" disabled onclick="exportSVG()">SVG</button>
+  <button class="exp-btn" id="exp-pdf" disabled>PDF</button>
+  <button class="exp-btn" id="exp-json" disabled>JSONL</button>
+  <button class="exp-btn" id="exp-vrml" disabled>VRML</button>
+  <div class="sb-sep"></div>
+  <span class="audit-hash">SHA256: <span id="audit-hash">—</span></span>
+  <span class="audit-hash" style="margin-left:8px">TRACE: <span id="trace-id">—</span></span>
+  <span class="sb-time" id="sb-time">2026-08-07</span>
+</div>
+
+</div><!-- /app -->
+
+<script>
+// ══════════════════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════════════════
+const SOURCES = {
+  HOLZBAU:[
+    {p:10,name:'dataholz.eu Tragwerke',url:'dataholz.eu/tragwerke',dom:'Holzbau Daten'},
+    {p:9,name:'Repositorium TU Wien EC5',url:'repositorium.tuwien.ac.at/ec5',dom:'Akademisch'},
+    {p:9,name:'ÖNORM EN 1995 (EC5)',url:'austrian-standards.at',dom:'Norm AT'},
+    {p:8,name:'github.com/pyec5/pyec5',url:'github.com/pyec5/pyec5',dom:'Python'},
+    {p:8,name:'OpenLibrary TU Graz',url:'openlibrary.tug.at/holzbau',dom:'Bibliothek'},
+    {p:7,name:'arxiv.org timber+beam 2025',url:'arxiv.org/search?q=timber+beam',dom:'Forschung'},
+    {p:6,name:'r/StructuralEngineering',url:'reddit.com/r/StructuralEngineering',dom:'Community'},
+  ],
+  BETONBAU:[
+    {p:10,name:'eurocodes.jrc.ec.europa.eu EC2',url:'eurocodes.jrc.ec.europa.eu',dom:'EC2 JRC'},
+    {p:9,name:'TU Wien Stahlbeton Skript',url:'ift.tuwien.ac.at/lehre/skripten',dom:'Akademisch'},
+    {p:9,name:'DAfStb Heft 600',url:'dafstb.de/publikationen',dom:'Bemessungshilfe'},
+    {p:8,name:'github.com/civilcode/rc-py',url:'github.com/civilcode/rc-py',dom:'Python'},
+    {p:8,name:'sectionproperties lib',url:'github.com/sectionproperties',dom:'Python'},
+    {p:7,name:'arxiv.org reinforced concrete',url:'arxiv.org/search?q=RC+beam+EC2',dom:'Forschung'},
+    {p:7,name:'ResearchGate EC2 Papers',url:'researchgate.net/search?q=eurocode2',dom:'Papers'},
+    {p:6,name:"c't heise.de KI+Statik",url:'heise.de/ct/ki-statik',dom:'Magazin'},
+  ],
+  STAHLBAU:[
+    {p:10,name:'eurocodes.jrc.ec.europa.eu EC3',url:'eurocodes.jrc.ec.europa.eu/EC3',dom:'EC3 JRC'},
+    {p:9,name:'ÖNORM EN 1993 (EC3)',url:'austrian-standards.at',dom:'Norm AT'},
+    {p:8,name:'github.com/pynite/PyNite',url:'github.com/pynite/PyNite',dom:'FEM Python'},
+    {p:7,name:'arxiv.org steel structures',url:'arxiv.org/search?q=steel+structure',dom:'Forschung'},
+    {p:6,name:'ScienceDirect Stahlbau',url:'sciencedirect.com/search?q=steel',dom:'Journals'},
+  ],
+  BIM:[
+    {p:10,name:'ifcopenshell.org docs',url:'ifcopenshell.org/docs',dom:'IFC'},
+    {p:9,name:'github.com/ifcjs/web-ifc',url:'github.com/ifcjs/web-ifc',dom:'WebIFC'},
+    {p:8,name:'speckle.systems',url:'speckle.systems',dom:'BIM Cloud'},
+    {p:7,name:'buildingsmart.org standards',url:'buildingsmart.org/standards',dom:'IFC Norm'},
+    {p:6,name:'HuggingFace BIM models',url:'huggingface.co/spaces/bim',dom:'ML'},
+  ],
+  FERTIGTEIL:[
+    {p:10,name:'ÖNORM EN 13747 Elementdecken',url:'austrian-standards.at',dom:'Norm AT'},
+    {p:9,name:'DAfStb Heft 631',url:'dafstb.de/heft-631',dom:'D-Bereiche'},
+    {p:8,name:'eurocodes.jrc.ec.europa.eu EC2',url:'eurocodes.jrc.ec.europa.eu',dom:'EC2 JRC'},
+    {p:7,name:'github.com/sectionproperties',url:'github.com/sectionproperties',dom:'Python'},
+    {p:6,name:'arxiv.org precast concrete',url:'arxiv.org/search?q=precast+concrete',dom:'Forschung'},
+  ],
+  'KI-WERKZEUG':[
+    {p:10,name:'arxiv.org LLM agents 2026',url:'arxiv.org/search?q=LLM+agents+2026',dom:'KI-Forschung'},
+    {p:9,name:'HuggingFace Models',url:'huggingface.co/models',dom:'Modelle'},
+    {p:9,name:'github.com/ScrapeGraphAI',url:'github.com/ScrapeGraphAI',dom:'Tools'},
+    {p:8,name:'docs.anthropic.com Claude API',url:'docs.anthropic.com',dom:'API Docs'},
+    {p:7,name:'github.com/knownsec/aipyapp',url:'github.com/knownsec/aipyapp',dom:'COT Loop'},
+    {p:7,name:'github.com/martin226/vibe-draw',url:'github.com/martin226/vibe-draw',dom:'Vibe-3D'},
+    {p:6,name:'r/MachineLearning',url:'reddit.com/r/MachineLearning',dom:'Community'},
+  ],
+  ALLGEMEIN:[
+    {p:10,name:'arxiv.org Suche',url:'arxiv.org/search',dom:'Forschung'},
+    {p:9,name:'GitHub Explore',url:'github.com/explore',dom:'Code'},
+    {p:8,name:'HuggingFace Hub',url:'huggingface.co',dom:'ML'},
+    {p:7,name:'ScienceDirect',url:'sciencedirect.com',dom:'Journals'},
+    {p:6,name:'ResearchGate',url:'researchgate.net',dom:'Forschung'},
+  ]
+};
+
+const ENGRAMS = {
+  HOLZBAU:[
+    {key:'EC5_6.1_BENDING',val:'σm,d / fm,d ≤ 1.0',conf:0.997,src:'EN 1995-1-1 §6.1'},
+    {key:'EC5_6.2_SHEAR',val:'τd = VEd·S / (I·b) ≤ fv,d',conf:0.994,src:'EN 1995-1-1 §6.2'},
+    {key:'GL24H_FM_K',val:'fm,k = 24 N/mm² · fv,k = 3.5 N/mm²',conf:0.999,src:'EN 14080 Tab.1'},
+  ],
+  BETONBAU:[
+    {key:'EC2_6.1_BENDING',val:'MRd = fcd·b·x·(d - x/2)',conf:0.998,src:'EN 1992-1-1 §6.1'},
+    {key:'EC2_6.2_SHEAR',val:'VRd,c = [CRd,c·k·(100·ρl·fck)^⅓]·bw·d',conf:0.995,src:'EN 1992-1-1 §6.2'},
+    {key:'EC2_9.2.1.1_MINAS',val:'As,min = 0.26·(fctm/fyk)·bt·d',conf:0.999,src:'EN 1992-1-1 §9.2'},
+  ],
+  STAHLBAU:[
+    {key:'EC3_6.2_BENDING',val:'MEd / MRd ≤ 1.0  |  MRd = Wy·fy/γM0',conf:0.998,src:'EN 1993-1-1 §6.2'},
+    {key:'EC3_6.2_SHEAR',val:'VEd / VRd ≤ 1.0  |  VRd = Av·fy/(√3·γM0)',conf:0.996,src:'EN 1993-1-1 §6.2'},
+  ],
+  BIM:[
+    {key:'IFC4_BEAM_ENTITY',val:"IfcBeam + IfcMaterialProfileSet + IfcRelAssociatesMaterial",conf:1.0,src:'IFC4 ADD2 TC1'},
+    {key:'IFC4_EXPORT_REQ',val:'GlobalId · OwnerHistory · Representation · ObjectPlacement',conf:1.0,src:'buildingSMART'},
+  ],
+  FERTIGTEIL:[
+    {key:'EC2_6.4_PUNCHING',val:'vRd,c = CRd,c·k·(100·ρl·fck)^⅓',conf:0.992,src:'EN 1992-1-1 §6.4'},
+    {key:'EN13747_VERBUND',val:'τEd ≤ τRd  |  Verbundfuge Gitterträger',conf:0.990,src:'EN 13747 §8'},
+  ],
+  'KI-WERKZEUG':[
+    {key:'MOE_SIGNAL_MATRIX',val:'S = 0.35R + 0.30E + 0.20C + 0.10A - 0.05U',conf:1.0,src:'NEXUS-OS Kernel'},
+    {key:'ENGRAM_O1_LOOKUP',val:'key = hash(name) → value in O(1)',conf:1.0,src:'NEXUS Engram v1.0'},
+  ],
+  ALLGEMEIN:[
+    {key:'MOE_SIGNAL_MATRIX',val:'S = 0.35R + 0.30E + 0.20C + 0.10A - 0.05U',conf:1.0,src:'NEXUS-OS Kernel'},
+  ]
+};
+
+const SIGNAL_PROFILES = {
+  HOLZBAU:   {R:.88,E:.85,C:.82,A:.79,U:.15},
+  BETONBAU:  {R:.92,E:.90,C:.88,A:.85,U:.10},
+  STAHLBAU:  {R:.85,E:.82,C:.78,A:.75,U:.18},
+  BIM:       {R:.80,E:.78,C:.75,A:.88,U:.12},
+  FERTIGTEIL:{R:.89,E:.86,C:.84,A:.81,U:.13},
+  'KI-WERKZEUG':{R:.90,E:.75,C:.70,A:.95,U:.20},
+  ALLGEMEIN: {R:.55,E:.55,C:.55,A:.55,U:.45},
+};
+
+const MOE_DOMAINS = {
+  'E-STATIK': ['HOLZBAU','BETONBAU','STAHLBAU','FERTIGTEIL'],
+  'E-NORMEN': ['HOLZBAU','BETONBAU','STAHLBAU','FERTIGTEIL','ALLGEMEIN'],
+  'E-BIM':    ['BIM'],
+  'E-MAT':    ['HOLZBAU','BETONBAU','STAHLBAU','FERTIGTEIL'],
+  'E-KI':     ['KI-WERKZEUG'],
+  'E-RPT':    ['HOLZBAU','BETONBAU','STAHLBAU','BIM','FERTIGTEIL','ALLGEMEIN'],
+};
+
+const CODE_TEMPLATES = {
+  HOLZBAU:`<span class="cm"># NEXUS EC5 Solver | Auto-generiert via aipyapp</span>
+<span class="cm"># Engram: EC5_6.1_BENDING confidence=0.997</span>
+
+<span class="kw">from</span> nexus_core <span class="kw">import</span> engram, ec5
+<span class="kw">import</span> sectionproperties <span class="kw">as</span> sp
+
+<span class="cm"># Parameter aus Task-Parser</span>
+b, h = <span class="num">0.14</span>, <span class="num">0.28</span>   <span class="cm"># GL24h [m]</span>
+L    = <span class="num">6.0</span>            <span class="cm"># Spannweite [m]</span>
+q_k  = <span class="num">5.0</span>            <span class="cm"># qk [kN/m]</span>
+
+<span class="cm"># Engram O(1) Lookup — kein Fine-Tuning</span>
+mat = engram[<span class="st">'GL24H_FM_K'</span>]    <span class="cm"># fm_k=24, fv_k=3.5</span>
+kmod = <span class="num">0.80</span>              <span class="cm"># NKL2, KLED mittel</span>
+
+<span class="cm"># Schnittgrößen</span>
+M_Ed = q_k * L**<span class="num">2</span> / <span class="num">8</span>  <span class="cm"># = 22.5 kNm</span>
+V_Ed = q_k * L / <span class="num">2</span>    <span class="cm"># = 15.0 kN</span>
+
+<span class="cm"># EC5 Bemessung</span>
+res = ec5.<span class="fn">bemesse_traeger</span>(b, h, M_Ed, V_Ed, mat, kmod)
+<span class="fn">print</span>(<span class="st">f"η_m = {res.eta_m:.3f}  &lt; 1.0 ✓"</span>)
+<span class="fn">print</span>(<span class="st">f"η_v = {res.eta_v:.3f}  &lt; 1.0 ✓"</span>)
+<span class="fn">print</span>(<span class="st">f"w_fin = {res.w_fin:.1f} mm"</span>)`,
+
+  BETONBAU:`<span class="cm"># NEXUS EC2 Solver | Auto-generiert via aipyapp</span>
+<span class="cm"># Engram: EC2_6.1_BENDING confidence=0.998</span>
+
+<span class="kw">from</span> nexus_core <span class="kw">import</span> engram, ec2
+<span class="kw">import</span> rc_py <span class="kw">as</span> rc
+
+<span class="cm"># Parameter aus Task-Parser</span>
+b, h = <span class="num">0.24</span>, <span class="num">0.44</span>  <span class="cm"># Randbalken [m]</span>
+L    = <span class="num">6.0</span>          <span class="cm"># Spannweite [m]</span>
+fck  = <span class="num">30</span>           <span class="cm"># C30/37 [N/mm²]</span>
+q_k  = <span class="num">12.5</span>         <span class="cm"># kN/m</span>
+
+<span class="cm"># Engram O(1) Lookup</span>
+form = engram[<span class="st">'EC2_6.1_BENDING'</span>]  <span class="cm"># O(1)</span>
+minas= engram[<span class="st">'EC2_9.2.1.1_MINAS'</span>]
+
+<span class="cm"># Schnittgrößen ULS</span>
+M_Ed = q_k * L**<span class="num">2</span> / <span class="num">8</span>  <span class="cm"># = 56.25 kNm</span>
+V_Ed = q_k * L / <span class="num">2</span>    <span class="cm"># = 37.5 kN</span>
+
+<span class="cm"># Bemessung</span>
+res = ec2.<span class="fn">bemesse_biegung</span>(b, h, M_Ed, fck)
+<span class="fn">print</span>(<span class="st">f"As,erf = {res.As_erf:.1f} cm²"</span>)
+<span class="fn">print</span>(<span class="st">f"MRd    = {res.MRd:.1f} kNm"</span>)`,
+
+  BIM:`<span class="cm"># NEXUS IFC Exporter | Auto-generiert</span>
+<span class="cm"># Engram: IFC4_BEAM_ENTITY confidence=1.0</span>
+
+<span class="kw">import</span> ifcopenshell
+<span class="kw">from</span> nexus_core <span class="kw">import</span> engram, ifc_builder
+
+<span class="cm"># IFC-Modell initialisieren</span>
+model = ifc_builder.<span class="fn">create</span>(schema=<span class="st">'IFC4'</span>)
+
+<span class="cm"># Träger aus Parametern</span>
+beam_params = {
+  <span class="st">'material'</span>: <span class="st">'GL24h'</span>, <span class="st">'b'</span>: <span class="num">0.14</span>, <span class="st">'h'</span>: <span class="num">0.28</span>,
+  <span class="st">'length'</span>: <span class="num">6.0</span>, <span class="st">'class'</span>: <span class="st">'IfcBeam'</span>
+}
+
+<span class="cm"># Engram O(1) → IFC Entity-Typ</span>
+entity = engram[<span class="st">'IFC4_BEAM_ENTITY'</span>]
+
+beam = ifc_builder.<span class="fn">add_beam</span>(model, **beam_params)
+model.<span class="fn">write</span>(<span class="st">'nexus_output.ifc'</span>)
+<span class="fn">print</span>(<span class="st">f"IFC gespeichert: {beam.GlobalId}"</span>)`,
+
+  'KI-WERKZEUG':`<span class="cm"># NEXUS MoE Orchestrator | Auto-generiert</span>
+<span class="cm"># Engram: MOE_SIGNAL_MATRIX confidence=1.0</span>
+
+<span class="kw">from</span> nexus_core <span class="kw">import</span> signal_matrix, moe_router
+<span class="kw">from</span> nexus_core.research <span class="kw">import</span> deep_web_research
+<span class="kw">from</span> nexus_core.engram <span class="kw">import</span> EngramStore
+
+<span class="cm"># Signal Matrix berechnen</span>
+sig = signal_matrix.<span class="fn">detect</span>(task_text)
+S   = signal_matrix.<span class="fn">compute</span>(sig)
+<span class="fn">print</span>(<span class="st">f"S = {S:.3f} | SCOPE={sig.scope}"</span>)
+
+<span class="cm"># Top-2 Experten routen</span>
+E1, E2 = moe_router.<span class="fn">route</span>(sig.scope)[:<span class="num">2</span>]
+
+<span class="cm"># Deep-Web Research + Destillation</span>
+urls = deep_web_research.<span class="fn">generate</span>(sig)
+ctx  = deep_web_research.<span class="fn">scrape_distill</span>(urls, max_tokens=<span class="num">8192</span>)
+
+<span class="cm"># COT Workflow starten</span>
+result = E1.<span class="fn">execute</span>(task_text, context=ctx, peer=E2)
+<span class="fn">print</span>(result.report)`,
+};
+CODE_TEMPLATES.STAHLBAU   = CODE_TEMPLATES.BETONBAU.replace('EC2','EC3').replace('C30/37','S355');
+CODE_TEMPLATES.FERTIGTEIL = CODE_TEMPLATES.BETONBAU.replace('Randbalken','Elementdecke').replace('0.24, 0.44','0.12, 0.16');
+CODE_TEMPLATES.ALLGEMEIN  = CODE_TEMPLATES['KI-WERKZEUG'];
+
+// ══════════════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════════════
+let currentMode = 'text', currentScope = 'ALLGEMEIN';
+let isRunning = false, wireMode = false, loadAnim = false;
+let skCanvas, skCtx, skDrawing = false, skPaths = [], skCurrent = null;
+let rotX = 0.45, rotY = 0.65, isDragging = false, lastMx = 0, lastMy = 0;
+let stressLevel = 0.0, beamAuto = true;
+let gl, prog, vbuf, nbuf, sbuf, ibuf, icount;
+let recognition = null, voiceOn = false;
+let glReady = false;
+
+// ══════════════════════════════════════════════════════════
+// CLOCK
+// ══════════════════════════════════════════════════════════
+function tick(){
+  const now = new Date();
+  const t = now.toTimeString().slice(0,8);
+  document.getElementById('sys-time').textContent = t;
+  document.getElementById('sb-time').textContent = now.toISOString().slice(0,10);
+}
+setInterval(tick,1000); tick();
+
+// ══════════════════════════════════════════════════════════
+// UI HELPERS
+// ══════════════════════════════════════════════════════════
+function setMode(m){
+  currentMode = m;
+  ['text','voice','sketch','upload','link','tpl'].forEach(x=>{
+    document.getElementById('tb-'+x).classList.toggle('on',x===m);
+  });
+}
+
+function selTab(id, btn){
+  document.querySelectorAll('.mtab').forEach(b=>b.classList.remove('on'));
+  document.querySelectorAll('.mode-panel').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById('mp-'+id).classList.add('on');
+}
+
+function selTpl(scope, goal, el){
+  document.querySelectorAll('.tpl-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  currentScope = scope;
+  document.getElementById('scope-val').textContent = scope;
+  document.getElementById('scope-tag').textContent = scope;
+  document.getElementById('maingoal-inp').value = goal;
+  setActiveTask(goal + ' [Template]');
+}
+
+function onPromptInput(){
+  const v = document.getElementById('prompt-txt').value;
+  document.getElementById('char-ct').textContent = v.length;
+  const s = detectScope(v);
+  if(s !== currentScope){
+    currentScope = s;
+    document.getElementById('scope-val').textContent = s;
+  }
+  if(v.length > 3) setActiveTask(v.trim());
+}
+
+function setActiveTask(txt){
+  document.getElementById('task-box').style.display='block';
+  document.getElementById('task-display').textContent = txt.slice(0,120);
+}
+
+function detectScope(txt){
+  const t = txt.toLowerCase();
+  if(/holz|gl24|gl28|c24|c16|ec5|brettschicht|kerto|clt|bsp/.test(t)) return 'HOLZBAU';
+  if(/beton|stahlbeton|c30|c40|c25|ec2|fertigteil|elementdecke|durchstanz/.test(t)) return 'BETONBAU';
+  if(/stahl|s355|s275|ipe|hea|heb|ec3/.test(t)) return 'STAHLBAU';
+  if(/ifc|bim|revit|allplan|speckle|3d|modell|glTF/.test(t)) return 'BIM';
+  if(/fertigteil|precast|elementdecke|ft-stütz|doppelwand/.test(t)) return 'FERTIGTEIL';
+  if(/ki|llm|agent|gpt|claude|deepseek|neural|embedding|rag/.test(t)) return 'KI-WERKZEUG';
+  return 'ALLGEMEIN';
+}
+
+function getTask(){
+  const inp = document.getElementById('maingoal-inp').value.trim();
+  const txt = document.getElementById('prompt-txt').value.trim();
+  const vt  = document.getElementById('voice-transcript').textContent;
+  return inp || txt || vt || 'Allgemeine KI-Werkstatt Anfrage';
+}
+
+// ══════════════════════════════════════════════════════════
+// SIGNAL MATRIX
+// ══════════════════════════════════════════════════════════
+function animateSignals(scope){
+  const prof = SIGNAL_PROFILES[scope] || SIGNAL_PROFILES.ALLGEMEIN;
+  const w = {R:0.35,E:0.30,C:0.20,A:0.10,U:-0.05};
+  const S = Object.entries(w).reduce((s,[k,wt])=>s+wt*prof[k],0);
+
+  ['R','E','C','A','U'].forEach(k=>{
+    const v = prof[k];
+    setTimeout(()=>{
+      document.getElementById('sig-'+k).style.width = (v*100)+'%';
+      document.getElementById('sv-'+k).textContent = v.toFixed(2);
+    }, 80);
+  });
+
+  setTimeout(()=>{
+    document.getElementById('sm-score').textContent = S.toFixed(3);
+    document.getElementById('scope-tag').textContent = scope;
+    const rEl = document.getElementById('sm-risk');
+    if(S > 0.80){rEl.textContent='LOW RISK';rEl.className='sm-risk risk-low';}
+    else if(S > 0.60){rEl.textContent='MED RISK';rEl.className='sm-risk risk-med';}
+    else{rEl.textContent='HIGH RISK';rEl.className='sm-risk risk-high';}
+  }, 200);
+}
+
+// ══════════════════════════════════════════════════════════
+// SOURCE LIST
+// ══════════════════════════════════════════════════════════
+async function animateSources(scope){
+  const srcs = (SOURCES[scope]||SOURCES.ALLGEMEIN).map(s=>({...s,status:'pending'}));
+  const list = document.getElementById('source-list');
+  document.getElementById('src-count').textContent = srcs.length+' gefunden';
+
+  function render(){
+    list.innerHTML = srcs.map(s=>`
+      <div class="src-item ${s.status} fadein">
+        <div class="src-top">
+          <span class="src-p">P${s.p}</span>
+          <span class="src-name">${s.name}</span>
+          <span class="src-st ${s.status==='done'?'ok':s.status==='loading'?'ld':'pd'}">
+            ${s.status==='done'?'✓ '+s.tok+'t':s.status==='loading'?'↓ scraping':'◦ pending'}
+          </span>
+        </div>
+        <div class="src-url">${s.url}</div>
+        ${s.status==='done'?`<div class="src-tok">${s.dom} · SeedContext +${s.tok}t</div>`:''}
+      </div>`).join('');
+  }
+
+  render();
+  let totalTok = 0;
+  for(let i=0; i<Math.min(srcs.length,5); i++){
+    await delay(500+Math.random()*300);
+    srcs[i].status='loading'; render();
+    await delay(600+Math.random()*500);
+    srcs[i].status='done';
+    srcs[i].tok = Math.floor(800+Math.random()*2500);
+    totalTok += srcs[i].tok;
+    render();
+    const pct = Math.min(100, totalTok/81.92);
+    document.getElementById('tok-fill').style.width = pct+'%';
+    document.getElementById('tok-val').textContent = totalTok.toLocaleString()+' / 8192 Token';
+  }
+}
+
+// ══════════════════════════════════════════════════════════
+// ENGRAM
+// ══════════════════════════════════════════════════════════
+function showEngrams(scope){
+  const entries = (ENGRAMS[scope]||ENGRAMS.ALLGEMEIN);
+  document.getElementById('engram-entries').innerHTML = entries.map(e=>`
+    <div class="eng-entry fadein">
+      <div class="eng-key">${e.key}</div>
+      <div class="eng-val">${e.val}</div>
+      <div class="eng-meta"><span class="em-conf">conf=${e.conf}</span><span class="em-src">${e.src}</span></div>
+    </div>`).join('');
+}
+
+// ══════════════════════════════════════════════════════════
+// MOE ROUTING
+// ══════════════════════════════════════════════════════════
+function routeMoE(scope){
+  const items = document.querySelectorAll('.moe-exp');
+  let active=0;
+  items.forEach(el=>{
+    const id = el.dataset.id;
+    const isActive = MOE_DOMAINS[id]?.includes(scope);
+    el.classList.toggle('on', isActive);
+    const sc = isActive ? (0.7+Math.random()*.25).toFixed(3) : (Math.random()*.25).toFixed(3);
+    el.querySelector('.moe-sc').textContent = sc;
+    if(isActive) active++;
+  });
+  document.getElementById('moe-active-count').textContent = active+'/6';
+  document.getElementById('moe-sparsity').textContent = Math.round((1-active/6)*100)+'%';
+  document.getElementById('moe-tokens').textContent = '~'+(active*49).toFixed(0)+'B aktiv';
+}
+
+// ══════════════════════════════════════════════════════════
+// COT STEPS
+// ══════════════════════════════════════════════════════════
+const COT_IDS = ['PLAN','RESEARCH','CODE','EXEC','REVIEW','3D'];
+function resetCot(){COT_IDS.forEach(id=>{const el=document.getElementById('cs-'+id);el.className='cot-step pending';})}
+async function activateCot(id){
+  const el = document.getElementById('cs-'+id);
+  el.className='cot-step active';
+  await delay(900+Math.random()*400);
+  el.className='cot-step done';
+}
+
+// ══════════════════════════════════════════════════════════
+// CODE DISPLAY
+// ══════════════════════════════════════════════════════════
+function showCode(scope){
+  const w = document.getElementById('code-wrap');
+  const b = document.getElementById('code-blk');
+  const tpl = CODE_TEMPLATES[scope] || CODE_TEMPLATES['KI-WERKZEUG'];
+  w.style.display='block';
+  b.innerHTML = tpl;
+}
+
+// ══════════════════════════════════════════════════════════
+// 3D RESULTS
+// ══════════════════════════════════════════════════════════
+function update3DResults(scope){
+  const presets = {
+    HOLZBAU:   {mat:'GL24h', span:'6.0m', sect:'14/28', med:'22.5', ved:'15.0', etam:'0.73', etav:'0.38', w:'18.2'},
+    BETONBAU:  {mat:'C30/37',span:'6.0m', sect:'24/44', med:'56.3', ved:'37.5', etam:'0.81', etav:'0.52', w:'12.1'},
+    STAHLBAU:  {mat:'S355',  span:'8.0m', sect:'IPE360',med:'96.0', ved:'48.0', etam:'0.68', etav:'0.41', w:'22.4'},
+    BIM:       {mat:'GL24h', span:'6.0m', sect:'14/28', med:'—',    ved:'—',    etam:'—',    etav:'—',    w:'—'},
+    FERTIGTEIL:{mat:'C30/37',span:'5.6m', sect:'16cm',  med:'28.7', ved:'22.1', etam:'0.79', etav:'0.61', w:'8.4'},
+    'KI-WERKZEUG':{mat:'—', span:'—',    sect:'—',     med:'—',    ved:'—',    etam:'—',    etav:'—',    w:'—'},
+    ALLGEMEIN: {mat:'GL24h', span:'6.0m', sect:'14/28', med:'22.5', ved:'15.0', etam:'0.73', etav:'0.38', w:'18.2'},
+  };
+  const p = presets[scope]||presets.ALLGEMEIN;
+  document.getElementById('v-mat').textContent = p.mat;
+  document.getElementById('v-span').textContent = p.span;
+  document.getElementById('v-sect').textContent = p.sect;
+  document.getElementById('v-med').textContent = p.med;
+  document.getElementById('v-ved').textContent = p.ved;
+  document.getElementById('v-etam').textContent = p.etam;
+  document.getElementById('v-etav').textContent = p.etav;
+  document.getElementById('v-w').textContent = p.w;
+  // animate stress
+  const eta = parseFloat(p.etam)||0.5;
+  stressLevel = isNaN(eta)?0.5:eta;
+  rebuildBeam();
+}
+
+// ══════════════════════════════════════════════════════════
+// AUDIT + EXPORTS
+// ══════════════════════════════════════════════════════════
+function genHash(){
+  const h = Array.from({length:8},()=>Math.floor(Math.random()*16).toString(16)).join('');
+  return h+'...'+Array.from({length:4},()=>Math.floor(Math.random()*16).toString(16)).join('');
+}
+function enableExports(){
+  ['ifc','dxf','svg','pdf','json','vrml'].forEach(id=>{
+    const el = document.getElementById('exp-'+id);
+    if(el) el.disabled = false;
+  });
+  document.getElementById('audit-hash').textContent = genHash();
+  document.getElementById('trace-id').textContent = 'TRC-'+Math.random().toString(36).slice(2,10).toUpperCase();
+}
+
+// ══════════════════════════════════════════════════════════
+// MAIN RUN
+// ══════════════════════════════════════════════════════════
+async function runNexus(){
+  if(isRunning) return;
+  isRunning = true;
+  const btn = document.getElementById('go-btn');
+  btn.disabled = true;
+  btn.textContent = '⟳ RUNNING';
+
+  const task = getTask();
+  const scope = detectScope(task + ' ' + document.getElementById('maingoal-inp').value);
+  currentScope = scope;
+
+  document.getElementById('scope-val').textContent = scope;
+  setActiveTask(task);
+  resetCot();
+  document.getElementById('code-wrap').style.display='none';
+  ['ifc','dxf','svg','pdf','json','vrml'].forEach(id=>{const el=document.getElementById('exp-'+id);if(el)el.disabled=true;});
+  document.getElementById('audit-hash').textContent='—';
+  document.getElementById('trace-id').textContent='—';
+
+  // Phase 1: Signal Matrix
+  animateSignals(scope);
+  await delay(300);
+
+  // Phase 2: MoE Routing
+  routeMoE(scope);
+  showEngrams(scope);
+
+  // Phase 3: Sources (parallel with COT start)
+  const srcProm = animateSources(scope);
+
+  // Phase 4: COT Steps
+  await activateCot('PLAN');
+  await activateCot('RESEARCH');
+  await srcProm;
+  showCode(scope);
+  await activateCot('CODE');
+  await activateCot('EXEC');
+  await activateCot('REVIEW');
+
+  // Phase 5: 3D
+  update3DResults(scope);
+  await activateCot('3D');
+
+  enableExports();
+  btn.disabled = false;
+  btn.textContent = '▶ GO';
+  isRunning = false;
+}
+
+function delay(ms){return new Promise(r=>setTimeout(r,ms))}
+
+// ══════════════════════════════════════════════════════════
+// WEBGL 3D BEAM
+// ══════════════════════════════════════════════════════════
+function initGL(){
+  const canvas = document.getElementById('canvas-3d');
+  gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  if(!gl){return;}
+
+  const VS=`attribute vec3 aP;attribute vec3 aN;attribute float aS;
+uniform mat4 uM;uniform mat3 uN;
+varying vec3 vN;varying float vS;
+void main(){gl_Position=uM*vec4(aP,1.);vN=normalize(uN*aN);vS=aS;}`;
+
+  const FS=`precision mediump float;
+varying vec3 vN;varying float vS;
+void main(){
+  vec3 L=normalize(vec3(.8,1.4,.6));
+  float d=max(dot(vN,L),0.);
+  vec3 c;
+  if(vS<.33) c=mix(vec3(.0,.1,.6),vec3(.0,.78,.65),vS*3.);
+  else if(vS<.66) c=mix(vec3(.0,.78,.65),vec3(.94,.65,.0),(vS-.33)*3.);
+  else c=mix(vec3(.94,.65,.0),vec3(1.,.13,.0),(vS-.66)*3.);
+  gl_FragColor=vec4(c*(.25+.75*d),1.);}`;
+
+  function sh(type,src){
+    const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);return s;
+  }
+  prog=gl.createProgram();
+  gl.attachShader(prog,sh(gl.VERTEX_SHADER,VS));
+  gl.attachShader(prog,sh(gl.FRAGMENT_SHADER,FS));
+  gl.linkProgram(prog);
+
+  vbuf=gl.createBuffer();nbuf=gl.createBuffer();sbuf=gl.createBuffer();ibuf=gl.createBuffer();
+  glReady=true;
+  rebuildBeam();
+  setupCanvasEvents();
+  requestAnimationFrame(renderLoop);
+}
+
+function rebuildBeam(){
+  if(!glReady)return;
+  const b=0.14,h=0.28,L=2.0,N=24;
+  const pos=[],nor=[],str=[],idx=[];
+  let vi=0;
+
+  for(let i=0;i<N;i++){
+    const x0=-L/2+(i/N)*L;
+    const x1=-L/2+((i+1)/N)*L;
+    const t=(i+.5)/N;
+    const sf=4*t*(1-t)*stressLevel;
+
+    const faces=[
+      {v:[[x0,h/2,b/2],[x1,h/2,b/2],[x1,h/2,-b/2],[x0,h/2,-b/2]],n:[0,1,0],s:sf*.85},
+      {v:[[x0,-h/2,-b/2],[x1,-h/2,-b/2],[x1,-h/2,b/2],[x0,-h/2,b/2]],n:[0,-1,0],s:sf*.95},
+      {v:[[x0,-h/2,b/2],[x1,-h/2,b/2],[x1,h/2,b/2],[x0,h/2,b/2]],n:[0,0,1],s:sf*.5},
+      {v:[[x0,h/2,-b/2],[x1,h/2,-b/2],[x1,-h/2,-b/2],[x0,-h/2,-b/2]],n:[0,0,-1],s:sf*.5},
+    ];
+
+    for(const f of faces){
+      for(const v of f.v){pos.push(...v);nor.push(...f.n);str.push(f.s);}
+      idx.push(vi,vi+1,vi+2,vi,vi+2,vi+3);vi+=4;
+    }
+  }
+  // End caps
+  const efaces=[
+    {v:[[-L/2,h/2,b/2],[-L/2,-h/2,b/2],[-L/2,-h/2,-b/2],[-L/2,h/2,-b/2]],n:[-1,0,0],s:0.01},
+    {v:[[L/2,h/2,-b/2],[L/2,-h/2,-b/2],[L/2,-h/2,b/2],[L/2,h/2,b/2]],n:[1,0,0],s:0.01},
+  ];
+  for(const f of efaces){
+    for(const v of f.v){pos.push(...v);nor.push(...f.n);str.push(f.s);}
+    idx.push(vi,vi+1,vi+2,vi,vi+2,vi+3);vi+=4;
+  }
+  icount=idx.length;
+
+  const g=gl;
+  g.bindBuffer(g.ARRAY_BUFFER,vbuf);g.bufferData(g.ARRAY_BUFFER,new Float32Array(pos),g.DYNAMIC_DRAW);
+  g.bindBuffer(g.ARRAY_BUFFER,nbuf);g.bufferData(g.ARRAY_BUFFER,new Float32Array(nor),g.STATIC_DRAW);
+  g.bindBuffer(g.ARRAY_BUFFER,sbuf);g.bufferData(g.ARRAY_BUFFER,new Float32Array(str),g.DYNAMIC_DRAW);
+  g.bindBuffer(g.ELEMENT_ARRAY_BUFFER,ibuf);g.bufferData(g.ELEMENT_ARRAY_BUFFER,new Uint16Array(idx),g.STATIC_DRAW);
+}
+
+function renderLoop(){
+  requestAnimationFrame(renderLoop);
+  if(!glReady)return;
+  const c=document.getElementById('canvas-3d');
+  const W=c.clientWidth,H=c.clientHeight;
+  if(c.width!==W||c.height!==H){c.width=W;c.height=H;}
+
+  if(beamAuto&&!isDragging) rotY+=0.004;
+
+  const g=gl;
+  g.viewport(0,0,W,H);
+  const dark=document.documentElement.getAttribute('data-theme')==='light';
+  if(dark){g.clearColor(.94,.96,.98,1);}else{g.clearColor(.03,.07,.12,1);}
+  g.clear(g.COLOR_BUFFER_BIT|g.DEPTH_BUFFER_BIT);
+  g.enable(g.DEPTH_TEST);g.enable(g.CULL_FACE);
+
+  const asp=W/H;
+  const fov=0.8,near=.1,far=50;
+  const f=1/Math.tan(fov/2);
+  const pr=new Float32Array([
+    f/asp,0,0,0, 0,f,0,0,
+    0,0,(far+near)/(near-far),-1,
+    0,0,2*far*near/(near-far),0
+  ]);
+
+  function rx(m,a){
+    const c=Math.cos(a),s=Math.sin(a),o=[...m];
+    for(let i=0;i<4;i++){o[4+i]=m[4+i]*c+m[8+i]*s;o[8+i]=-m[4+i]*s+m[8+i]*c;}
+    return o;
+  }
+  function ry(m,a){
+    const c=Math.cos(a),s=Math.sin(a),o=[...m];
+    for(let i=0;i<4;i++){o[i]=m[i]*c-m[8+i]*s;o[8+i]=m[i]*s+m[8+i]*c;}
+    return o;
+  }
+  function tr(m,x,y,z){
+    const o=[...m];
+    o[12]=m[0]*x+m[4]*y+m[8]*z+m[12];
+    o[13]=m[1]*x+m[5]*y+m[9]*z+m[13];
+    o[14]=m[2]*x+m[6]*y+m[10]*z+m[14];
+    return o;
+  }
+  function mul(a,b){
+    const o=new Array(16).fill(0);
+    for(let i=0;i<4;i++)for(let j=0;j<4;j++)for(let k=0;k<4;k++)o[j*4+i]+=a[k*4+i]*b[j*4+k];
+    return o;
+  }
+
+  let mv=[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
+  mv=tr(mv,0,0,-3.0);
+  mv=rx(mv,rotX);
+  mv=ry(mv,rotY);
+
+  const mvp=new Float32Array(mul(Array.from(pr),mv));
+  const nm=new Float32Array([mv[0],mv[1],mv[2],mv[4],mv[5],mv[6],mv[8],mv[9],mv[10]]);
+
+  g.useProgram(prog);
+  g.uniformMatrix4fv(g.getUniformLocation(prog,'uM'),false,mvp);
+  g.uniformMatrix3fv(g.getUniformLocation(prog,'uN'),false,nm);
+
+  function bind(buf,loc,size){
+    g.bindBuffer(g.ARRAY_BUFFER,buf);
+    const l=g.getAttribLocation(prog,loc);
+    g.enableVertexAttribArray(l);
+    g.vertexAttribPointer(l,size,g.FLOAT,false,0,0);
+  }
+  bind(vbuf,'aP',3);bind(nbuf,'aN',3);bind(sbuf,'aS',1);
+  g.bindBuffer(g.ELEMENT_ARRAY_BUFFER,ibuf);
+  g.drawElements(g.TRIANGLES,icount,g.UNSIGNED_SHORT,0);
+
+  // Draw simple support triangles
+  // (skipped for brevity — beam alone communicates the concept)
+}
+
+function setupCanvasEvents(){
+  const c=document.getElementById('canvas-3d');
+  c.addEventListener('mousedown',e=>{isDragging=true;lastMx=e.clientX;lastMy=e.clientY;beamAuto=false;});
+  document.addEventListener('mousemove',e=>{
+    if(!isDragging)return;
+    rotY+=(e.clientX-lastMx)*.012;
+    rotX+=(e.clientY-lastMy)*.012;
+    lastMx=e.clientX;lastMy=e.clientY;
+  });
+  document.addEventListener('mouseup',()=>{isDragging=false;});
+  c.addEventListener('touchstart',e=>{
+    isDragging=true;lastMx=e.touches[0].clientX;lastMy=e.touches[0].clientY;beamAuto=false;
+  },{passive:true});
+  c.addEventListener('touchmove',e=>{
+    if(!isDragging)return;
+    rotY+=(e.touches[0].clientX-lastMx)*.012;
+    rotX+=(e.touches[0].clientY-lastMy)*.012;
+    lastMx=e.touches[0].clientX;lastMy=e.touches[0].clientY;
+  },{passive:true});
+  c.addEventListener('touchend',()=>{isDragging=false;});
+}
+
+function resetView(){rotX=0.45;rotY=0.65;beamAuto=true;}
+function toggleWire(){
+  wireMode=!wireMode;
+  gl.polygonOffset(wireMode?1:0,wireMode?1:0);
+}
+function animateLoad(){
+  let t=0;
+  const id=setInterval(()=>{
+    stressLevel=0.5+0.45*Math.sin(t);
+    t+=0.15;rebuildBeam();
+    if(t>Math.PI*2){clearInterval(id);stressLevel=parseFloat(document.getElementById('v-etam').textContent)||0.5;rebuildBeam();}
+  },50);
+}
+
+// ══════════════════════════════════════════════════════════
+// SKETCH
+// ══════════════════════════════════════════════════════════
+function initSketch(){
+  skCanvas=document.getElementById('sketch-canvas');
+  skCtx=skCanvas.getContext('2d');
+  skCtx.strokeStyle='#00cba8';skCtx.lineWidth=2;skCtx.lineCap='round';skCtx.lineJoin='round';
+
+  const ev=(e)=>{
+    const r=skCanvas.getBoundingClientRect();
+    const sx=skCanvas.width/r.width;
+    return {x:(e.clientX-r.left)*sx,y:(e.clientY-r.top)*(skCanvas.height/r.height)};
+  };
+  skCanvas.addEventListener('mousedown',e=>{
+    skDrawing=true;skCurrent={c:document.getElementById('color-pick').value,pts:[ev(e)]};
+  });
+  skCanvas.addEventListener('mousemove',e=>{
+    if(!skDrawing)return;
+    skCurrent.pts.push(ev(e));
+    redrawSketch();
+  });
+  skCanvas.addEventListener('mouseup',()=>{if(skDrawing&&skCurrent){skPaths.push(skCurrent);skCurrent=null;skDrawing=false;}});
+  skCanvas.addEventListener('touchstart',e=>{e.preventDefault();const t=e.touches[0];const r=skCanvas.getBoundingClientRect();skDrawing=true;skCurrent={c:'#00cba8',pts:[{x:(t.clientX-r.left)*skCanvas.width/r.width,y:(t.clientY-r.top)*skCanvas.height/r.height}]};},{passive:false});
+  skCanvas.addEventListener('touchmove',e=>{e.preventDefault();if(!skDrawing)return;const t=e.touches[0];const r=skCanvas.getBoundingClientRect();skCurrent.pts.push({x:(t.clientX-r.left)*skCanvas.width/r.width,y:(t.clientY-r.top)*skCanvas.height/r.height});redrawSketch();},{passive:false});
+  skCanvas.addEventListener('touchend',()=>{if(skDrawing&&skCurrent){skPaths.push(skCurrent);skCurrent=null;skDrawing=false;}});
+}
+
+function redrawSketch(){
+  skCtx.clearRect(0,0,skCanvas.width,skCanvas.height);
+  const all=[...skPaths,...(skCurrent?[skCurrent]:[])];
+  for(const p of all){
+    if(!p.pts.length)continue;
+    skCtx.beginPath();skCtx.strokeStyle=p.c;skCtx.lineWidth=2;
+    skCtx.moveTo(p.pts[0].x,p.pts[0].y);
+    for(let i=1;i<p.pts.length;i++) skCtx.lineTo(p.pts[i].x,p.pts[i].y);
+    skCtx.stroke();
+  }
+}
+
+function sk_clear(){skPaths=[];skCurrent=null;skCtx.clearRect(0,0,skCanvas.width,skCanvas.height);}
+function sk_undo(){skPaths.pop();redrawSketch();}
+function useSketch(){setActiveTask('Sketch-Input ['+skPaths.length+' Pfade]');selTab('text',document.querySelector('.mtab'));}
+
+// ══════════════════════════════════════════════════════════
+// VOICE
+// ══════════════════════════════════════════════════════════
+function toggleVoice(){
+  if(!('webkitSpeechRecognition' in window||'SpeechRecognition' in window)){
+    document.getElementById('voice-status').textContent='Web Speech API nicht verfügbar';
+    return;
+  }
+  if(voiceOn){
+    recognition&&recognition.stop();
+    voiceOn=false;
+    document.getElementById('mic-btn').classList.remove('rec');
+    document.getElementById('voice-status').textContent='Klicken zum Starten';
+    return;
+  }
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new SR();
+  recognition.lang='de-AT';recognition.continuous=true;recognition.interimResults=true;
+  recognition.onresult=e=>{
+    let t='';for(const r of e.results) t+=r[0].transcript;
+    document.getElementById('voice-transcript').textContent=t;
+    setActiveTask(t);
+    const s=detectScope(t);if(s!==currentScope){currentScope=s;document.getElementById('scope-val').textContent=s;}
+  };
+  recognition.onerror=()=>{voiceOn=false;document.getElementById('mic-btn').classList.remove('rec');};
+  recognition.onend=()=>{voiceOn=false;document.getElementById('mic-btn').classList.remove('rec');document.getElementById('voice-status').textContent='Klicken zum Starten';};
+  recognition.start();
+  voiceOn=true;
+  document.getElementById('mic-btn').classList.add('rec');
+  document.getElementById('voice-status').textContent='Aufnahme läuft...';
+}
+
+// ══════════════════════════════════════════════════════════
+// FILE UPLOAD
+// ══════════════════════════════════════════════════════════
+function handleFiles(files){
+  const list=document.getElementById('file-list');
+  list.innerHTML=[...files].map(f=>`<div>📎 ${f.name} (${(f.size/1024).toFixed(1)}KB)</div>`).join('');
+  if(files.length>0){
+    const name=files[0].name;
+    const ext=name.split('.').pop().toUpperCase();
+    const scopeMap={IFC:'BIM',DXF:'BIM',PDF:'BETONBAU',CSV:'ALLGEMEIN'};
+    const s=scopeMap[ext]||'ALLGEMEIN';
+    currentScope=s;document.getElementById('scope-val').textContent=s;
+    setActiveTask('Datei-Upload: '+name);
+  }
+}
+function handleDrop(e){
+  e.preventDefault();
+  document.getElementById('drop-zone').classList.remove('drag');
+  handleFiles(e.dataTransfer.files);
+}
+
+// ══════════════════════════════════════════════════════════
+// LINK
+// ══════════════════════════════════════════════════════════
+function useLink(){
+  const url=document.getElementById('link-url').value.trim();
+  if(!url)return;
+  const s=detectScope(url);currentScope=s;document.getElementById('scope-val').textContent=s;
+  setActiveTask('URL-Analyse: '+url.slice(0,60));
+  document.getElementById('link-preview').textContent='→ scraping: '+url;
+}
+
+// ══════════════════════════════════════════════════════════
+// EXPORT
+// ══════════════════════════════════════════════════════════
+function exportSVG(){
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="600" height="200" style="background:#08111e">
+  <text x="20" y="30" fill="#00cba8" font-family="monospace" font-size="14">NEXUS WORKBENCH — 3D Träger Export</text>
+  <rect x="50" y="80" width="500" height="50" rx="4" fill="#162235" stroke="#00cba8" stroke-width="1"/>
+  <text x="60" y="108" fill="#b8cedd" font-family="monospace" font-size="11">GL24h 14/28 · L=6.0m · ηm=${document.getElementById('v-etam').textContent}</text>
+  <text x="20" y="170" fill="#6e8ca8" font-family="monospace" font-size="9">SHA256: ${document.getElementById('audit-hash').textContent}</text>
+</svg>`;
+  const blob=new Blob([svg],{type:'image/svg+xml'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='nexus_traeger.svg';a.click();
+}
+
+// ══════════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded',()=>{
+  initSketch();
+  initGL();
+});
+
+// keyboard shortcut
+document.addEventListener('keydown',e=>{
+  if((e.ctrlKey||e.metaKey)&&e.key==='Enter') runNexus();
+});
+</script>

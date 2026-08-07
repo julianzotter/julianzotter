@@ -1,0 +1,31 @@
+{
+  "EC5_6.1_BENDING":      {"val":"σm,d / fm,d ≤ 1.0","conf":0.997,"src":"EN 1995-1-1 §6.1","scope":"HOLZBAU"},
+  "EC5_6.2_SHEAR":        {"val":"τd = VEd·S / (I·b) ≤ fv,d","conf":0.994,"src":"EN 1995-1-1 §6.2","scope":"HOLZBAU"},
+  "GL24H_FM_K":           {"val":"fm,k = 24 N/mm²  ·  fv,k = 3.5 N/mm²","conf":0.999,"src":"EN 14080 Tab.1","scope":"HOLZBAU"},
+  "EC5_3.2_KMOD":         {"val":"kmod: SC1=0.8, SC2=0.7 (GLAM)","conf":0.996,"src":"EN 1995-1-1 Tab.3.1","scope":"HOLZBAU"},
+  "EC5_SLS_WFIN":         {"val":"wfin = winst·(1+kdef) ≤ L/300","conf":0.991,"src":"EN 1995-1-1 §7.2","scope":"HOLZBAU"},
+
+  "EC2_6.1_BENDING":      {"val":"MRd = fcd·b·x·(d - x/2)","conf":0.998,"src":"EN 1992-1-1 §6.1","scope":"BETONBAU"},
+  "EC2_6.2_SHEAR":        {"val":"VRd,c = [CRd,c·k·(100·ρl·fck)^⅓]·bw·d","conf":0.995,"src":"EN 1992-1-1 §6.2","scope":"BETONBAU"},
+  "EC2_9.2.1.1_MINAS":    {"val":"As,min = 0.26·(fctm/fyk)·bt·d","conf":0.999,"src":"EN 1992-1-1 §9.2.1.1","scope":"BETONBAU"},
+  "EC2_6.4_PUNCHING":     {"val":"vRd,c = CRd,c·k·(100·ρl·fck)^⅓ ≥ vmin","conf":0.993,"src":"EN 1992-1-1 §6.4","scope":"BETONBAU"},
+  "EC2_SLS_CRACK":        {"val":"wk ≤ wmax: XC1=0.4mm, XC2-4=0.3mm","conf":0.997,"src":"EN 1992-1-1 §7.3","scope":"BETONBAU"},
+
+  "EC3_6.2.5_BENDING":    {"val":"MEd / MRd ≤ 1.0  |  MRd = Wpl·fy / γM0","conf":0.997,"src":"EN 1993-1-1 §6.2.5","scope":"STAHLBAU"},
+  "EC3_6.2.6_SHEAR":      {"val":"VEd / VRd ≤ 1.0  |  VRd = Av·fyd / √3","conf":0.994,"src":"EN 1993-1-1 §6.2.6","scope":"STAHLBAU"},
+  "S355_MAT":             {"val":"fy = 355 N/mm²  ·  fu = 510 N/mm²","conf":0.999,"src":"EN 10025-2","scope":"STAHLBAU"},
+
+  "IFC4_WALL":            {"val":"IfcWall → Pset_WallCommon: LoadBearing, IsExternal","conf":0.985,"src":"IFC4 ADD2","scope":"BIM"},
+  "IFC4_BEAM":            {"val":"IfcBeam → Pset_BeamCommon: Span, LoadBearing","conf":0.985,"src":"IFC4 ADD2","scope":"BIM"},
+  "IFC4_COLUMN":          {"val":"IfcColumn → Pset_ColumnCommon: LoadBearing","conf":0.985,"src":"IFC4 ADD2","scope":"BIM"},
+
+  "EN13747_SLAB":         {"val":"Elementdecke: b=600mm, Aufbeton ≥50mm, Gitterträger","conf":0.990,"src":"EN 13747:2008","scope":"FERTIGTEIL"},
+  "EN13225_COLUMN":       {"val":"FT-Stütze: C40/50, Expositionsklasse XC1 min","conf":0.988,"src":"EN 13225:2013","scope":"FERTIGTEIL"},
+
+  "MOE_TOP2_RULE":        {"val":"Aktiviere top-2 Experten nach S-Score; Sparsity = (N-2)/N","conf":0.995,"src":"NEXUS AI-OS §MoE","scope":"KI-WERKZEUG"},
+  "SIGNAL_FORMULA":       {"val":"S = 0.35·R + 0.30·E + 0.20·C + 0.10·A − 0.05·U","conf":1.000,"src":"NEXUS AI-OS §SignalMatrix","scope":"KI-WERKZEUG"},
+  "ENGRAM_O1":            {"val":"key = hash(norm_id); value = engram[key]; O(1) lookup","conf":1.000,"src":"NEXUS AI-OS §Engram","scope":"KI-WERKZEUG"},
+
+  "ONR24005_STRUCT":      {"val":"Gliederung: Normen > System > Lasten > Schnittgr. > Nachweise > Zeichn.","conf":0.995,"src":"ONR 24005:2002","scope":"ALLGEMEIN"},
+  "AUDIT_SHA256":         {"val":"SHA-256(inputs||outputs) stored append-only per task","conf":1.000,"src":"NEXUS AI-OS §Audit","scope":"ALLGEMEIN"}
+}

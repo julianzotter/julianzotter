@@ -101,7 +101,7 @@ button{font-family:var(--mono);cursor:pointer;border:none;outline:none}
     <div class="logo">NEXUS SPEISEKARTE</div>
     <div class="logo-sub">AI-FULLSTACK MENU v1.1 · SEED-SOURCE BROWSER</div>
   </div>
-  <span class="hbadge hb-t">100 EINTRÄGE</span>
+  <span class="hbadge hb-t">103 EINTRÄGE</span>
   <span class="hbadge hb-e">P0/P1/P2</span>
   <span class="hbadge hb-g">SELF-REFINED</span>
   <div class="sep"></div>
@@ -273,7 +273,10 @@ const MENU = [
 {"id":"SUPABASE","name":"Supabase — Open Postgres Backend","url":"https://supabase.com","priority":"P2","cat":"BACKEND","env":"CLOUD","cmd":"pip install supabase","desc":"Postgres + pgvector + auth + storage + real-time. Cloud SSOT option.","tags":["supabase","postgres","cloud"]},
 {"id":"TAILWIND","name":"Tailwind CSS — Utility-First CSS","url":"https://tailwindcss.com","priority":"P1","cat":"FRONTEND","env":"LOCAL","cmd":"npm install tailwindcss","desc":"NEXUS UI styling layer. Use sparingly — prefer CSS tokens for theming.","tags":["tailwind","css","styling"]},
 {"id":"HF-SPACES","name":"HuggingFace Spaces — Live Demos","url":"https://huggingface.co/spaces","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Gradio/Streamlit demos. Test models before integrating.","tags":["huggingface","spaces","demos"]},
-{"id":"GITHUB-TRENDING","name":"GitHub Trending — Daily AI Repos","url":"https://github.com/trending/python?since=daily","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Daily top Python repos. AI/LLM discovery feed for bookmark updates.","tags":["github","trending","discovery"]}
+{"id":"GITHUB-TRENDING","name":"GitHub Trending — Daily AI Repos","url":"https://github.com/trending/python?since=daily","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Daily top Python repos. AI/LLM discovery feed for bookmark updates.","tags":["github","trending","discovery"]},
+{"id":"SWARM","name":"OpenAI Swarm — Lightweight Multi-Agent","url":"https://github.com/openai/swarm","priority":"P1","cat":"AGENT","env":"LOCAL","cmd":"pip install git+https://github.com/openai/swarm.git","desc":"Minimalist deterministic agent routing + handoffs. Blueprint for NEXUS MoE-Routing patterns.","tags":["swarm","multi-agent","handoffs","routing"]},
+{"id":"CUBICASA5K","name":"CubiCasa5K — Floorplan Dataset","url":"https://zenodo.org/record/2647535","priority":"P1","cat":"AEC","env":"LOCAL+CLOUD","cmd":"wget zenodo.org/record/2647535","desc":"5000 annotated floorplans. High-value AEC-AI training data for structural inference + room segmentation.","tags":["dataset","floorplan","aec","training-data"]},
+{"id":"NEMO-GUARDRAILS","name":"NeMo Guardrails (NVIDIA)","url":"https://github.com/NVIDIA/NeMo-Guardrails","priority":"P1","cat":"EVAL","env":"LOCAL","cmd":"pip install nemoguardrails","desc":"Hard-coded output validation, hallucination checks, semantic routing. NEXUS CONTRARIAN-PEER safety layer.","tags":["guardrails","safety","hallucination","validation"]}
 ];
 
 // State

@@ -1,0 +1,402 @@
+<title>NEXUS AI-FULLSTACK SPEISEKARTE v1.1</title>
+<style>
+:root{
+  --ink:#08111e;--panel:#0e1a2a;--plate:#162235;--rim:#1e3048;--rim2:#253a58;
+  --teal:#00cba8;--teal2:#009e84;--ember:#ff5920;--gold:#f0a500;--leaf:#2ed999;
+  --red:#ff3d3d;--mist:#6e8ca8;--txt:#b8cedd;--txt2:#7a9ab8;
+  --mono:ui-monospace,'Cascadia Code','Fira Code','Consolas','Courier New',monospace;
+}
+@media(prefers-color-scheme:light){:root:not([data-theme="dark"]){
+  --ink:#f0f4f8;--panel:#ffffff;--plate:#e8eef5;--rim:#cdd8e5;--rim2:#b0c0d0;
+  --teal:#007a65;--teal2:#005a4c;--ember:#c43a0a;--gold:#a06a00;--leaf:#1a9960;
+  --red:#cc0000;--mist:#5a7a95;--txt:#1a2d3d;--txt2:#4a6580;
+}}
+:root[data-theme="dark"]{--ink:#08111e;--panel:#0e1a2a;--plate:#162235;--rim:#1e3048;--rim2:#253a58;--teal:#00cba8;--teal2:#009e84;--ember:#ff5920;--gold:#f0a500;--leaf:#2ed999;--red:#ff3d3d;--mist:#6e8ca8;--txt:#b8cedd;--txt2:#7a9ab8;}
+:root[data-theme="light"]{--ink:#f0f4f8;--panel:#ffffff;--plate:#e8eef5;--rim:#cdd8e5;--rim2:#b0c0d0;--teal:#007a65;--teal2:#005a4c;--ember:#c43a0a;--gold:#a06a00;--leaf:#1a9960;--red:#cc0000;--mist:#5a7a95;--txt:#1a2d3d;--txt2:#4a6580;}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:var(--ink);color:var(--txt);font-family:var(--mono);font-size:12px;min-height:100%;line-height:1.45}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--rim2);border-radius:2px}
+button{font-family:var(--mono);cursor:pointer;border:none;outline:none}
+
+/* HEADER */
+#hdr{background:linear-gradient(90deg,var(--panel) 0%,var(--plate) 50%,var(--panel) 100%);border-bottom:1px solid var(--teal2);display:flex;align-items:center;gap:10px;padding:8px 14px;flex-shrink:0;flex-wrap:wrap;gap:8px;}
+.logo{font-size:13px;font-weight:700;color:var(--teal);letter-spacing:3px;text-shadow:0 0 18px rgba(0,203,168,.4)}
+.logo-sub{font-size:8px;color:var(--mist);letter-spacing:2px}
+.hbadge{font-size:8px;padding:2px 7px;border-radius:2px;border:1px solid;letter-spacing:1px}
+.hb-t{border-color:var(--teal2);color:var(--teal);background:rgba(0,203,168,.07)}
+.hb-e{border-color:rgba(255,89,32,.4);color:var(--ember);background:rgba(255,89,32,.07)}
+.hb-g{border-color:rgba(240,165,0,.4);color:var(--gold);background:rgba(240,165,0,.07)}
+.sep{flex:1}
+#sys-time{font-size:10px;color:var(--txt2);font-variant-numeric:tabular-nums}
+.theme-btn{background:var(--plate);border:1px solid var(--rim2);color:var(--txt2);padding:3px 8px;border-radius:2px;font-size:10px}
+.theme-btn:hover{color:var(--teal)}
+.pulse{width:7px;height:7px;border-radius:50%;background:var(--leaf);box-shadow:0 0 7px var(--leaf);animation:pls 2s ease-in-out infinite;flex-shrink:0}
+@keyframes pls{0%,100%{opacity:1}50%{opacity:.3}}
+
+/* FILTER BAR */
+#filters{background:var(--panel);border-bottom:1px solid var(--rim);padding:8px 14px;display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.fi-label{font-size:8px;color:var(--mist);letter-spacing:1.5px;text-transform:uppercase;margin-right:2px}
+.fi-group{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.fi-btn{padding:3px 9px;border-radius:2px;border:1px solid var(--rim2);background:var(--plate);color:var(--txt2);font-size:10px;transition:all .2s;cursor:pointer;font-family:var(--mono)}
+.fi-btn:hover{border-color:var(--teal2);color:var(--teal)}
+.fi-btn.on{background:rgba(0,203,168,.1);border-color:var(--teal);color:var(--teal)}
+.fi-btn.on-ember{background:rgba(255,89,32,.1);border-color:var(--ember);color:var(--ember)}
+.fi-btn.on-gold{background:rgba(240,165,0,.1);border-color:var(--gold);color:var(--gold)}
+#search-box{background:var(--plate);border:1px solid var(--rim2);color:var(--txt);padding:4px 10px;border-radius:2px;font-family:var(--mono);font-size:11px;width:200px}
+#search-box::placeholder{color:var(--mist)}
+#search-box:focus{border-color:var(--teal2);outline:none}
+
+/* STATS BAR */
+#stats-bar{background:var(--ink);border-bottom:1px solid var(--rim);padding:5px 14px;display:flex;gap:14px;align-items:center;font-size:9px;color:var(--mist)}
+.stat-v{color:var(--teal);font-variant-numeric:tabular-nums}
+.stat-sep{color:var(--rim2)}
+
+/* GRID */
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;padding:12px 14px}
+
+/* CARD */
+.card{background:var(--panel);border:1px solid var(--rim);border-radius:3px;padding:10px 11px;display:flex;flex-direction:column;gap:6px;transition:border-color .2s,box-shadow .2s;cursor:default}
+.card:hover{border-color:var(--teal2);box-shadow:0 0 10px rgba(0,203,168,.08)}
+.card-top{display:flex;align-items:flex-start;gap:6px}
+.card-badges{display:flex;gap:4px;align-items:center;flex-wrap:wrap;flex:1}
+.badge{font-size:8px;padding:1px 5px;border-radius:2px;letter-spacing:.5px;font-weight:600}
+.bp0{background:rgba(255,61,61,.12);color:var(--red);border:1px solid rgba(255,61,61,.3)}
+.bp1{background:rgba(240,165,0,.1);color:var(--gold);border:1px solid rgba(240,165,0,.3)}
+.bp2{background:rgba(110,140,168,.1);color:var(--mist);border:1px solid rgba(110,140,168,.3)}
+.bcat{background:rgba(0,203,168,.07);color:var(--teal);border:1px solid rgba(0,203,168,.2)}
+.benv{background:rgba(46,217,153,.07);color:var(--leaf);border:1px solid rgba(46,217,153,.2)}
+.card-name{font-size:11px;font-weight:700;color:var(--txt);line-height:1.3}
+.card-desc{font-size:9px;color:var(--txt2);line-height:1.5}
+.card-cmd{font-size:9px;color:var(--leaf);background:rgba(46,217,153,.06);border:1px solid rgba(46,217,153,.15);padding:2px 7px;border-radius:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.card-tags{display:flex;gap:3px;flex-wrap:wrap}
+.tag{font-size:8px;color:var(--mist);background:var(--plate);border:1px solid var(--rim);padding:1px 5px;border-radius:2px}
+.card-btns{display:flex;gap:5px;margin-top:2px}
+.cbtn{padding:3px 8px;border-radius:2px;font-size:9px;letter-spacing:.5px;border:1px solid;transition:all .2s;font-family:var(--mono)}
+.cbtn-open{border-color:var(--teal2);color:var(--teal);background:rgba(0,203,168,.06)}
+.cbtn-open:hover{background:rgba(0,203,168,.15)}
+.cbtn-copy{border-color:var(--rim2);color:var(--txt2);background:var(--plate)}
+.cbtn-copy:hover{border-color:var(--gold);color:var(--gold)}
+.cbtn-cmd{border-color:rgba(46,217,153,.3);color:var(--leaf);background:rgba(46,217,153,.05)}
+.cbtn-cmd:hover{background:rgba(46,217,153,.12)}
+.cbtn-cmd:disabled{opacity:.35;cursor:default}
+
+/* EXPORT BAR */
+#export-bar{background:var(--panel);border-top:1px solid var(--rim);padding:7px 14px;display:flex;gap:8px;align-items:center}
+.exp-btn{padding:4px 12px;border-radius:2px;font-size:10px;border:1px solid;font-family:var(--mono);cursor:pointer;transition:all .2s;letter-spacing:.5px}
+.exp-jsonl{border-color:var(--teal2);color:var(--teal);background:rgba(0,203,168,.07)}
+.exp-jsonl:hover{background:rgba(0,203,168,.15)}
+.exp-html{border-color:rgba(240,165,0,.4);color:var(--gold);background:rgba(240,165,0,.07)}
+.exp-html:hover{background:rgba(240,165,0,.15)}
+.exp-md{border-color:var(--rim2);color:var(--txt2);background:var(--plate)}
+.exp-md:hover{border-color:var(--leaf);color:var(--leaf)}
+.exp-lbl{font-size:9px;color:var(--mist);margin-left:6px}
+#toast{position:fixed;bottom:24px;right:24px;background:var(--plate);border:1px solid var(--teal2);color:var(--teal);padding:8px 16px;border-radius:3px;font-size:11px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+#toast.show{opacity:1}
+.no-results{grid-column:1/-1;text-align:center;padding:40px;color:var(--mist);font-size:11px}
+</style>
+
+<div id="hdr">
+  <div>
+    <div class="logo">NEXUS SPEISEKARTE</div>
+    <div class="logo-sub">AI-FULLSTACK MENU v1.1 · SEED-SOURCE BROWSER</div>
+  </div>
+  <span class="hbadge hb-t">100 EINTRÄGE</span>
+  <span class="hbadge hb-e">P0/P1/P2</span>
+  <span class="hbadge hb-g">SELF-REFINED</span>
+  <div class="sep"></div>
+  <div class="pulse"></div>
+  <div id="sys-time">--:--:--</div>
+  <button class="theme-btn" onclick="cycleTheme()">☾ THEME</button>
+</div>
+
+<div id="filters">
+  <span class="fi-label">PRIORITÄT</span>
+  <div class="fi-group" id="fg-prio">
+    <button class="fi-btn on" data-f="prio" data-v="ALL">ALL</button>
+    <button class="fi-btn" data-f="prio" data-v="P0">🔴 P0</button>
+    <button class="fi-btn" data-f="prio" data-v="P1">🟠 P1</button>
+    <button class="fi-btn" data-f="prio" data-v="P2">🟢 P2</button>
+  </div>
+  <span class="fi-label" style="margin-left:8px">KATEGORIE</span>
+  <div class="fi-group" id="fg-cat">
+    <button class="fi-btn on" data-f="cat" data-v="ALL">ALL</button>
+    <button class="fi-btn" data-f="cat" data-v="LLM-FRAMEWORK">🧠 LLM</button>
+    <button class="fi-btn" data-f="cat" data-v="AGENT">🤖 AGENT</button>
+    <button class="fi-btn" data-f="cat" data-v="SEARCH">🔍 SEARCH</button>
+    <button class="fi-btn" data-f="cat" data-v="AEC">🏗 AEC</button>
+    <button class="fi-btn" data-f="cat" data-v="FRONTEND">🎨 UI</button>
+    <button class="fi-btn" data-f="cat" data-v="BACKEND">⚙️ BACK</button>
+    <button class="fi-btn" data-f="cat" data-v="SCRAPING">🌐 SCRAPE</button>
+    <button class="fi-btn" data-f="cat" data-v="PARSING">📄 PARSE</button>
+    <button class="fi-btn" data-f="cat" data-v="DATA">📦 DATA</button>
+    <button class="fi-btn" data-f="cat" data-v="EVAL">✅ EVAL</button>
+    <button class="fi-btn" data-f="cat" data-v="RESEARCH">🔬 RESEARCH</button>
+    <button class="fi-btn" data-f="cat" data-v="KNOWLEDGE">📚 WIKI</button>
+    <button class="fi-btn" data-f="cat" data-v="INFRA">🐳 INFRA</button>
+    <button class="fi-btn" data-f="cat" data-v="LLM-GATEWAY">🚪 GATEWAY</button>
+    <button class="fi-btn" data-f="cat" data-v="CODE-EXEC">💻 EXEC</button>
+  </div>
+  <span class="fi-label" style="margin-left:8px">ENV</span>
+  <div class="fi-group" id="fg-env">
+    <button class="fi-btn on" data-f="env" data-v="ALL">ALL</button>
+    <button class="fi-btn" data-f="env" data-v="LOCAL">LOCAL</button>
+    <button class="fi-btn" data-f="env" data-v="CLOUD">CLOUD</button>
+  </div>
+  <input id="search-box" type="text" placeholder="🔍  suchen..." oninput="render()">
+</div>
+
+<div id="stats-bar">
+  <span>ANGEZEIGT: <span class="stat-v" id="st-shown">0</span></span>
+  <span class="stat-sep">|</span>
+  <span>GESAMT: <span class="stat-v" id="st-total">0</span></span>
+  <span class="stat-sep">|</span>
+  <span>P0: <span class="stat-v" id="st-p0">0</span></span>
+  <span>P1: <span class="stat-v" id="st-p1">0</span></span>
+  <span>P2: <span class="stat-v" id="st-p2">0</span></span>
+  <span class="stat-sep">|</span>
+  <span>AEC: <span class="stat-v" id="st-aec">0</span></span>
+  <span>LOCAL: <span class="stat-v" id="st-local">0</span></span>
+  <span class="stat-sep">|</span>
+  <span style="color:var(--mist)">NEXUS AI-OS v1.1 · SPEISEKARTE · SOURCE→PARSE→INDEX→RETRIEVE→ROUTE→PROMPT→EXECUTE→EVAL→PROMOTE</span>
+</div>
+
+<div id="grid"></div>
+
+<div id="export-bar">
+  <span class="fi-label">EXPORT:</span>
+  <button class="exp-btn exp-jsonl" onclick="exportJSONL()">↓ JSONL</button>
+  <button class="exp-btn exp-html" onclick="exportHTML()">↓ HTML</button>
+  <button class="exp-btn exp-md" onclick="exportMD()">↓ MARKDOWN</button>
+  <span class="exp-lbl" id="export-info">Exportiert aktuelle Filterset · SHA256 in AUDIT-LEDGER</span>
+</div>
+<div id="toast"></div>
+
+<script>
+const MENU = [
+{"id":"MCP-SPEC","name":"MCP — Model Context Protocol","url":"https://modelcontextprotocol.io/docs/learn/architecture","priority":"P0","cat":"AGENT","env":"LOCAL+CLOUD","cmd":"pip install mcp","desc":"Standard Tool/Resource/Prompt interface for agents. Foundation of NEXUS tool bus.","tags":["mcp","tools","protocol"]},
+{"id":"MCP-INTRO","name":"MCP Getting Started","url":"https://modelcontextprotocol.io/docs/getting-started/intro","priority":"P0","cat":"AGENT","env":"LOCAL+CLOUD","cmd":"","desc":"Official onboarding: hosts, clients, servers, capabilities, transports.","tags":["mcp","getting-started"]},
+{"id":"DSPY","name":"DSPy — Program, not Prompt","url":"https://github.com/stanfordnlp/dspy","priority":"P0","cat":"LLM-FRAMEWORK","env":"LOCAL","cmd":"pip install dspy-ai","desc":"Compile/optimize prompts as programs. Best fit for NEXUS PROMPTBASE.","tags":["dspy","optimizer","compiler"]},
+{"id":"DSPY-OPT","name":"DSPy Optimizers (MIPRO, BootstrapFewShot)","url":"https://github.com/stanfordnlp/dspy/tree/main/dspy/teleprompt","priority":"P0","cat":"LLM-FRAMEWORK","env":"LOCAL","cmd":"pip install dspy-ai","desc":"BootstrapFewShot, MIPRO: compile few-shot + instruction. Core NEXUS promptbase.","tags":["dspy","optimizer","mipro"]},
+{"id":"LANGGRAPH","name":"LangGraph — Stateful Agent Graphs","url":"https://github.com/langchain-ai/langgraph","priority":"P0","cat":"AGENT","env":"LOCAL+CLOUD","cmd":"pip install langgraph","desc":"State machines for long-lived agents, checkpointing, human-in-loop gates.","tags":["langgraph","agents","state-machine"]},
+{"id":"LITELLM","name":"LiteLLM — Multi-Provider LLM Gateway","url":"https://docs.litellm.ai","priority":"P0","cat":"LLM-GATEWAY","env":"LOCAL+CLOUD","cmd":"pip install litellm","desc":"Unified API for 100+ models. Fallback, budget, usage tracking. NEXUS L3 gateway.","tags":["litellm","gateway","multi-llm"]},
+{"id":"QDRANT","name":"Qdrant Hybrid Search + Reranking","url":"https://qdrant.tech/documentation/advanced-tutorials/reranking-hybrid-search","priority":"P0","cat":"SEARCH","env":"LOCAL+CLOUD","cmd":"pip install qdrant-client","desc":"dense+sparse → candidate set → late reranking. O(n×r) vs O(n²).","tags":["qdrant","hybrid","reranker"]},
+{"id":"SCRAPEGRAPH","name":"ScrapeGraphAI — LLM Web Scraper","url":"https://github.com/ScrapeGraphAI/Scrapegraph-ai","priority":"P0","cat":"SCRAPING","env":"LOCAL","cmd":"pip install scrapegraphai","desc":"Graph-based LLM scraper: HTML/PDF/MD → structured JSON + source URL. NEXUS research core.","tags":["scraping","llm","graph"]},
+{"id":"AIPYAPP","name":"aipyapp — LLM Python Execution Loop","url":"https://github.com/knownsec/aipyapp","priority":"P0","cat":"CODE-EXEC","env":"LOCAL","cmd":"pip install aipyapp","desc":"LLM → plan → code → execute → feedback loop. NEXUS COT code-gen engine.","tags":["code-gen","execution","loop"]},
+{"id":"FASTAPI","name":"FastAPI + Pydantic v2","url":"https://fastapi.tiangolo.com","priority":"P0","cat":"BACKEND","env":"LOCAL","cmd":"pip install fastapi uvicorn pydantic","desc":"NEXUS orchestrator API. Auto-schema, WebSocket, async.","tags":["fastapi","pydantic","api"]},
+{"id":"SQLITE-FTS5","name":"SQLite FTS5 — Full-Text Search","url":"https://sqlite.org/fts5.html","priority":"P0","cat":"SEARCH","env":"LOCAL","cmd":"built-in","desc":"Deterministic BM25 fulltext, Stage-A retrieval. Zero dependencies.","tags":["sqlite","fts5","bm25"]},
+{"id":"IFCOPENSHELL","name":"IfcOpenShell — IFC Python API","url":"https://ifcopenshell.org","priority":"P0","cat":"AEC","env":"LOCAL","cmd":"pip install ifcopenshell","desc":"Read/write IFC4 models. NEXUS AEC export pipeline.","tags":["ifc","bim","aec"]},
+{"id":"SECTIONPROPS","name":"sectionproperties — Cross-Section Analysis","url":"https://github.com/sectionproperties/sectionproperties","priority":"P0","cat":"AEC","env":"LOCAL","cmd":"pip install sectionproperties","desc":"Section props, stresses, composite sections. EC2/EC5 solver foundation.","tags":["structural","cross-section","ec2"]},
+{"id":"DUCKDB","name":"DuckDB — Analytical SQL + FTS","url":"https://duckdb.org/docs/lts/core_extensions/full_text_search","priority":"P0","cat":"SEARCH","env":"LOCAL","cmd":"pip install duckdb","desc":"In-process OLAP. FTS/BM25 extension, JSON/Parquet. NEXUS index analytics.","tags":["duckdb","sql","analytics"]},
+{"id":"OLLAMA","name":"Ollama — Local LLM + Embeddings","url":"https://docs.ollama.com/api/embed","priority":"P0","cat":"LLM-GATEWAY","env":"LOCAL","cmd":"curl -fsSL https://ollama.com/install.sh | sh","desc":"Local LLM serving + embedding API. NEXUS L4 local inference.","tags":["ollama","local","embeddings"]},
+{"id":"THREEJS","name":"three.js — WebGL 3D Renderer","url":"https://threejs.org","priority":"P0","cat":"FRONTEND","env":"LOCAL","cmd":"npm install three","desc":"NEXUS L0 3D viewer. Beam/stress heatmap/glTF. All-in-browser.","tags":["threejs","webgl","3d"]},
+{"id":"WEBSPEECH","name":"Web Speech API — Browser Voice","url":"https://developer.mozilla.org/docs/Web/API/Web_Speech_API","priority":"P0","cat":"FRONTEND","env":"LOCAL","cmd":"built-in","desc":"Browser-native speech recognition. de-AT locale. NEXUS voice input.","tags":["speech","voice","browser"]},
+{"id":"ANTHROPIC","name":"Anthropic Claude API","url":"https://docs.anthropic.com","priority":"P0","cat":"LLM-GATEWAY","env":"CLOUD","cmd":"pip install anthropic","desc":"Claude API, tool use, prompt caching, vision. NEXUS primary LLM.","tags":["anthropic","claude","api"]},
+{"id":"OPENAI-API","name":"OpenAI API — GPT + Embeddings","url":"https://platform.openai.com/docs","priority":"P0","cat":"LLM-GATEWAY","env":"CLOUD","cmd":"pip install openai","desc":"GPT-4o, structured outputs, embeddings. NEXUS secondary LLM via LiteLLM.","tags":["openai","gpt","embeddings"]},
+{"id":"MCP-SERVERS","name":"MCP Server Registry (Official)","url":"https://github.com/modelcontextprotocol/servers","priority":"P0","cat":"AGENT","env":"LOCAL+CLOUD","cmd":"","desc":"Curated list: filesystem, GitHub, Postgres, Slack, search MCP servers. NEXUS tool bus.","tags":["mcp","servers","tools"]},
+{"id":"TIKTOKEN","name":"tiktoken — OpenAI Tokenizer","url":"https://github.com/openai/tiktoken","priority":"P0","cat":"BACKEND","env":"LOCAL","cmd":"pip install tiktoken","desc":"Fast BPE tokenizer. NEXUS SeedContext ≤8192 token budget enforcement.","tags":["tokenizer","tokens","budget"]},
+{"id":"PYDANTIC","name":"Pydantic v2 — Data Validation","url":"https://docs.pydantic.dev","priority":"P0","cat":"BACKEND","env":"LOCAL","cmd":"pip install pydantic","desc":"Schema validation, structured LLM outputs. NEXUS API contracts.","tags":["pydantic","validation","schema"]},
+{"id":"NUMPY","name":"NumPy — Array Computing","url":"https://numpy.org","priority":"P0","cat":"AEC","env":"LOCAL","cmd":"pip install numpy","desc":"Foundation for all NEXUS numerical solvers. Matrix ops, stress calcs.","tags":["numpy","math","foundation"]},
+{"id":"PYTEST","name":"pytest — Python Test Framework","url":"https://docs.pytest.org","priority":"P0","cat":"EVAL","env":"LOCAL","cmd":"pip install pytest","desc":"NEXUS golden tests: engram lookups, solver outputs, signal scores.","tags":["pytest","testing","golden-tests"]},
+{"id":"DATAHOLZ","name":"dataholz.eu — Holzbau Daten AT","url":"https://www.dataholz.eu","priority":"P0","cat":"AEC","env":"CLOUD","cmd":"","desc":"Austrian timber database. P10 source for EC5 Holzbau scope. Free.","tags":["holzbau","ec5","austria"]},
+{"id":"JRC-EC2","name":"JRC Eurocodes EC2 Free Text","url":"https://eurocodes.jrc.ec.europa.eu/showpage.php?id=132","priority":"P0","cat":"AEC","env":"CLOUD","cmd":"","desc":"Official free EC2 text. NEXUS Betonbau authoritative engram source.","tags":["ec2","eurocode","official"]},
+{"id":"JRC-EC5","name":"JRC Eurocodes EC5 Free Text","url":"https://eurocodes.jrc.ec.europa.eu/showpage.php?id=135","priority":"P0","cat":"AEC","env":"CLOUD","cmd":"","desc":"Official free EC5 text. NEXUS Holzbau authoritative engram source.","tags":["ec5","eurocode","timber"]},
+{"id":"ONR24005","name":"ONR 24005 — Statik Dokumentation AT","url":"https://www.austrian-standards.at/de/shop/onr-24005-2002-11-01","priority":"P0","cat":"AEC","env":"CLOUD","cmd":"","desc":"Austrian structural documentation standard. NEXUS report template.","tags":["onr24005","statik","austria"]},
+{"id":"HF-MODELS","name":"HuggingFace Model Hub","url":"https://huggingface.co/models","priority":"P0","cat":"RESEARCH","env":"CLOUD","cmd":"pip install transformers","desc":"50k+ models: embeddings, rerankers, LLMs. NEXUS model registry.","tags":["huggingface","models","embeddings"]},
+{"id":"DOCKER-COMPOSE","name":"Docker Compose — NEXUS Stack","url":"https://docs.docker.com/compose","priority":"P0","cat":"INFRA","env":"LOCAL","cmd":"docker compose up","desc":"Java+Python+DB+Redis in one stack. NEXUS deployment baseline.","tags":["docker","deployment","infra"]},
+{"id":"LLAMAINDEX","name":"LlamaIndex — Router + Retriever","url":"https://docs.llamaindex.ai/en/stable","priority":"P1","cat":"LLM-FRAMEWORK","env":"LOCAL+CLOUD","cmd":"pip install llama-index","desc":"Router-retriever, data connectors, structured outputs.","tags":["llamaindex","retriever","rag"]},
+{"id":"OPENAI-AGENTS","name":"OpenAI Agents SDK","url":"https://github.com/openai/openai-agents-python","priority":"P1","cat":"AGENT","env":"LOCAL+CLOUD","cmd":"pip install openai-agents","desc":"Agents + tools + handoffs + guardrails + tracing. Minimal abstraction.","tags":["openai","agents","tracing"]},
+{"id":"HAYSTACK","name":"Haystack — Modular RAG Pipelines","url":"https://docs.haystack.deepset.ai","priority":"P1","cat":"LLM-FRAMEWORK","env":"LOCAL+CLOUD","cmd":"pip install haystack-ai","desc":"Explicit pipeline composition: retrievers, readers, generators.","tags":["haystack","rag","pipeline"]},
+{"id":"PREFECT","name":"Prefect — Python Workflow Orchestration","url":"https://docs.prefect.io/v3/concepts/flows","priority":"P1","cat":"BACKEND","env":"LOCAL+CLOUD","cmd":"pip install prefect","desc":"Deterministic Python flows, retries, states, observability.","tags":["prefect","workflow","orchestration"]},
+{"id":"GPT-RESEARCHER","name":"GPT Researcher — Deep Research Agent","url":"https://github.com/assafelovic/gpt-researcher","priority":"P1","cat":"AGENT","env":"LOCAL+CLOUD","cmd":"pip install gpt-researcher","desc":"Web+local deep research + MCP. Benchmark for NEXUS research engine.","tags":["research","agent","autonomous"]},
+{"id":"GRAPHRAG","name":"Microsoft GraphRAG","url":"https://github.com/microsoft/graphrag","priority":"P1","cat":"SEARCH","env":"LOCAL+CLOUD","cmd":"pip install graphrag","desc":"KG-based global query RAG. High indexing cost. P2 for NEXUS KG expansion.","tags":["graphrag","knowledge-graph","global-query"]},
+{"id":"HF-DATASETS","name":"HuggingFace Datasets","url":"https://huggingface.co/docs/datasets/index","priority":"P1","cat":"DATA","env":"LOCAL+CLOUD","cmd":"pip install datasets","desc":"Arrow-based corpus load/stream/curate. NEXUS eval dataset pool.","tags":["huggingface","datasets","corpus"]},
+{"id":"RAGAS","name":"Ragas — RAG Eval Metrics","url":"https://docs.ragas.io","priority":"P1","cat":"EVAL","env":"LOCAL","cmd":"pip install ragas","desc":"Faithfulness, context precision, answer relevance. NEXUS eval add-on.","tags":["ragas","eval","rag"]},
+{"id":"CRAWL4AI","name":"Crawl4AI — LLM-Friendly Crawler","url":"https://github.com/unclecode/crawl4ai","priority":"P1","cat":"SCRAPING","env":"LOCAL","cmd":"pip install crawl4ai","desc":"Async crawler → clean markdown. JS rendering for LLM context extraction.","tags":["crawl4ai","crawler","markdown"]},
+{"id":"DOCLING","name":"Docling — Document Parser (IBM)","url":"https://github.com/DS4SD/docling","priority":"P1","cat":"PARSING","env":"LOCAL","cmd":"pip install docling","desc":"PDF/DOCX/XLSX → structured DoclingDocument. Tables, formulas, layout.","tags":["docling","pdf","parser"]},
+{"id":"TRAFILATURA","name":"Trafilatura — Web Text Extraction","url":"https://github.com/adbar/trafilatura","priority":"P1","cat":"SCRAPING","env":"LOCAL","cmd":"pip install trafilatura","desc":"High-precision boilerplate removal. Best recall/precision for article text.","tags":["trafilatura","text-extraction","web"]},
+{"id":"VIBE-DRAW","name":"vibe-draw — Sketch → 3D glTF","url":"https://github.com/martin226/vibe-draw","priority":"P1","cat":"AEC","env":"LOCAL+CLOUD","cmd":"git clone https://github.com/martin226/vibe-draw","desc":"2D sketch → improve → 3D → glTF. NEXUS dashboard sketch-to-3D bridge.","tags":["sketch","3d","gltf"]},
+{"id":"PYNITE","name":"PyNite — 3D FEM Analysis","url":"https://github.com/JWock82/PyNite","priority":"P1","cat":"AEC","env":"LOCAL","cmd":"pip install PyNite","desc":"3D FEM: beams, frames, plates. EC2/EC5 structural solver backend.","tags":["pynite","fem","structural"]},
+{"id":"EZDXF","name":"ezdxf — DXF Read/Write","url":"https://ezdxf.mozman.at","priority":"P1","cat":"AEC","env":"LOCAL","cmd":"pip install ezdxf","desc":"Pure Python DXF. NEXUS reinforcement plan export.","tags":["ezdxf","dxf","cad"]},
+{"id":"SPECKLE","name":"Speckle — AEC Data Platform","url":"https://speckle.systems","priority":"P1","cat":"AEC","env":"CLOUD","cmd":"pip install specklepy","desc":"Open BIM data hub. Revit/Rhino/IFC connectors. NEXUS 3D sync.","tags":["speckle","bim","connector"]},
+{"id":"WEAVIATE","name":"Weaviate — Vector DB + GraphQL","url":"https://weaviate.io","priority":"P1","cat":"SEARCH","env":"LOCAL+CLOUD","cmd":"pip install weaviate-client","desc":"NEXUS L3 RAG vector DB. Hybrid BM25+vector, GraphQL.","tags":["weaviate","vector-db","hybrid"]},
+{"id":"LANGWATCH","name":"langwatch/scenario — Agent Tests","url":"https://github.com/langwatch/scenario","priority":"P1","cat":"EVAL","env":"LOCAL","cmd":"pip install langwatch-scenario","desc":"Simulate user/edge-cases/tool-calls. NEXUS workflow eval framework.","tags":["scenario","eval","agent"]},
+{"id":"REPO2TXT","name":"repo2txt — Codebase → LLM Context","url":"https://github.com/abinthomasonline/repo2txt","priority":"P1","cat":"PARSING","env":"LOCAL","cmd":"git clone ...","desc":"Repo → filtered plain text for LLM prompts. Token count. NEXUS wiki packer.","tags":["repo2txt","context","token-count"]},
+{"id":"HTMX","name":"HTMX — HTML Hypermedia Extension","url":"https://htmx.org","priority":"P1","cat":"FRONTEND","env":"LOCAL","cmd":"CDN / npm install htmx.org","desc":"Partial HTML updates via AJAX. NEXUS dashboard live-refresh without React.","tags":["htmx","frontend","ajax"]},
+{"id":"TESSERACTJS","name":"Tesseract.js — Browser OCR","url":"https://github.com/naptha/tesseract.js","priority":"P1","cat":"FRONTEND","env":"LOCAL","cmd":"npm install tesseract.js","desc":"Browser OCR from sketch/photo. NEXUS pixel/sketch input mode.","tags":["ocr","browser","image"]},
+{"id":"BM25S","name":"bm25s — Fast BM25 Python","url":"https://github.com/xhluca/bm25s","priority":"P1","cat":"SEARCH","env":"LOCAL","cmd":"pip install bm25s","desc":"10-100x faster BM25. No Java. NEXUS Stage-B keyword retrieval.","tags":["bm25","retrieval","fast"]},
+{"id":"UNSTRUCTURED","name":"Unstructured.io — Document Partitioner","url":"https://github.com/Unstructured-IO/unstructured","priority":"P1","cat":"PARSING","env":"LOCAL","cmd":"pip install unstructured","desc":"PDF/DOCX/HTML partitioning with element types. NEXUS parser.","tags":["unstructured","parser","pdf"]},
+{"id":"PYMUPDF","name":"PyMuPDF — Fast PDF Parser","url":"https://pymupdf.readthedocs.io","priority":"P1","cat":"PARSING","env":"LOCAL","cmd":"pip install pymupdf","desc":"High-speed PDF text+table+image extraction. NEXUS norm ingestion.","tags":["pymupdf","pdf","parser"]},
+{"id":"NATS","name":"NATS — Lightweight Message Bus","url":"https://nats.io","priority":"P1","cat":"BACKEND","env":"LOCAL+CLOUD","cmd":"pip install nats-py","desc":"NEXUS L4 message bus. Async, pub/sub. Lighter than Kafka.","tags":["nats","message-bus","async"]},
+{"id":"OPENTELEMETRY","name":"OpenTelemetry — Trace + Metrics","url":"https://opentelemetry.io/docs/languages/python","priority":"P1","cat":"BACKEND","env":"LOCAL+CLOUD","cmd":"pip install opentelemetry-sdk","desc":"trace_id propagation across agents. NEXUS audit ledger backbone.","tags":["opentelemetry","tracing","audit"]},
+{"id":"LANGSMITH","name":"LangSmith — LLM Observability","url":"https://docs.smith.langchain.com","priority":"P1","cat":"EVAL","env":"CLOUD","cmd":"pip install langsmith","desc":"Trace/debug/eval LLM chains. Dataset management. NEXUS dev eval.","tags":["langsmith","observability","eval"]},
+{"id":"AGENTOPS","name":"AgentOps — Agent Monitoring","url":"https://github.com/AgentOps-AI/agentops","priority":"P1","cat":"EVAL","env":"LOCAL+CLOUD","cmd":"pip install agentops","desc":"Session tracking, tool-call logging, cost monitoring for agents.","tags":["agentops","monitoring","cost"]},
+{"id":"PGVECTOR","name":"pgvector — Postgres Vector","url":"https://github.com/pgvector/pgvector","priority":"P1","cat":"SEARCH","env":"LOCAL","cmd":"pip install pgvector","desc":"NEXUS hybrid storage: Postgres + vector similarity. SQL interface.","tags":["pgvector","postgres","vector"]},
+{"id":"CHROMA","name":"ChromaDB — Embedded Vector DB","url":"https://docs.trychroma.com","priority":"P1","cat":"SEARCH","env":"LOCAL","cmd":"pip install chromadb","desc":"Zero-infra local vector DB. Quick prototyping before Qdrant migration.","tags":["chroma","vector-db","embedded"]},
+{"id":"JINJA2","name":"Jinja2 — Python Template Engine","url":"https://jinja.palletsprojects.com","priority":"P0","cat":"BACKEND","env":"LOCAL","cmd":"pip install jinja2","desc":"NEXUS LaTeX/HTML/report generation. ONR24005 template rendering.","tags":["jinja2","templates","report"]},
+{"id":"MATPLOTLIB","name":"matplotlib — Scientific Plotting","url":"https://matplotlib.org","priority":"P1","cat":"AEC","env":"LOCAL","cmd":"pip install matplotlib","desc":"M-V-N diagrams for structural reports. NEXUS PS/SVG plot output.","tags":["matplotlib","plotting","structural"]},
+{"id":"SCIPY","name":"SciPy — Scientific Computing","url":"https://scipy.org","priority":"P1","cat":"AEC","env":"LOCAL","cmd":"pip install scipy","desc":"Linear algebra, FEM matrix assembly. EC2/EC5 numerical core.","tags":["scipy","fem","math"]},
+{"id":"SENTENCE-TRANSFORMERS","name":"sentence-transformers — Local Embeddings","url":"https://www.sbert.net","priority":"P1","cat":"SEARCH","env":"LOCAL","cmd":"pip install sentence-transformers","desc":"Local embedding: all-MiniLM, BGE, E5. NEXUS Stage-D embedding.","tags":["sbert","embeddings","local"]},
+{"id":"RERANKERS","name":"rerankers — Unified Reranker API","url":"https://github.com/answerdotai/rerankers","priority":"P1","cat":"SEARCH","env":"LOCAL","cmd":"pip install rerankers","desc":"cross-encoder, ColBERT, MonoT5 unified. NEXUS Stage-F reranking.","tags":["rerankers","colbert","reranking"]},
+{"id":"REDIS","name":"Redis — Cache + Queue","url":"https://redis.io","priority":"P1","cat":"BACKEND","env":"LOCAL","cmd":"pip install redis","desc":"NEXUS job queue + session cache. Celery broker. Sub-ms latency.","tags":["redis","cache","queue"]},
+{"id":"HTTPX","name":"httpx — Async HTTP Client","url":"https://www.python-httpx.org","priority":"P1","cat":"BACKEND","env":"LOCAL","cmd":"pip install httpx","desc":"Async HTTP for NEXUS research engine URL fetching. HTTP/2.","tags":["httpx","http","async"]},
+{"id":"FIRECRAWL","name":"Firecrawl — Managed Web Crawl API","url":"https://firecrawl.dev","priority":"P1","cat":"SCRAPING","env":"CLOUD","cmd":"pip install firecrawl-py","desc":"URL → clean markdown via API. JS rendering, sitemaps.","tags":["firecrawl","crawl","api"]},
+{"id":"PLAYWRIGHT","name":"Playwright — Browser Automation","url":"https://playwright.dev/python","priority":"P1","cat":"SCRAPING","env":"LOCAL","cmd":"pip install playwright","desc":"Headless browser. NEXUS JS-rendered page scraping fallback.","tags":["playwright","browser","automation"]},
+{"id":"OBSIDIAN","name":"Obsidian — Local Markdown Vault","url":"https://obsidian.md","priority":"P0","cat":"KNOWLEDGE","env":"LOCAL","cmd":"","desc":"Human-readable knowledge layer. Backlinks, graph. NEXUS wiki frontend.","tags":["obsidian","markdown","wiki"]},
+{"id":"LOGSEQ","name":"Logseq — Open Graph Knowledge","url":"https://logseq.com","priority":"P1","cat":"KNOWLEDGE","env":"LOCAL","cmd":"","desc":"Open-source Obsidian alternative. Datalog queries, Git sync.","tags":["logseq","graph","knowledge"]},
+{"id":"TUWIEN-REPO","name":"Repositorium TU Wien","url":"https://repositum.tuwien.at","priority":"P0","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Open-access AT academic repo. EC2/EC5 theses + papers. NEXUS academic seed.","tags":["tuwien","academic","austria"]},
+{"id":"AUSTRIAN-STANDARDS","name":"Austrian Standards — ÖNORM Shop","url":"https://www.austrian-standards.at","priority":"P0","cat":"AEC","env":"CLOUD","cmd":"","desc":"Purchase ÖNORM EN 1992/1995/1993 + national annexes.","tags":["onorm","standards","purchase"]},
+{"id":"BUILDINGSMART","name":"buildingSMART IFC4 Standards","url":"https://www.buildingsmart.org/standards/bsi-standards/industry-foundation-classes","priority":"P0","cat":"AEC","env":"CLOUD","cmd":"","desc":"IFC4 ADD2 spec, property sets, entity definitions. NEXUS BIM authority.","tags":["buildingsmart","ifc4","standards"]},
+{"id":"IFC-VIEWER","name":"web-ifc-viewer — Browser IFC","url":"https://github.com/IFCjs/web-ifc-viewer","priority":"P1","cat":"FRONTEND","env":"LOCAL","cmd":"npm install web-ifc-viewer","desc":"Three.js-based IFC viewer in browser. NEXUS 3D pane IFC import.","tags":["ifc","viewer","threejs"]},
+{"id":"ARXIV-CS","name":"arXiv cs.LG / cs.AI Recent","url":"https://arxiv.org/list/cs.LG/recent","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"pip install arxiv","desc":"Daily LLM/ML preprints. NEXUS research feed via arxiv client.","tags":["arxiv","llm","preprints"]},
+{"id":"REDDIT-ML","name":"Reddit r/MachineLearning","url":"https://www.reddit.com/r/MachineLearning","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Community papers/tools. Signal: paper links + practitioner commentary.","tags":["reddit","ml","community"]},
+{"id":"REDDIT-STRUCT","name":"Reddit r/StructuralEngineering","url":"https://www.reddit.com/r/StructuralEngineering","priority":"P1","cat":"AEC","env":"CLOUD","cmd":"","desc":"AEC practitioner Q&A. Real-world EC2/EC5 edge cases.","tags":["reddit","structural","aec"]},
+{"id":"HEISE-KI","name":"c't / heise.de Künstliche Intelligenz","url":"https://www.heise.de/thema/Kuenstliche-Intelligenz","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"DE AI news. German-speaking LLM ecosystem awareness.","tags":["heise","german","ai"]},
+{"id":"SCIENCEDIRECT","name":"ScienceDirect — Engineering Journals","url":"https://www.sciencedirect.com","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Engineering journals: EC2/EC5/structural. NEXUS academic source.","tags":["sciencedirect","journals","structural"]},
+{"id":"RESEARCHGATE","name":"ResearchGate — Preprints + PDFs","url":"https://www.researchgate.net","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Researcher network + free PDF sharing. Often accessible vs Elsevier.","tags":["researchgate","preprints","free"]},
+{"id":"CONNECTED-PAPERS","name":"Connected Papers — Research Graph","url":"https://www.connectedpapers.com","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Visual paper graph explorer. Research rabbit hole navigation.","tags":["connected-papers","discovery","graph"]},
+{"id":"COLAB","name":"Google Colab — Free GPU Notebooks","url":"https://colab.research.google.com","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Free T4/L4 GPU. Model eval, embedding experiments, solver testing.","tags":["colab","gpu","notebooks"]},
+{"id":"CHATGPT-GPTS","name":"ChatGPT GPT Store — Agent Patterns","url":"https://chatgpt.com/gpts","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Browse specialized GPT agents. Signal: prompt patterns for your domain.","tags":["chatgpt","gpts","agents"]},
+{"id":"DEEPSEEK","name":"DeepSeek API — MoE Models","url":"https://api-docs.deepseek.com","priority":"P1","cat":"LLM-GATEWAY","env":"CLOUD","cmd":"pip install openai","desc":"DeepSeek V3/R1. MoE, 1M context, cost-efficient reasoning backbone.","tags":["deepseek","moe","reasoning"]},
+{"id":"GROQ","name":"Groq — Ultra-Fast LLM Inference","url":"https://console.groq.com/docs","priority":"P1","cat":"LLM-GATEWAY","env":"CLOUD","cmd":"pip install groq","desc":"<1s latency for 70B models. NEXUS latency-critical COT steps.","tags":["groq","fast","low-latency"]},
+{"id":"DISCORD-AI","name":"Discord AI/LLM Communities","url":"https://discord.gg","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Signal channels: EleutherAI, LangChain, Ollama Discord. Real-time tips.","tags":["discord","community","llm"]},
+{"id":"LANGFUSE","name":"Langfuse — Open LLM Observability","url":"https://langfuse.com","priority":"P1","cat":"EVAL","env":"LOCAL+CLOUD","cmd":"pip install langfuse","desc":"Open-source LLM tracing, prompt management, eval dashboard.","tags":["langfuse","tracing","open-source"]},
+{"id":"MINIO","name":"MinIO — S3-Compatible Storage","url":"https://min.io","priority":"P1","cat":"INFRA","env":"LOCAL","cmd":"docker pull minio/minio","desc":"Local S3 storage. NEXUS append-only audit blob archive.","tags":["minio","s3","storage"]},
+{"id":"DAFSTB","name":"DAfStb — EC2 Erläuterungen","url":"https://www.dafstb.de/publikationen","priority":"P1","cat":"AEC","env":"CLOUD","cmd":"","desc":"Heft 600 (EC2 commentary), 631 (Konsolen/D-Bereiche). Betonbau wiki.","tags":["dafstb","ec2","german"]},
+{"id":"RCPY","name":"rc-py — EC2 Bending/Shear Solver","url":"https://github.com/civilcode/rc-py","priority":"P0","cat":"AEC","env":"LOCAL","cmd":"pip install rc-py","desc":"EC2 beam bending + shear capacity solver. NEXUS Betonbau primary.","tags":["ec2","bending","shear"]},
+{"id":"PYEC5","name":"GitHub EC5 Python Libraries","url":"https://github.com/topics/ec5","priority":"P0","cat":"AEC","env":"LOCAL","cmd":"","desc":"Discover open-source EC5 Python libs. NEXUS Holzbau solver pool.","tags":["ec5","python","timber"]},
+{"id":"PERPLEXITY","name":"Perplexity AI — Web-Grounded Search","url":"https://www.perplexity.ai","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"pip install openai","desc":"Real-time cited web answers. NEXUS research validation layer.","tags":["perplexity","search","citations"]},
+{"id":"WASM-PYTHON","name":"Pyodide — Python in Browser (WASM)","url":"https://pyodide.org","priority":"P2","cat":"FRONTEND","env":"LOCAL","cmd":"CDN","desc":"Python + NumPy/SciPy in browser via WASM. Browser-side solver option.","tags":["pyodide","wasm","python"]},
+{"id":"FREECAD","name":"FreeCAD + Python API","url":"https://wiki.freecad.org/Python_scripting_tutorial","priority":"P2","cat":"AEC","env":"LOCAL","cmd":"apt install freecad","desc":"Open-source parametric CAD. Python scripting for structural geometry.","tags":["freecad","cad","parametric"]},
+{"id":"CADQUERY","name":"CadQuery — Parametric CAD Python","url":"https://github.com/CadQuery/cadquery","priority":"P2","cat":"AEC","env":"LOCAL","cmd":"pip install cadquery","desc":"Code-driven 3D geometry. Beam/column parametric generation.","tags":["cadquery","cad","3d"]},
+{"id":"R3F","name":"React Three Fiber — R3F","url":"https://docs.pmnd.rs/react-three-fiber","priority":"P2","cat":"FRONTEND","env":"LOCAL","cmd":"npm install @react-three/fiber","desc":"Declarative three.js in React. Only if React stack needed.","tags":["r3f","react","threejs"]},
+{"id":"SUPABASE","name":"Supabase — Open Postgres Backend","url":"https://supabase.com","priority":"P2","cat":"BACKEND","env":"CLOUD","cmd":"pip install supabase","desc":"Postgres + pgvector + auth + storage + real-time. Cloud SSOT option.","tags":["supabase","postgres","cloud"]},
+{"id":"TAILWIND","name":"Tailwind CSS — Utility-First CSS","url":"https://tailwindcss.com","priority":"P1","cat":"FRONTEND","env":"LOCAL","cmd":"npm install tailwindcss","desc":"NEXUS UI styling layer. Use sparingly — prefer CSS tokens for theming.","tags":["tailwind","css","styling"]},
+{"id":"HF-SPACES","name":"HuggingFace Spaces — Live Demos","url":"https://huggingface.co/spaces","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Gradio/Streamlit demos. Test models before integrating.","tags":["huggingface","spaces","demos"]},
+{"id":"GITHUB-TRENDING","name":"GitHub Trending — Daily AI Repos","url":"https://github.com/trending/python?since=daily","priority":"P1","cat":"RESEARCH","env":"CLOUD","cmd":"","desc":"Daily top Python repos. AI/LLM discovery feed for bookmark updates.","tags":["github","trending","discovery"]}
+];
+
+// State
+let fPrio='ALL', fCat='ALL', fEnv='ALL', fSearch='';
+const themes=['','light','dark'];
+let themeIdx=0;
+
+// Filter group logic
+document.querySelectorAll('[data-f]').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    const f=btn.dataset.f, v=btn.dataset.v;
+    if(f==='prio'){fPrio=v; document.querySelectorAll('[data-f="prio"]').forEach(b=>b.classList.remove('on','on-ember','on-gold'));
+      btn.classList.add(v==='P0'?'on-ember':v==='P1'?'on-gold':'on');}
+    if(f==='cat'){fCat=v; document.querySelectorAll('[data-f="cat"]').forEach(b=>b.classList.remove('on')); btn.classList.add('on');}
+    if(f==='env'){fEnv=v; document.querySelectorAll('[data-f="env"]').forEach(b=>b.classList.remove('on')); btn.classList.add('on');}
+    render();
+  });
+});
+
+function filtered(){
+  const q=(fSearch||'').toLowerCase();
+  return MENU.filter(m=>{
+    if(fPrio!=='ALL' && m.priority!==fPrio) return false;
+    if(fCat!=='ALL' && m.cat!==fCat) return false;
+    if(fEnv!=='ALL' && !m.env.includes(fEnv)) return false;
+    if(q){
+      const blob=(m.name+m.desc+m.tags.join(' ')+m.cat+m.id).toLowerCase();
+      if(!blob.includes(q)) return false;
+    }
+    return true;
+  });
+}
+
+function prioBadge(p){
+  if(p==='P0') return '<span class="badge bp0">P0</span>';
+  if(p==='P1') return '<span class="badge bp1">P1</span>';
+  return '<span class="badge bp2">P2</span>';
+}
+
+function render(){
+  const list=filtered();
+  const grid=document.getElementById('grid');
+  document.getElementById('st-shown').textContent=list.length;
+  document.getElementById('st-total').textContent=MENU.length;
+  document.getElementById('st-p0').textContent=MENU.filter(m=>m.priority==='P0').length;
+  document.getElementById('st-p1').textContent=MENU.filter(m=>m.priority==='P1').length;
+  document.getElementById('st-p2').textContent=MENU.filter(m=>m.priority==='P2').length;
+  document.getElementById('st-aec').textContent=MENU.filter(m=>m.cat==='AEC').length;
+  document.getElementById('st-local').textContent=MENU.filter(m=>m.env.includes('LOCAL')).length;
+
+  if(!list.length){grid.innerHTML='<div class="no-results">⚠ Keine Einträge für diese Filter gefunden</div>';return;}
+
+  grid.innerHTML=list.map(m=>`
+<div class="card">
+  <div class="card-top">
+    <div class="card-badges">
+      ${prioBadge(m.priority)}
+      <span class="badge bcat">${m.cat}</span>
+      <span class="badge benv">${m.env}</span>
+    </div>
+  </div>
+  <div class="card-name">${m.name}</div>
+  <div class="card-desc">${m.desc}</div>
+  ${m.cmd&&m.cmd!=='built-in'&&m.cmd!=='CDN'?`<div class="card-cmd">${m.cmd}</div>`:''}
+  <div class="card-tags">${m.tags.map(t=>`<span class="tag">#${t}</span>`).join('')}</div>
+  <div class="card-btns">
+    <button class="cbtn cbtn-open" onclick="window.open('${m.url}','_blank')">↗ OPEN</button>
+    <button class="cbtn cbtn-copy" onclick="copyURL('${m.url}','${m.id}')">⎘ URL</button>
+    ${m.cmd&&m.cmd!=='built-in'&&m.cmd!=='CDN'?`<button class="cbtn cbtn-cmd" onclick="copyText('${m.cmd.replace(/'/g,"\\'")}','cmd')">⎘ CMD</button>`:''}
+  </div>
+</div>`).join('');
+}
+
+function copyURL(url,id){
+  navigator.clipboard.writeText(url).then(()=>toast(`✓ ${id} URL kopiert`));
+}
+function copyText(txt,label){
+  navigator.clipboard.writeText(txt).then(()=>toast(`✓ ${label} kopiert`));
+}
+
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),1800);
+}
+
+function exportJSONL(){
+  const data=filtered().map(m=>JSON.stringify(m)).join('\n');
+  download('nexus_speisekarte_filtered.jsonl',data,'application/x-ndjson');
+  toast('↓ JSONL exportiert — '+filtered().length+' Einträge');
+}
+
+function exportHTML(){
+  const rows=filtered().map(m=>`<tr><td>${m.priority}</td><td>${m.cat}</td><td>${m.env}</td><td><a href="${m.url}">${m.name}</a></td><td>${m.cmd||'—'}</td><td>${m.desc}</td><td>${m.tags.join(', ')}</td></tr>`).join('');
+  const html=`<!DOCTYPE html><html><head><meta charset="utf-8"><title>NEXUS SPEISEKARTE</title><style>body{font-family:monospace;font-size:11px;background:#08111e;color:#b8cedd}table{border-collapse:collapse;width:100%}th,td{border:1px solid #1e3048;padding:4px 8px}th{background:#162235;color:#00cba8}a{color:#00cba8}</style></head><body><h2 style="color:#00cba8">NEXUS AI-FULLSTACK SPEISEKARTE</h2><table><tr><th>P</th><th>CAT</th><th>ENV</th><th>NAME</th><th>CMD</th><th>DESC</th><th>TAGS</th></tr>${rows}</table></body></html>`;
+  download('nexus_speisekarte.html',html,'text/html');
+  toast('↓ HTML exportiert');
+}
+
+function exportMD(){
+  const lines=['# NEXUS AI-FULLSTACK SPEISEKARTE','','| P | CAT | ENV | NAME | CMD | DESC |','|---|---|---|---|---|---|'];
+  filtered().forEach(m=>lines.push(`| ${m.priority} | ${m.cat} | ${m.env} | [${m.name}](${m.url}) | \`${m.cmd||'—'}\` | ${m.desc} |`));
+  download('nexus_speisekarte.md',lines.join('\n'),'text/markdown');
+  toast('↓ Markdown exportiert');
+}
+
+function download(name,content,type){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type}));
+  a.download=name; a.click();
+}
+
+function cycleTheme(){
+  themeIdx=(themeIdx+1)%themes.length;
+  const t=themes[themeIdx];
+  document.documentElement.dataset.theme=t||'';
+  if(!t) delete document.documentElement.dataset.theme;
+}
+
+// Clock
+setInterval(()=>{document.getElementById('sys-time').textContent=new Date().toLocaleTimeString('de-AT',{hour12:false})},1000);
+
+// Init
+document.getElementById('search-box').addEventListener('input',e=>{fSearch=e.target.value;render();});
+render();
+</script>

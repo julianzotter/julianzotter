@@ -13,6 +13,7 @@ Drive-Zugriff müssen daher in der claude.ai-Routinen-UI angelegt werden:
 |---|---|---|---|
 | W1_drive_indexer.md | W1 DRIVE-INDEXER | `0 4 * * *` | Google_Drive |
 | W4_dev_log.md | W4 DEV-LOG | `0 20 * * *` | Google_Drive, Claude_Code_Remote, GitHub |
-| W2_inbox_sorter.md | W2 INBOX-SORTER | `30 4 * * *` | Google_Drive (erst nach Nomenklatur-Freigabe) |
+| W2_inbox_sorter.md | W2 INBOX-SORTER | `30 4 * * *` | Google_Drive (Start MODUS: VORSCHLAG) |
+| W3_chat_export_ingest.md | W3 CHAT-EXPORT-INGEST | `0 5 * * *` | Google_Drive (Start MODUS: INDEX) |
 
 Der Prompt-Block beginnt in jeder Datei nach der Zeile `---PROMPT---` und wird 1:1 eingefügt.

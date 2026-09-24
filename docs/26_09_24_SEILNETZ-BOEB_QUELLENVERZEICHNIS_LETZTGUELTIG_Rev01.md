@@ -2,6 +2,7 @@
 
 `STAND: 2026-09-24 12:40 UTC · Rev 01 · AGENT: Claude Code (Session seilstatik-doku-overview) · MODUS: READ_ONLY (keine Rechnung, keine Freigabe) · KLASSE: DERIVED (Register über PRIMARY-Quellen)`
 `QUELLEN: Drive-Ordner _SEILSTATIK_BOEBLINGEN (13EeKXWMpoN…, 41 Objekte) · Unterordner deepseek (15gRtcOcLeMy…, 8) · SEILNETZ-DOCU (1lOJGVBVmYx7…, 15) · 10 Screenshots vom 24.09. · gelesen: 22 Dateien vollständig, 5 große Protokolle nur strukturell (siehe §9)`
+`GIT: julianzotter/julianzotter · Branch claude/seilstatik-doku-overview-rc0lpt · docs/26_09_24_SEILNETZ-BOEB_QUELLENVERZEICHNIS_LETZTGUELTIG_Rev01.md · Commit ccbf8b9 · Drive-Kopie 1Bztv0nNthbUdSHqvEizKqA1Rk4wEyWp8 (SEILNETZ-DOCU)`
 
 ## 0 TL;DR
 
@@ -158,7 +159,7 @@ Bilanz: 11 PRIMARY · 12 DERIVED · 10 WORKFLOW · 7 OBSOLETE · 1 CONFLICT · 1
 | 26_07_30_ONR-Regeln_Produktdatenblätter_Baudatenbank.at.md (2×) | 1H6S_0pmSE76nl9J_E6AYJw1EVZ5bKGpQ, 1bFLPT-Ls1tuXbwG5PzSjVr2T7O2AqCBU | Datei, **Dublette** | projektfremd |
 | 26_07_31_Register_before_Deploy__THINK_befor_you_RUN__Search_before_generate.txt | 1rxlkg0Mk37guiDjAYP5hXWnhzUBlvKuv (3. Kopie im Drive) | Datei | Governance, projektfremd |
 | Verknüpfungen (7, 10:27 UTC): Quellenbefund 18.09. · Deep-Parsing 18.09. · Chatprotokolle 18.09. · CLA-Analyse 18.09. · CODEX Inventar 04.07. · CODEX Knotenupdate 04.07. · QUELLEN-LISTE 11.09. | 1giK9wp9…, 1RbEhUAm…, 1yNZKAhF…, 1VKm6ur_…, 1pFbhZDD…, 1iJU7h__…, 125ktuIJ… | Shortcut | → §2 |
-| **dieses Dokument** (Rev01) | wird beim Upload ergänzt | Datei | DERIVED |
+| **dieses Dokument** (Rev01) | 1Bztv0nNthbUdSHqvEizKqA1Rk4wEyWp8 | Datei | DERIVED |
 
 Hinweis: Ordner `FT-TRAEGER-MATRIX` (1PMnJ_Mx6pEUglGLqa-R7awRurYg_x0Zi, Screenshot 11:34) gehört zu einem **anderen Projekt** (Fertigteilträger); RUNLOG.md dort ist nicht der Seilstatik-RUNLOG.
 

@@ -9,6 +9,7 @@
 > 2. Neue Primärquellen U18 `Seilkraftmessung_Pfeifer.pdf` (16.06.2015, Drive 1wA4Zm_EejjEXFDTx3V5qnwvYYbhIH85a) und U19 `Seilkraftmessung_Vergleich.pdf` (1zuHrDvmNXjI3aYcQkeBdg-g3jZo9Og5w), Pfad `EXPORT\00 Bestandstatik fragmentiert\PDF_Finale_Dokumente_Ausgang\13bb-statik-dokumentation\`.
 > 3. U9b: ETA-11/0160 = PFEIFER Wire Ropes, aktuelle Fassung 21.02.2025 (DIBt 8.06.02-289/24). Modell-Materialname Z-14.7-411 ist die alte abZ.
 > 4. N6 (EA 3 420 vs. 4 940 kN) ist durch K15.105 zugunsten 130 ± 10 kN/mm² geschlossen (Stellungnahme 23.09., 01-005).
+> 5. Neue Artefakte 29.09.–03.10. (SANDBOX-Konfliktkopie `.1.rf5` 30.09., Mastachsen-Fall A/B/C = F11, Hilfsstäbe 158/178–193, Angebotsgrenze Ankerprüfung) siehe `26_10_03_SEILSTATIK-BOEB_NEUE-ARTEFAKTE-UEBERSICHT_v1.0.md` (NA-01…NA-17, K10–K18, N12–N18).
 > Vollständige Einarbeitung in Rev02 = Aufgabe A9 der WorkOrder WO-BOEB-000003.
 
 ## 0 TL;DR

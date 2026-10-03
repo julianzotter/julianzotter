@@ -4,6 +4,13 @@
 `QUELLEN: Drive-Ordner _SEILSTATIK_BOEBLINGEN (13EeKXWMpoN…, 41 Objekte) · Unterordner deepseek (15gRtcOcLeMy…, 8) · SEILNETZ-DOCU (1lOJGVBVmYx7…, 15) · 10 Screenshots vom 24.09. · gelesen: 22 Dateien vollständig, 5 große Protokolle nur strukturell (siehe §9)`
 `GIT: julianzotter/julianzotter · Branch claude/seilstatik-doku-overview-rc0lpt · docs/26_09_24_SEILNETZ-BOEB_QUELLENVERZEICHNIS_LETZTGUELTIG_Rev01.md · Commit ccbf8b9 · Drive-Kopie 1Bztv0nNthbUdSHqvEizKqA1Rk4wEyWp8 (SEILNETZ-DOCU)`
 
+> **ERRATA (2026-10-03, Self-Refinement Iteration 01, Commit folgt):**
+> 1. Aktuelle Berichtsfassung ist **VORLAGE-005** (Codex, 23.09., Drive 1VKWJ3ZPgSInVpTSEOzWnQdEJ7FV7imSI) plus Stellungnahme 23.09. (16b-bVXpiWkaXY0DioDYiIfo3nhh2i1ZN), nicht VORLAGE-002. Prüfanmerkungen 01-005, 01-013, 01-017 sind CLOSED; Fragen sind F1–F10.
+> 2. Neue Primärquellen U18 `Seilkraftmessung_Pfeifer.pdf` (16.06.2015, Drive 1wA4Zm_EejjEXFDTx3V5qnwvYYbhIH85a) und U19 `Seilkraftmessung_Vergleich.pdf` (1zuHrDvmNXjI3aYcQkeBdg-g3jZo9Og5w), Pfad `EXPORT\00 Bestandstatik fragmentiert\PDF_Finale_Dokumente_Ausgang\13bb-statik-dokumentation\`.
+> 3. U9b: ETA-11/0160 = PFEIFER Wire Ropes, aktuelle Fassung 21.02.2025 (DIBt 8.06.02-289/24). Modell-Materialname Z-14.7-411 ist die alte abZ.
+> 4. N6 (EA 3 420 vs. 4 940 kN) ist durch K15.105 zugunsten 130 ± 10 kN/mm² geschlossen (Stellungnahme 23.09., 01-005).
+> Vollständige Einarbeitung in Rev02 = Aufgabe A9 der WorkOrder WO-BOEB-000003.
+
 ## 0 TL;DR
 
 - **Letztgültiger Rechen- und Dokumentationsstand = Unterordner `deepseek` vom 23.09.2026**: Kurzbericht VAR-A (LK100) + Prüfbericht VORLAGE-002 (Claude Code, ersetzt VORLAGE-001/Gemini) + Ausdruckprotokoll AP1. Alle drei tragen `STATUS=VORLÄUFIG · FREIGABE=NEIN · BESTELLREIF=NEIN`.

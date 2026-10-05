@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+dist/
+build/
+
+# Secrets — AP2 Security Gate catches these before commit
+*.env
+.env.*
+*.pem
+*.key
+secrets/
+
+# Colab / Jupyter
+*.ipynb_checkpoints/
+.ipynb_checkpoints/
+
+# Large generated artifacts — keep in Drive WORK, not in repo
+# (golden cases + small outputs ARE committed — see nexus-workbench/artifacts/)
+raw_import_*.txt
+raw_import_*.json
+*_knowledge_graph_*.json
+*_cluster_db_*.json
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Drive sync lock
+*.gdrive_lock

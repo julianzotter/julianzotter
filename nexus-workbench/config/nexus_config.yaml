@@ -1,0 +1,85 @@
+# NEXUS AI-OS — Canonical User Settings & Configuration
+# SSOT: This file is the authoritative source for all runtime settings.
+# Version uses SemVer; bump MINOR for new sections, PATCH for value changes.
+# KANON: _developement/LLM-LOCAL-SSOT/WORK (mit 'e' — ohne 'e' ist DELETED)
+
+version: "1.0.0"
+updated: "2026-10-05"
+mandant: "ZOTTERCONSULT_EU"
+owner: "julian.zotter@gmail.com"
+
+# ── Git / Sync ─────────────────────────────────────────────────────────────
+git:
+  remote: "https://github.com/julianzotter/julianzotter.git"
+  branch_main: "main"
+  branch_dev:  "claude/nexus-ai-os-dashboard-1t0lsm"
+  # Colab path to cloned repo (mount point inside Colab VM)
+  colab_repo_path: "/content/julianzotter"
+
+# ── Drive Paths ─────────────────────────────────────────────────────────────
+drive:
+  root:           "/gdrive/My Drive/_developement"          # KANON: mit 'e'
+  ssot:           "/gdrive/My Drive/_developement/LLM-LOCAL-SSOT"
+  work:           "/gdrive/My Drive/_developement/LLM-LOCAL-SSOT/WORK"
+  comms:          "/gdrive/My Drive/_developement/LLM-LOCAL-SSOT/WORK/_COMMS/feedback.jsonl"
+  skills_faq:     "18aqLKl2x0boeCb4gruLkc3MVu1ZIasuY"
+  skills_router:  "1ngrxjm_RBzu7HPT54AQLIeSKzRPGMInX"
+  mcp_tools:      "1fRa7rQvKi-BkhVIzjXPcY_u8iIJ4Vn5J"
+  logfiles:       "1nwWVPDXs5gab28GXjEA5d1PaNkZ1tEXZ"
+  dashboard_reg:  "133n5h-wVKzefYPTTnRDZMS4cJcmP_Yjz"
+
+# ── 8-Zonen-Modell ─────────────────────────────────────────────────────────
+zones:
+  Z1_governance:   {label: "Governance",      rag_allowed: true,  ap2_scan: true}
+  Z2_ai_eng:       {label: "AI-Engineering",  rag_allowed: true,  ap2_scan: true}
+  Z3_code:         {label: "Code",            rag_allowed: true,  ap2_scan: true}
+  Z4_engineering:  {label: "Engineering",     rag_allowed: true,  ap2_scan: true}
+  Z5_projekte:     {label: "Projekte",        rag_allowed: true,  ap2_scan: true}
+  Z6_finanzen:     {label: "Finanzen",        rag_allowed: false, ap2_scan: true}  # STRICT
+  Z7_media:        {label: "Media",           rag_allowed: true,  ap2_scan: false}
+  Z8_exclude:      {label: "Exclude",         rag_allowed: false, ap2_scan: false}
+
+# ── Security Gates ──────────────────────────────────────────────────────────
+security:
+  ap2_secret_scan:        true   # scripts/secret_scan.py — must exit 0 before any upload
+  ap3_inventory_scan:     true   # scripts/scan_inventory.py → data/source_registry.json
+  worm_ledger_enabled:    true
+  worm_merkle_chain:      false  # TODO: implement in log_feedback()
+  ap2_script:             "nexus-workbench/scripts/secret_scan.py"
+  ap3_script:             "nexus-workbench/scripts/scan_inventory.py"
+
+# ── LLM Agent Roster (Mandantentrennung: ZOTTERCONSULT only) ───────────────
+agents:
+  ID01: {role: "Human AI / Orchestrator", provider: "human",       active: true}
+  ID02: {role: "Orchestrator",            provider: "ChatGPT",     active: true}
+  ID03: {role: "Reviewer",               provider: "ChatGPT",     active: true}
+  ID04: {role: "Colab Executor",         provider: "Gemini",      active: true}
+  ID05: {role: "Research",               provider: "Perplexity",  active: true}
+  ID06: {role: "Code / Architecture",    provider: "Claude",      model: "claude-sonnet-4-6", active: true}
+  ID07: {role: "Offline / Air-Gap",      provider: "DeepSeek",    active: false}
+  ID08: {role: "Local Inference",        provider: "Ollama",      active: false, optional: true}
+
+# ── Feedback / WORM Ledger Schema ───────────────────────────────────────────
+feedback_schema:
+  fields: [ts, from, case_id, status, payload]
+  ts_format: "ISO8601-UTC"        # datetime.utcnow().isoformat() + "Z"
+  valid_status: [INFO, PASS, FAIL, WARN, ERROR]
+  append_only: true
+
+# ── Save Convention (save_v3) ───────────────────────────────────────────────
+save:
+  dual_write: true                # writes {name}_{ts}.ext AND {name}_v1.ext
+  sha_length: 12                  # first 12 chars of sha256 of first 200 KB
+
+# ── VERBOTEN (global — must never appear in committed code or Colab) ────────
+forbidden:
+  paths:
+    - "_development"              # deleted folder — WRONG spelling (without 'e')
+  functions:
+    - "save_to_workspace()"
+    - "threading.Timer"
+  features:
+    - "Dashboard"
+    - "Voice"
+    - "Three.js"
+    - "IFC"

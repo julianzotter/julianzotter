@@ -1,0 +1,114 @@
+# NEXUS AEC Signal Matrix — Kernel Routing Table
+# Maps (norm_tag, nachweis_typ) → kernel module + golden case
+# This is the ROUTING TABLE, not the scoring matrix (see backend/signal_matrix.py for scores).
+# Update status after each Vertical Slice execution.
+#
+# status values:
+#   IMPLEMENTED        — kernel exists, golden case PASSED
+#   IMPL_PENDING       — kernel written, golden case not yet run
+#   KERNEL_DEFINED     — kernel designed, no golden case
+#   SPEC_ONLY          — spec exists, kernel not written
+#   DEPRECATED         — replaced by newer kernel
+
+version: "1.0.0"
+updated: "2026-10-05"
+
+signals:
+
+  # ── EC2 Bemessung ─────────────────────────────────────────────────────────
+  - id: SM-001
+    norm_tag: EC2
+    material_tag: BETON-STAHL
+    nachweis_typ: BIEGE
+    norm_ref: "EN 1992-1-1 §6.1"
+    kernel: "ec2_fertigteil_kernel.py"
+    golden_case: "golden_case_A.json"
+    status: IMPLEMENTED
+    validated: true
+    m1_slice: "M1-A"
+    notes: "L=6.2m Typ A — delta=0.00% — WARNING: circular validation, verify with Schneider Bautabellen"
+
+  - id: SM-002
+    norm_tag: EC2
+    material_tag: BETON-STAHL
+    nachweis_typ: SCHUB
+    norm_ref: "EN 1992-1-1 §6.2.2 + §6.2.3"
+    kernel: "ec2_fertigteil_kernel_B.py"
+    golden_case: "golden_case_B.json"
+    status: IMPL_PENDING
+    validated: false
+    m1_slice: "M1-B"
+    notes: "L=7.5m Typ B — V_Ed=108.3 kN > V_Rdc=71.1 kN → §6.2.3 Bügel 2×Ø8@150 — awaiting Colab run"
+
+  - id: SM-003
+    norm_tag: EC2
+    material_tag: BETON-STAHL
+    nachweis_typ: DURCHSTANZEN
+    norm_ref: "EN 1992-1-1 §6.4"
+    kernel: null
+    status: SPEC_ONLY
+    notes: "Not yet designed"
+
+  # ── EC5 Holzbau ───────────────────────────────────────────────────────────
+  - id: SM-010
+    norm_tag: EC5
+    material_tag: HOLZ-GL24H
+    nachweis_typ: KNICKEN
+    norm_ref: "EN 1995-1-1 §6.3"
+    kernel: "ec5_buckling.py"
+    golden_case: null
+    status: SPEC_ONLY
+    notes: "Canonical workflow W2 — kernel not yet written"
+
+  - id: SM-011
+    norm_tag: EC5
+    material_tag: HOLZ-GL24H
+    nachweis_typ: BIEGE
+    norm_ref: "EN 1995-1-1 §6.1"
+    kernel: null
+    status: SPEC_ONLY
+
+  # ── CEN/TS 19103 HBV ─────────────────────────────────────────────────────
+  - id: SM-020
+    norm_tag: CENTS19103
+    material_tag: HOLZ-BETON-VERBUND
+    nachweis_typ: VERBUND-GAMMA2
+    norm_ref: "CEN/TS 19103 γ2-Methode Annex"
+    kernel: "hbv_gamma2_kernel.py"
+    golden_case: null
+    status: KERNEL_DEFINED
+    notes: "Canonical workflow W3 — kernel designed, golden test pending against CEN/TS Annex example"
+
+  # ── Seilstatik ────────────────────────────────────────────────────────────
+  - id: SM-030
+    norm_tag: SEILSTATIK
+    material_tag: SEIL
+    nachweis_typ: ZUGKRAFT
+    norm_ref: "EN 1993-1-11"
+    kernel: null
+    status: SPEC_ONLY
+
+  # ── SIGEPLAN / Sicherheitsplan ────────────────────────────────────────────
+  - id: SM-040
+    norm_tag: SIGEPLAN
+    material_tag: null
+    nachweis_typ: SICHERHEITSPLAN
+    norm_ref: "BAUARBG §7"
+    kernel: null
+    status: SPEC_ONLY
+
+# ── Kernel Output Schema (alle Kernels müssen diese Felder liefern) ─────────
+kernel_output_schema:
+  required:
+    - norm_tag         # z.B. "EC2"
+    - material_tag     # z.B. "BETON-STAHL"
+    - nachweis_typ     # z.B. "BIEGE"
+    - status           # "PASS" | "FAIL"
+    - eta              # Ausnutzungsgrad 0..1
+    - case_id          # aus golden_case oder runtime-generiert
+  optional:
+    - delta_pct        # Abweichung zu Handrechnung in %
+    - M_Ed_kNm
+    - V_Ed_kN
+    - As_req_cm2
+    - As_prov_cm2

@@ -4,8 +4,8 @@
 |---|---|
 | Datei | `00_Quellenlog/RF6/26_10_06_ID-03_Quellenlog_RF6.md` |
 | Rolle | ID-03 (Claude) · Pflege: ID01 / Codex (lokal) |
-| Status | CANDIDATE Rev0 · **kein RF6-Rechenlauf registriert** |
-| Software | RFEM 6.12.0008 (SDK dlubal.api 2.12.8), API-II gRPC 127.0.0.1:9000 |
+| Status | CANDIDATE Rev1 (06.10. 21:10 UTC) · **kein RF6-Rechenlauf registriert** · Rev1 = Einarbeitung ADDENDUM Rev0 + Uploads WORKING_CALC.rf6bak / TABLE-EXPORT.xml |
+| Software | Modellformat RFEM 6.12.0008 · **Server beim Export 6.13.0001** (ADDENDUM §3) · Client dlubal.api 2.12.8 (Server verlangt 2.13.1) · API-II gRPC 127.0.0.1:9000 |
 | Kanon | BEFUND RF5/RF6/VAR-A Rev0 §2 · TEILABGLEICH summary.json · MODELL-DIFF QS14 Rev0 |
 
 ## 1 Modelle und Hashes
@@ -18,7 +18,7 @@
 | M3 | BOEB_BESTAND-5e_NEUBERECHNET_RFEM529_20260923_1437.rf5 | SANDBOX\05_RECHENSTAND | 23.09.2026 | 317D78D7AF7837F402928221C504F06B48AF6153BF1B60C53DE440A109FE4E12 | 86 Kn / 88 Stäbe / 19 LF / 21 LK | **Kalibrierreferenz** (u_Kn17 2,085 m, N_S54 17,47 kN) | VERIFIED 23.09.; mtime 30.09. → Hash neu prüfen |
 | M4 | BOEB_VAR-A_…_VORLAEUFIG_20260923_1437.rf5 | SANDBOX\05_RECHENSTAND | 23.09.2026 | EAB6A5B1A31D4C14746ECBDA27480D8D514FD8F10F30B208AE4E4C80E42EC970 | 84 Kn / 86 Stäbe | VAR-A Zielgeometrie | VERIFIED 23.09. |
 | M4b | …_1437.1.rf5 (48 619 520 B) | SANDBOX\05_RECHENSTAND | 30.09.2026 | – | unbekannt | Konfliktkopie | **SPERRLISTE bis Hash + Wiederöffnung** |
-| M5 | 26_10_06_SEILSTATIK-MODELL-001_WORKING_CALC.rf6 | – | geplant | – | M1 + Patch (A = 0,38 cm² prüfen, QS 14 löschen, VAR-A-Geometrie) | Arbeitskopie | **existiert noch nicht** |
+| M5 | 26_10_06_SEILSTATIK-MODELL-001_WORKING_CALC.rf6 (.rf6bak-Upload 2 360 116 B) | lokal BENCHMARK-SEILSTATIK; Upload Chat 06.10. | gespeichert 06.10. (format.txt: RFEM6 6.13.0001, ts 1791320603) | .rf6bak: 903093dd0274826f3316cd21f9178cc78553369f500cfe06cd8eb230c278e327 (.rf6 selbst nicht hochgeladen) | model.db read-only: **106 Kn / 105 Linien / 105 Stäbe / 17 QS / 14 Mat / 19 LF / 21 LK / 2 RK / 27 NodalSupport an 35 Knoten**; QS-14-Stäbe 158, 178, 179–193 **noch vorhanden**; keine Ergebnisse (results.xml leer) | Arbeitskopie = 1:1-Kopie von M1 | P1 erledigt · **P2 (QS-14 löschen) offen** · A = 0,38 cm² lt. ADDENDUM B3 |
 
 ## 2 Exporte, Protokolle, Skripte
 
@@ -37,9 +37,29 @@
 
 | RUN-ID | Modell (Hash) | Datum | Solver | Loadings | Ergebnisdateien (SHA-256) | Kalibrierung Δ | Status |
 |---|---|---|---|---|---|---|---|
-| RUN-RF6-000 | M1 1286822e… | – | – | – | Baseline-Export Auftrag 1 (ausstehend) | – | **ausstehend** |
+| RUN-RF6-000 | M1 1286822e… / M5 | Exportversuch 06.10. 18:12 UTC (E6b) | – (nicht gerechnet) | 21 LK abgefragt | keine (No results available) | – | **NICHT ERFÜLLT** · M1 wegen QS-14-Fehler nicht rechenbar (ADDENDUM K7) |
 | RUN-RF6-001 | M5 (–) | – | Th. III. O., Newton-Raphson, g = 10,00 m/s² (E7 offen) | LK100, RK1, LK220 | – | Soll: u_Kn17 2,085 m, N_S54 17,47 kN (Toleranz E8 offen) | geplant |
+
+## 3a Korrekturen aus ADDENDUM Rev0 (übernommen)
+
+| K | Korrektur | Wirkung hier |
+|---|---|---|
+| K1 | Hilfsstäbe = 158, **178**, 179–193 (nicht 159; 159 = Linie von Stab 178) | MODELL-DIFF Rev0 §1 war bereits korrekt (Stab 178, Linie 159) |
+| K2 | Server 6.13.0001, Format 6.12.0008; Speichern in 6.13 ändert Hash | M5 trägt format.txt „RFEM6 6.13.0001“ → M1-Hash gilt nicht für M5 |
+| K3/K6 | gelaufenes Skript ≠ Wrapper, Ausgabenamen abweichend | als E6b getrennt geführt; vor nächstem Lauf Datei auf G: mit Drive-Fassung E6a vergleichen (Hash) |
+| K4 | A = 0,38 cm² in M1 belegt (B3) | Behauptung 0,02 cm² (ANWEIDUNG.docx) widerlegt; Delta-Matrix Spalte „A = ?“ → 0,38 |
+| K5 | RK1/RK2 im Export fehlen | E6a exportiert je Kategorie alle Loadings der Tabelle; ob RK enthalten, erst nach erstem erfolgreichen Lauf belegt |
+| K7 | Baseline = M1 + QS-14-Bereinigung ohne VAR-A-Patch | RUN-RF6-000 neu definiert: Modell = M5 nach P2, Geometrie V01 |
+| K8 | Bezugstemperatur: Material 20 °C, dT +10/+57/−34 K | E5 präzisieren: Frage ist dT-Basis (T_Montage) vs. PFEIFER T₀ 10 °C, nicht „0 °C“ |
 
 ## 4 Offene Entscheidungen mit RF6-Wirkung (aus BEFUND Rev0 §8)
 
 E1 Geometriebasis VAR-A statt G3 · E2 Maste 1006/1007 entfallen, 3006/3007 gelenkig · E3 C21 Fall A/B · E4 Kombinatorik EN 1990 vs. Bestand · E5 Bezugstemperatur 0 °C vs. T₀ 10 °C · E6 Seil 35 Stablasten · E7 g 10,00 → 9,81 · E8 Kalibriertoleranz.
+
+## 5 Nächste Schritte RF6 (Stand 06.10. 21:10 UTC)
+
+1. P2 in M5 ausführen (17 Stäbe, 20 Knoten, QS 14–17 löschen; Kontrolle 86 Kn / 88 Stäbe), speichern, SHA-256 der .rf6 notieren.
+2. `pip install --upgrade dlubal.api==2.13.1` (Server 6.13.0001), dann `--check`.
+3. Enum-Liste ausgeben: `python -c "from dlubal.api import rfem; print([k for k in rfem.results.ResultsType.keys() if 'NODES' in k])"` → Verformungs-Kategorie belegen.
+4. Rechenlauf LK100/RK1 in M5 (Th. III. O.), danach E6a ausführen; API_Log.json + CSV-Hashes in §3 eintragen.
+5. Kalibrierung K1–K7 der Delta-Matrix nur gegen ein Modell mit Bestand-5e-Geometrie (O1); M5 trägt V01-Geometrie → zusätzliche Arbeitskopie `…_BESTAND5E_CALC.rf6` oder Entscheidung E1 vorziehen.

@@ -1,0 +1,42 @@
+typ;nr;name;actionCategoryId;definition;quelle
+LF;10;Eigengewicht Ausbauzustand;11;Eigengewicht automatisch + Leuchte 1,000 kN Kn 1-30 + Kabel 0,001 kN/m (RF5-Ausdruck);model.db M5 (LoadCase) + BEFUND Rev0 §6
+LF;20;Temperatur +10;71;dT = +10 K;model.db M5
+LF;21;temperatur + 57;71;dT = +57 K;model.db M5
+LF;22;temperatur -34;71;dT = -34 K;model.db M5
+LF;30;wind x;61;;model.db M5
+LF;31;wind -x;61;;model.db M5
+LF;32;wind y;61;;model.db M5
+LF;33;wind -y;61;;model.db M5
+LF;40;raueis rd2;54;Eis als Schnee-Kategorie (K4 pruefen);model.db M5
+LF;41;raueis rd2 wind leitend;54;;model.db M5
+LF;43;Schnee auf Leuchten;54;1,500 kN/Knoten;model.db M5
+LF;50;wind auf eis x;61;;model.db M5
+LF;51;wind auf eis -x;61;;model.db M5
+LF;52;wind auf eis y;61;;model.db M5
+LF;53;wind auf eis -y;61;;model.db M5
+LF;60;wind auf eis x rd2 leitend;61;;model.db M5
+LF;61;wind auf eis -x rd2 leitend;61;;model.db M5
+LF;62;wind auf eis y rd2 leitend;61;;model.db M5
+LF;63;wind auf eis -y rd2 leitend;61;;model.db M5
+LK;100;Verformungsnachweis;;1.00*LF10 + 1.00*LF20;model.db M5 (LoadCombinationImplStatic_items)
+LK;101;verformung unter eislast;;1.00*LF10 + 1.00*LF22 + 1.00*LF40;model.db M5
+LK;200;temperatur 10 wind auf seil x;;1.35*LF10 + 1.50*LF20 + 0.90*LF30;model.db M5
+LK;201;temperatur 10 wind auf seil - x;;1.35*LF10 + 1.35*LF20 + 0.90*LF31;model.db M5
+LK;202;temperatur 10 wind auf seil y;;1.35*LF10 + 1.35*LF20 + 0.90*LF32;model.db M5
+LK;203;temperatur 10 wind auf seil -y;;1.35*LF10 + 1.35*LF20 + 0.90*LF33;model.db M5
+LK;204;temp +57;;1.35*LF10 + 1.50*LF21;model.db M5
+LK;205;temp -34 eis;;1.35*LF10 + 1.35*LF22 + 1.35*LF40;model.db M5
+LK;206;temp -34 rd2 leitend wind x;;1.35*LF10 + 1.35*LF22 + 1.35*LF40 + 0.75*LF60;model.db M5
+LK;207;temp -34 rd2 leitend wind -x;;1.35*LF10 + 1.35*LF22 + 1.35*LF40 + 0.75*LF61;model.db M5
+LK;208;temp -34 rd2 leitend wind y;;1.35*LF10 + 1.35*LF22 + 1.35*LF40 + 0.75*LF62;model.db M5
+LK;209;temp -34 rd2 leitend wind -y;;1.35*LF10 + 1.35*LF22 + 1.35*LF40 + 0.75*LF63;model.db M5
+LK;210;temp -34 wind x leitend rd2;;1.35*LF10 + 1.35*LF22 + 0.75*LF41 + 1.35*LF60;model.db M5
+LK;211;temp -34 wind -x leitend rd2;;1.35*LF10 + 1.35*LF22 + 0.75*LF41 + 1.35*LF61;model.db M5
+LK;212;temp -34 wind y leitend rd2;;1.35*LF10 + 1.35*LF22 + 0.68*LF41 + 1.35*LF62;model.db M5
+LK;213;temp -34 wind -y leitend rd2;;1.35*LF10 + 1.35*LF22 + 0.68*LF41 + 1.35*LF63;model.db M5
+LK;214;GZT (EQU) - Aussergewoehnlich - psi-1,1;;1.35*LF10 + 1.35*LF22 + 0.27*LF43;model.db M5
+LK;215;GZT (EQU) - Staendig / voruebergehend;;1.10*LF10 + 1.35*LF20 + 1.35*LF30;model.db M5
+LK;216;GZT (EQU) - Staendig / voruebergehend;;1.10*LF10 + 1.35*LF20 + 1.50*LF31;model.db M5
+LK;217;GZT (EQU) - Staendig / voruebergehend;;1.10*LF10 + 1.35*LF20 + 1.35*LF32;model.db M5
+LK;218;GZT (EQU) - Staendig / voruebergehend;;1.10*LF10 + 1.35*LF20 + 1.35*LF33;model.db M5
+LK;220;Erg. 2 (28.04.2015) - FEHLT im Modell;;1.35*LF10 + 1.50*LF43 (max N 20,16 kN lt. Kurzbericht);BEFUND Rev0 K7, Rev01 N5

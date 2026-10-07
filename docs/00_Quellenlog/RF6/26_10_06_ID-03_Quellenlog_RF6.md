@@ -67,3 +67,16 @@ E1 Geometriebasis VAR-A statt G3 · E2 Maste 1006/1007 entfallen, 3006/3007 gele
 3. Enum-Liste ausgeben: `python -c "from dlubal.api import rfem; print([k for k in rfem.results.ResultsType.keys() if 'NODES' in k])"` → Verformungs-Kategorie belegen.
 4. Rechenlauf LK100/RK1 in M5 (Th. III. O.), danach E6a ausführen; API_Log.json + CSV-Hashes in §3 eintragen.
 5. Kalibrierung K1–K7 der Delta-Matrix nur gegen ein Modell mit Bestand-5e-Geometrie (O1); M5 trägt V01-Geometrie → zusätzliche Arbeitskopie `…_BESTAND5E_CALC.rf6` oder Entscheidung E1 vorziehen.
+
+## 6 Pfadreferenzen (ID01, 07.10.2026) und Ablage der Loop-Dokumente
+
+| Ref | Ort | Drive-ID / Pfad | Regel |
+|---|---|---|---|
+| P1 | Hauptordner Projekt | `_SEILSTATIK_BOEBLINGEN` · 13EeKXWMpoN-FrH1oPFcOsPuK_9BqfmA3 | Projektquellen (Bestandsstatik, Vermesser, Prüfberichte) |
+| P2 | Projekt-Arbeitsverzeichnis Adaptierung | `26-03-18_Boeb_Adaptierung` · 1tA6hbxW3SqxyGLPY8EP1J0ESmsVuMYi5 | Arbeitsstand Ergänzung 4 |
+| P3 | Benchmark-Ordner (Drive) | `_INDEX_LNK/BENCHMARK-SEILSTATIK` · 1ZpE9ym5UVEJuiLml0YKXDQl8Qk878sZl | enthält 00_Quellenlog (1kbe5F856ZwxMRybU8ouCpgefjK-Eyck2) |
+| P4 | Lokal (Drive für Desktop) | `G:\Meine Ablage\_INDEX_LNK\BENCHMARK-SEILSTATIK\` | Arbeitskopien, nie M1 beschreiben |
+| P5 | Skripte lokal | `…\BENCHMARK-SEILSTATIK\Skripte\` | nur Skripte aus Repo `tools/` (Hash im Quellenlog); Sperrliste Rev0 gilt |
+| P6 | Ergebnis-/Exportverzeichnis lokal | `…\BENCHMARK-SEILSTATIK\Daten\results\` | E6a-Exporte → zusätzlich `00_Quellenlog/API_Auszuege/RF6_EXPORT_<stamp>_<RUN-ID>/`; schreibgeschützt nach Lauf |
+
+Loop-Dokumente (07.10.): Loop 1 Fremddaten „Fall B“ Drive 16nR2N7F5OWlQpJ4vP6H8aDbXkLxbm2Rj · Loop 2 Docx FERTIGSTELLUNG + Eingabetabellen Repo `docs/26_10_07_ID-03_DELTA-REFINEMENT_LOOP2_FERTIGSTELLUNG-DOCX_Rev0.md` (Drive-ID nach Upload eintragen) · Eingabedaten v0.1 Zip 1-0r03VNC5jV_xm8rALgGfDS40MFn9vs7.

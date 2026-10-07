@@ -1,0 +1,7 @@
+﻿no;bezeichnung;E_kN_cm2;G_kN_cm2;nu;gamma_kN_m3;alpha_T_1_K;gamma_M;hinweis
+1;rundlitze | Z-14.7-411;90000.0;5000.0;8.0;80.0;1.6e-05;1.1;nicht verwendet, nu = 8,0 und E = 900 GPa sind Bestandsfehler
+2;Baustahl S 235 JR | DIN EN 10025-2:2004-11;21000.0;8076.923;0.3;78.5;1.2e-05;1.0;
+3;Baustahl S 235 | DIN 18800:1990-11;21000.0;8100.0;0.2963;78.5;1.2e-05;1.1;
+4;S 235 J2 G3;21000.0;8100.0;0.2963;78.5;1.2e-05;1.1;
+5;Seil PE (Pfeifer) | Z-14.7-411;13000.0;5000.0;0.3;80.0;1.6e-05;1.1;
+6;S 235 J2 G3;21000.0;8100.0;0.2963;78.5;1.2e-05;1.1;

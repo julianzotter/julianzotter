@@ -29,7 +29,7 @@ Lokal = `G:\Meine Ablage\_INDEX_LNK\BENCHMARK-SEILSTATIK\` (Drive für Desktop, 
 | 7 | `26_10_06_ID-03_retour_rfem6_patch.py` + `gates.json.example` | `Skripte\` · Drive 1yG40SCCbz3vjF_nkr7gZDigdkupUfGGa | Dry-Run geprüft |
 | 9 | `26_10_06_ID-03_anpassen_rf6.py` (Delta-Auswertung) | `Skripte\` · Drive 13KBaOIRlTxQu_BcOMl1LT1wqFjX0ELa7 | CANDIDATE |
 | 9 | F_Rd 27,9 kN (F_Rk 46,1 kN, γ_R·γ_M = 1,5·1,1), ETA-11/0160 | Quellenlog Ursprung U9b | FOUND |
-| 10 | Quellenlog Ursprung / Vermesser / RF6 (Run-Register §3, Pfade §6) | `00_Quellenlog\` · RF6 Rev1 Drive 1PqqND7dbDesZIgtBVmitxmsi9yXpNfiB | Rev0/Rev1 |
+| 10 | Quellenlog Ursprung / Vermesser / RF6 (Run-Register §3, Pfade §6) | `00_Quellenlog\` · Drive-Ordner RF6 1UllYfuGwqUM5khZyAH4cUyMc60Lo6TrV (aktuelle Datei `…Quellenlog_RF6_Rev1.md`) | Rev0/Rev1 |
 
 ## 2 Beschaffung (ID01), blockiert Schritte 1/2/9
 

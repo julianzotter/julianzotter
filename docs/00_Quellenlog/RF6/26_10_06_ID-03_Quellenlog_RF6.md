@@ -104,8 +104,8 @@ Weitere Dateien 07.10.: Gegencheck-Antwort 1qRkkAnHRBxzBbpCpNE2Aw-NTKY9RGKeE (RF
 
 | Datei | Repo | Drive (BENCHMARK-SEILSTATIK/SKILL, Ordner 1F1xbTixsIAZ4qnTuUuPW0PIdNmvsDu1_) |
 |---|---|---|
-| SKILL.md (aktiv als `seilstatik-rf5-rf6-neuaufbau`) | `.claude/skills/seilstatik-rf5-rf6-neuaufbau/SKILL.md`, Kopie `docs/26_10_07_ID-03_SKILL_…_Rev0.md` | 1OAeKgo6F0XwMIvL-IQqW4VoPvyjwRA85 |
-| WEGWEISER.md | `.claude/skills/seilstatik-rf5-rf6-neuaufbau/WEGWEISER.md`, Kopie `docs/26_10_07_ID-03_WEGWEISER_…_Rev0.md` | 1uEcT1QsoZ-1jKJC5JfU50MIMEI5trCwx |
+| SKILL.md (aktiv als `seilstatik-rf5-rf6-neuaufbau`) | `.claude/skills/seilstatik-rf5-rf6-neuaufbau/SKILL.md`, Kopie `docs/26_10_07_ID-03_SKILL_…_Rev0.md` | Ordner SKILL (jeweils aktuelle Datei gleichen Namens) |
+| WEGWEISER.md | `.claude/skills/seilstatik-rf5-rf6-neuaufbau/WEGWEISER.md`, Kopie `docs/26_10_07_ID-03_WEGWEISER_…_Rev0.md` | Ordner SKILL (jeweils aktuelle Datei gleichen Namens) |
 
 ### 6c Entscheidung Referenzmodell (ID01, 07.10.2026)
 

@@ -80,3 +80,22 @@ E1 Geometriebasis VAR-A statt G3 · E2 Maste 1006/1007 entfallen, 3006/3007 gele
 | P6 | Ergebnis-/Exportverzeichnis lokal | `…\BENCHMARK-SEILSTATIK\Daten\results\` | E6a-Exporte → zusätzlich `00_Quellenlog/API_Auszuege/RF6_EXPORT_<stamp>_<RUN-ID>/`; schreibgeschützt nach Lauf |
 
 Loop-Dokumente (07.10.): Loop 1 Fremddaten „Fall B“ Drive 16nR2N7F5OWlQpJ4vP6H8aDbXkLxbm2Rj · Loop 2 Docx FERTIGSTELLUNG + Eingabetabellen Drive 1QZJxf7BR8e9Jud-O0SrBJko2Pw8bq4Bt (Repo `docs/26_10_07_ID-03_DELTA-REFINEMENT_LOOP2_FERTIGSTELLUNG-DOCX_Rev0.md`) · Eingabedaten v0.1 Zip 1-0r03VNC5jV_xm8rALgGfDS40MFn9vs7.
+
+### 6a Drive-Ordnerstruktur BENCHMARK-SEILSTATIK (angelegt 07.10. 09:04–09:07 UTC, spiegelt Paket v0.1 Stand cdc6acf)
+
+| Pfad (Drive = G:\Meine Ablage\_INDEX_LNK\BENCHMARK-SEILSTATIK\) | Drive-ID |
+|---|---|
+| README_PAKET.md | 1ZljCyNMIWZqwUMvNj5jTy0BR8UMmqojp |
+| Skripte/ | 1iZNO0RFjfYXLS6clwA0vNYyWKuHkvpCF |
+| Skripte/_GESPERRT_FREMDSKRIPTE_CHATFASSUNG/ | 1ewcBd4x-NQ1mTVsVv8ebeh90R9swpbzx |
+| Daten/ | 1ncwXXd0sqislDw8BHWB8e2P3_wMpL5jd |
+| Daten/input/ | 1jvEhVlmHp8zZzjNuhDqPZBveV8ZzCnn7 |
+| Daten/input/EINGABEDATEN_RF6_v0.1/ | 1ZPr8x8H81DXt6qQAHICKe8huZ1-nMmuO |
+| Daten/input/EINGABEDATEN_RF6_v0.1/A_BESTAND/ | 1wsZYY6q54b7bhLuxcCzQrWPUEgV5hVPo |
+| Daten/input/EINGABEDATEN_RF6_v0.1/B_VARA/ | 1c9Av0mZ4gqeb4ApPBaoPM1MFZkBVAMIK |
+| Daten/results/ | 1x2ACcb2u4fQ1-B9mUCwkFRyohF39Rkt6 |
+| Logs/ | 1jwh1tfHHnEEiaEKgtU7Zrjfbcz7Q3k6n |
+| Befunde/ | 1tSNvcVz-dGZEZXX5bH-qUNX7tzs5F6PA |
+| 00_Quellenlog/ (bestehend) | 1kbe5F856ZwxMRybU8ouCpgefjK-Eyck2 |
+
+Weitere Dateien 07.10.: Gegencheck-Antwort 1qRkkAnHRBxzBbpCpNE2Aw-NTKY9RGKeE (RF6-Ordner) · Topologie-Gate C06/C07 (Befunde/) · ZIP `SEILSTATIK_BOEBLINGEN_ERG4_BENCHMARK-SEILSTATIK_v0.1.zip` (50 Dateien, SHA-256 98f39df608a97b4c…) nur im Repo und als Session-Dateiversand; Drive-Connector lädt keine Binärdateien dieser Größe. Die Ordnerstruktur auf Drive ersetzt das ZIP für die lokale Synchronisation.

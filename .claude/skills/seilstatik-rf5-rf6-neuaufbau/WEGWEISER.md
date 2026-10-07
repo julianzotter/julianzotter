@@ -57,3 +57,49 @@ Lokal = `G:\Meine Ablage\_INDEX_LNK\BENCHMARK-SEILSTATIK\` (Drive für Desktop, 
 ## 4 Nicht verwenden
 
 Fremdskripte `rf5_export.py`, `boeb_bereinigung.py`, `boeb_rf6_generator*.py`, `boeb_delta_matrix.py`, `boeb_pfeifer_mapping.py`, `boeb_full_pipeline.py`, `tabellen_generator.py`, `boeb_import.py`; Excel V02/V04; `transformed_nodes.csv` (G3-Siebenpunkt); Docx FERTIGSTELLUNG „Fall B". Begründung: `Befunde\…SPERRLISTE…`, Loop 1, Loop 2, Gegencheck-Antwort (alle im Ordner Befunde, Drive 1tSNvcVz-dGZEZXX5bH-qUNX7tzs5F6PA).
+
+## 5 CSV-Verträge (verbindlich; UTF-8 mit BOM, Trennzeichen `;`, Dezimalpunkt, Einheiten im Spaltennamen, erste Zeile Kopf, keine Formeln)
+
+| Datei | Spalten | Schlüssel | Einheit |
+|---|---|---|---|
+| 01_knoten | no; x_m; y_m; z_m; quelle | no | m, RFEM lokal, Z nach unten + |
+| 02_staebe | no; linie; knoten_i; knoten_j; typ_rf5 (9 Seil / 1 Balken); typ_text; qs_start; qs_ende; laenge_m; quelle | no | m |
+| 03_materialien | no; bezeichnung; E_kN_cm2; G_kN_cm2; nu; gamma_kN_m3; alpha_T_1_K; gamma_M; hinweis | no | kN/cm² (API: ×1e7 → Pa) |
+| 04_querschnitte | no; bezeichnung; material; A_cm2; Ay_cm2; Az_cm2; It_cm4; Iy_cm4; Iz_cm4; verwendung | no | cm², cm⁴ (API: ×1e-4 / ×1e-8 → m², m⁴) |
+| 05_lager | no; knoten (Liste); ux; uy; uz; phix; phiy; phiz (fest/frei/Federwert); drehung_z_rad; hinweis | no | rad |
+| 06_rechenparameter | parameter; wert; hinweis | parameter | – |
+| 07_knotenlasten | LF; nr; Fx_kN; Fy_kN; Fz_kN; anzahl; knoten (Liste) | LF+nr | kN (API: ×1e3 → N) |
+| 08_stablasten | LF; lf_name; nr; art (Streckenlast_kN_m / Temperatur_dT_K); wert; richtung_code_rf6; anzahl; staebe (Liste) | LF+nr | kN/m, K |
+| 09_lastfaelle_lastkombinationen | typ (LF/LK); nr; name; actionCategoryId; definition (Faktor*LF + …); quelle | typ+nr | – |
+| 10_resultate_rf5_staebe (**neu, aus 13bb/PDF**) | LK; stab; N_min_kN; N_max_kN; x_m; seite_pdf; quelle | LK+stab | kN |
+| 11_resultate_rf5_lager (**neu**) | LK; knoten; Px_kN; Py_kN; Pz_kN; seite_pdf; quelle | LK+knoten | kN |
+| 12_resultate_rf5_knoten (**neu**) | LK; knoten; ux_m; uy_m; uz_m; seite_pdf; quelle | LK+knoten | m (liefert auch R2 für Kn 8) |
+| T01–T09 (Teilmodell) | wie 01–09, zusätzlich T01: x_m_B; y_m_B; z_m_B; rolle; in_modell_A_T; in_modell_B_T · T02: in_modell_B_T; weggelassen_am_schnitt · T05: knoten_im_teilmodell; in_modell_B_T | wie oben | wie oben |
+| T10_randbedingung_schnittknoten | knoten; LK; option_R1; option_R2_ux_m; option_R2_uy_m; option_R2_uz_m; quelle_R2 | knoten+LK | m |
+| T11_change_allowlist | objekt; id; aktion; alt; neu; grund; freigabe | objekt+id | – |
+| rf6_writeback_audit (Schritt 5/7) | gruppe; objekt_id; feld; csv_wert; rf6_wert; status (OK/ABWEICHUNG) | gruppe+objekt_id+feld | SI wie API |
+| 01_Seilkraefte_N / 02_Lagerkraefte_global / 03_Knotenverformungen (Export E6a) | wie vom Export-Skript geliefert (API-Felder), plus run_id | LK+objekt | N, m (API) |
+| rf5_rf6_comparison (Schritt 9) | LK; objekt_typ (Seil/Lager/Knoten); id; groesse; RF5; RF6_A; RF6_B; delta_B_minus_RF5; delta_rel; status (APPROVED_CHANGE / SOFTWARE_MAPPING / ROUNDING / UNAPPROVED) | LK+objekt_typ+id+groesse | kN, m |
+
+Vergleichsschlüssel: Seil = LK + Stab-Nr; Lager = LK + Knoten; Knoten = LK + Knoten-Nr. Vorzeichen: Z nach unten positiv, Zug positiv. Nullschwelle für δ: |RF5| < 0,1 kN bzw. 1 mm → nur Δ absolut.
+
+## 6 Minimaler Datensatz für den heutigen Rechenlauf (Teilmodell, so wenig wie möglich)
+
+| Nr | Datei | Zeilen | Status |
+|---|---|---|---|
+| 1 | T01_knoten (16, davon 2 nur A-T) | 16 | vorhanden |
+| 2 | T02_staebe (15 + 2 weggelassen dokumentiert) | 17 | vorhanden |
+| 3 | T03_materialien (Mat 5 Seil, Mat 6 S 235 J2 G3) | 2 | vorhanden |
+| 4 | T04_querschnitte (QS 1, 4, 5, 12) | 4 | vorhanden |
+| 5 | T05_lager (6 Objekte + NEU-B + RAND-8) | 8 | vorhanden; Drehung 3006/3007 = Auflage ID01 |
+| 6 | T06_rechenparameter | 28 | vorhanden |
+| 7 | T07_knotenlasten (gefiltert) | 16 | vorhanden |
+| 8 | T08_stablasten (gefiltert, 12 Seile) | 18 | vorhanden; Richtungscodes gegen RF5-Ausdruck prüfen |
+| 9 | T09 LF/LK | 41 | vorhanden; LK220 Entscheidung E4 |
+| 10 | T10 Randbedingung Kn 8 | 22 (je LK) | R1 sofort; R2 braucht 12_resultate_rf5_knoten |
+| 11 | T11 change_allowlist | 8 | vorhanden |
+| 12 | 10/11/12_resultate_rf5 (Vergleichswerte, T-G1) | – | **fehlt** → heute aus RF5 13bb (COM oder Ausdruck) für LK100 mindestens: N S17, S18, S19, S22, S60, S63, S64, S81; Lager 105, 106, 113, 114, 2021; u Kn 8, 9, 10, 29, 30 |
+
+Alles andere (Gesamtmodell 86/88, übrige LF-Knotenlisten, Hilfsgeometrie, Fremddaten) ist für den heutigen Lauf nicht erforderlich.
+
+Ablage: `Daten\input\EINGABEDATEN_RF6_TEILMODELL_v0.1\` (lokal/Drive) · Generator `Skripte\26_10_07_ID-03_make_teilmodell.py` · RF6-Tabellenexport als Readback-Format: lokaler Ordner `…\BENCHMARK-SEILSTATIK\` (Index `26_10_07_ID-03-Stäbe+Stabendgelenke-json.txt`, Drive 14gCnIvxV8PtLj7Jm7rj6aMxsBcAHp4_m; enthält u. a. `Knoten-Zwangsverformungen.csv` für R2 und `Stabnichtlinearitäten.csv` für Seil = nur Zug).

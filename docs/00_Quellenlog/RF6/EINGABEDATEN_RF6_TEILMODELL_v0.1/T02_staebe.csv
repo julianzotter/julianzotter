@@ -1,0 +1,18 @@
+﻿no;typ_text;knoten_i;knoten_j;qs_start;qs_ende;laenge_m;in_modell_B_T;weggelassen_am_schnitt;quelle
+17;Seil;330;8;1;1;11.7675;ja;;U10 + lines.csv
+18;Seil;330;9;1;1;15.914192;ja;;U10 + lines.csv
+19;Seil;3006;9;1;1;3.831583;ja;;U10 + lines.csv
+20;Seil;10;9;1;1;20.467404;ja;;U10 + lines.csv
+21;Seil;10;106;1;1;3.872815;ja;;U10 + lines.csv
+22;Seil;10;3007;1;1;8.003209;ja;;U10 + lines.csv
+60;Seil;29;113;1;1;3.392401;ja;;U10 + lines.csv
+61;Seil;10;29;1;1;19.082717;ja;;U10 + lines.csv
+62;Seil;29;30;1;1;19.38098;ja;;U10 + lines.csv
+63;Seil;30;3021;1;1;11.782029;ja;;U10 + lines.csv
+64;Seil;30;114;1;1;11.078517;ja;;U10 + lines.csv
+81;Seil;105;330;1;1;1.00171;ja;;U10 + lines.csv
+1006;Balken;3006;2006;5;4;8.7;nein (Mast entfaellt);;U10 + lines.csv
+1007;Balken;3007;2007;5;4;8.7;nein (Mast entfaellt);;U10 + lines.csv
+1021;Balken;3021;2021;12;4;8.7;ja;;U10 + lines.csv
+16;Seil;8;6;;;;nein;ja (ausserhalb Modellgrenze);
+23;Seil;11;8;;;;nein;ja (ausserhalb Modellgrenze);

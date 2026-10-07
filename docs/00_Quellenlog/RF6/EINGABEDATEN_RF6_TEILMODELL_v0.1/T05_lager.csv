@@ -1,0 +1,9 @@
+﻿no;knoten;knoten_im_teilmodell;ux;uy;uz;phix;phiy;phiz;drehung_z_rad;in_modell_B_T;hinweis
+2;101-106;105,106;fest;fest;fest;frei;frei;fest;-0.7853982;ja;Werte -1 = starr, 0 = frei, sonst Federkonstante
+8;2021;2021;fest;fest;fest;fest;fest;fest;0.06981317;ja;Werte -1 = starr, 0 = frei, sonst Federkonstante
+29;114;114;fest;fest;fest;frei;frei;fest;0.7853982;ja;Werte -1 = starr, 0 = frei, sonst Federkonstante
+30;113;113;fest;fest;fest;frei;frei;fest;0.7853982;ja;Werte -1 = starr, 0 = frei, sonst Federkonstante
+36;2006;2006;fest;fest;fest;fest;fest;fest;-2.180789;nein (Mastfuss entfaellt);Werte -1 = starr, 0 = frei, sonst Federkonstante
+37;2007;2007;fest;fest;fest;fest;fest;fest;0.9620255;nein (Mastfuss entfaellt);Werte -1 = starr, 0 = frei, sonst Federkonstante
+NEU-B;3006,3007;3006,3007;fest;fest;fest;frei;frei;fest;wie Lager Kn 105 (-0.7853982), Auflage ID01;ja (nur Modell B-T);Fassadenanker C06/C07, gelenkig wie Wandanker
+RAND-8;8;8;R1 fest / R2 u_x(LK);R1 fest / R2 u_y(LK);R1 fest / R2 u_z(LK);frei;frei;frei;0;ja;Modellgrenze: R1 starr (Standard heute) oder R2 Knoten-Zwangsverformung aus RF5 (T10)

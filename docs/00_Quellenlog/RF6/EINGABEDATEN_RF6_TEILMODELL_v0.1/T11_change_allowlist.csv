@@ -1,0 +1,9 @@
+﻿objekt;id;aktion;alt;neu;grund;freigabe
+Knoten;3006;Koordinaten setzen;"141.809;58.051;-0.038";"142.648;58.743;0.452";C06 -> Fassadenanker (Geometer 7101, T1);ID01 07.10.2026
+Knoten;3007;Koordinaten setzen;"160.376;43.764;0.186";"161.883;44.239;0.452";C07 -> Fassadenanker (Geometer 7102, T1);ID01 07.10.2026
+Stab;1006;loeschen;Mast 3006-2006;-;Pylon C06 entfaellt;ID01 07.10.2026
+Stab;1007;loeschen;Mast 3007-2007;-;Pylon C07 entfaellt;ID01 07.10.2026
+Knoten+Lager;2006;loeschen;Mastfuss, Lager Obj 36;-;Pylon C06 entfaellt;ID01 07.10.2026
+Knoten+Lager;2007;loeschen;Mastfuss, Lager Obj 37;-;Pylon C07 entfaellt;ID01 07.10.2026
+Lager;3006,3007;neu gelenkig;-;u fest, phi_x/phi_y frei, phi_z fest, Drehung wie Kn 105;Fassadenanker;ID01 07.10.2026 (Drehung: Auflage)
+Lager;8;Randbedingung Modellgrenze;freier Netzknoten;R1 starr / R2 Zwangsverformung;Teilmodell-Schnitt;ANNAHME ID-03, Bestaetigung ID01 (Skizze)

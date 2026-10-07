@@ -1,0 +1,17 @@
+﻿no;x_m;y_m;z_m;x_m_B;y_m_B;z_m_B;rolle;in_modell_A_T;in_modell_B_T;quelle
+8;116.629;67.891;0.35;116.629;67.891;0.35;SCHNITTKNOTEN (Modellgrenze, Randbedingung R1/R2);ja;ja;U10 input_3.json
+9;138.936;55.525;0.177;138.936;55.525;0.177;Netzknoten;ja;ja;U10 input_3.json
+10;153.008;40.669;0.616;153.008;40.669;0.616;Netzknoten;ja;ja;U10 input_3.json
+29;170.654;33.408;0.4;170.654;33.408;0.4;Netzknoten;ja;ja;U10 input_3.json
+30;181.20428900000002;17.174649;1.29;181.20428900000002;17.174649;1.29;Netzknoten;ja;ja;U10 input_3.json
+105;122.596;57.411;-0.12900000016390567;122.596;57.411;-0.12900000016390567;Wandanker (Lager);ja;ja;U10 input_3.json
+106;151.487;37.125;0.2619999996647334;151.487;37.125;0.2619999996647334;Wandanker (Lager);ja;ja;U10 input_3.json
+113;172.126;36.292;-0.612;172.126;36.292;-0.612;Wandanker (Lager);ja;ja;U10 input_3.json
+114;172.082;11.24;-0.783;172.082;11.24;-0.783;Wandanker (Lager);ja;ja;U10 input_3.json
+330;123.243236;58.16457;-7.105427e-15;123.243236;58.16457;-7.105427e-15;Netzknoten;ja;ja;U10 input_3.json
+2006;141.80901;58.05100000000001;8.662000009999998;;;;Mastfuss C06 (nur Modell A-T);ja;nein (entfaellt);U10 input_3.json
+2007;160.37601;43.76400000000001;8.886000009999998;;;;Mastfuss C07 (nur Modell A-T);ja;nein (entfaellt);U10 input_3.json
+2021;192.946;16.26700000000001;9.637000009999998;192.946;16.26700000000001;9.637000009999998;Mastfuss C21 (Lager);ja;ja;U10 input_3.json
+3006;141.809;58.051;-0.03800000014900473;142.648;58.743;0.452;Kern (geaenderter Haltepunkt);ja;ja;U10 input_3.json
+3007;160.376;43.764;0.186;161.883;44.239;0.452;Kern (geaenderter Haltepunkt);ja;ja;U10 input_3.json
+3021;192.946;16.267;0.9369999999999999;192.946;16.267;0.9369999999999999;Mastkopf C21 (bleibt);ja;ja;U10 input_3.json

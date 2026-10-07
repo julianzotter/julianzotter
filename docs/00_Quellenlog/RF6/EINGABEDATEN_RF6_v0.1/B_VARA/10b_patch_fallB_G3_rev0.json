@@ -1,0 +1,23 @@
+{
+ "id": "26_10_07_ID-03-RF6_GEOMETRIE_PATCH_FALL-B_G3_Rev0",
+ "status": "VARIANTE B-7 – NICHT FREIGEGEBEN – nur anwendbar nach Entscheidung ID01: E1 = Transformation T2 (G3-Siebenpunkt) UND E2 = Maste 1006/1007 bleiben (Docx FERTIGSTELLUNG 07.10.). Widerspricht Auftragsprämisse Ergänzung 4 (C06/C07 -> Fassadenanker); Umfang des Auftrags ist dann neu zu definieren.",
+ "ziel_modell": "Arbeitskopie WORKING_CALC nach P2 (86 Kn / 88 St); Original M1 nie ändern",
+ "koordinatensystem": "RFEM lokal, Z positiv nach unten, [m]",
+ "transformation": {"quelle": "transformed_nodes.csv (V8, Pipeline G3 09/2026)", "fit": "7 Punkte starr, RMSE 0,62-0,65 m (Quellenlog Vermesser T2, Status CONFLICT)"},
+ "knoten_setzen": [
+  {"knoten": 105, "label": "A05", "x": 122.071816, "y": 56.970598, "z": -0.129, "basis": "G3; dXY zu 5e 0,685 m (T2-Artefakt, physisch unveraendert)"},
+  {"knoten": 106, "label": "A06", "x": 151.161724, "y": 36.990289, "z": 0.262, "basis": "G3; dXY 0,352 m"},
+  {"knoten": 113, "label": "A13", "x": 171.514489, "y": 36.430740, "z": -0.612, "basis": "G3; dXY 0,627 m"},
+  {"knoten": 114, "label": "A14", "x": 172.194131, "y": 11.139194, "z": -0.783, "basis": "G3; dXY 0,151 m"},
+  {"knoten": 3006, "label": "C06 Mastkopf", "x": 142.074985, "y": 58.490902, "z": -0.038, "basis": "G3; Mast 1006 bleibt, Neigung 3,38 deg, L 8,715 m"},
+  {"knoten": 3007, "label": "C07 Mastkopf", "x": 161.455905, "y": 44.182774, "z": 0.186, "basis": "G3; Mast 1007 bleibt, Neigung 7,58 deg, L 8,777 m"},
+  {"knoten": 3021, "label": "C21 Mastkopf", "x": 192.948951, "y": 15.945504, "z": 0.937, "basis": "G3; Mast 1021 bleibt, Neigung 2,12 deg, L 8,706 m (E3)"}
+ ],
+ "staebe_loeschen": {"maste_entfallen": [], "hilfsgeometrie_qs14": [158, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193]},
+ "knoten_loeschen": [3025, 3026, 3027, 3028, 3057, 3058, 3060, 3061, 3062, 3063, 3064, 3065, 3066, 3067, 3068, 3069, 3070, 3071, 3072, 3095],
+ "lager": {"entfernen": [], "neu_gelenkig_wie_101_106": [], "hinweis": "Lager unveraendert (27 Objekte); Mastfuesse 2006/2007/2021 bleiben eingespannt"},
+ "querschnitte_loeschen": [14, 15, 16, 17],
+ "lasten": "unveraendert, 1:1 Bestand (LF10 = 30 x 1,000 kN); keine Vorspannung; keine Formfindung; LK220 ergaenzen (E4)",
+ "zusaetzliche_nachweise_bei_freigabe": ["Maste 1006/1007/1021 geneigt: Biegung am Fuss + Koecher (Th. III. O.)", "Mastkopfanschluss bei 7,6 deg", "Geometer-Freigabe V7 revidieren (Hash 7DB74920 nicht reproduziert)"],
+ "kontrollwerte_nach_patch": {"knoten": 86, "seilstaebe": 68, "maste": 20, "lager_objekte": 27}
+}

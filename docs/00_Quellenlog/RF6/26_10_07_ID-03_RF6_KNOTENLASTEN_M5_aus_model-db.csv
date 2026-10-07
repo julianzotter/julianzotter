@@ -1,0 +1,18 @@
+LF;Last_Nr;Typ;Fx_N;Fy_N;Fz_N;Anzahl_Knoten;Knoten;Befund;Quelle
+10;1;Components;0;0;1000;30;1-30;Leuchte 1,000 kN je Knoten, Summe 30,0 kN (Z positiv nach unten);model.db M5 NodalLoad/NodalLoadImplComponents
+30;1;Components;21;0;0;31;1-30, 330;;model.db M5
+31;1;Components;-21;0;0;28;1-11, 13-14, 16-28, 30, 113;Knoten 113 (Anker) enthalten, 12/15/29 fehlen (BEFUND K: Knotenlisten inkonsistent);model.db M5
+31;2;Components;-21;0;0;1;1;Knoten 1 doppelt belastet;model.db M5
+32;1;Components;21;0;0;29;1-23, 25-28, 330, 3012;3012 (Mastkopf) enthalten, 24/29/30 fehlen; Richtung x statt y;model.db M5
+33;1;Components;0;-21;0;29;1-6, 8-10, 12-30, 330;7 und 11 fehlen;model.db M5
+40;1;Components;0;0;65;30;1-30;Raueis RD2 Knoten;model.db M5
+41;1;Components;0;0;29;29;1-6, 8-30;7 fehlt;model.db M5
+43;1;Components;0;0;1500;30;1-30;Schnee auf Leuchten 1,500 kN;model.db M5
+50;1;Components;23.5;0;0;30;1-30;;model.db M5
+51;1;Components;-24;0;0;30;1-30;;model.db M5
+52;1;Components;0;24;0;30;1, 3-30, 3002;3002 (Mastkopf) enthalten, 2 fehlt;model.db M5
+53;1;Components;0;-24;0;30;1-30;;model.db M5
+60;1;Components;10.6;0;0;30;1-30;;model.db M5
+61;1;Components;-11;0;0;30;1-30;;model.db M5
+62;1;Components;0;11;0;30;1-30;;model.db M5
+63;1;Components;0;-11;0;30;1-30;;model.db M5

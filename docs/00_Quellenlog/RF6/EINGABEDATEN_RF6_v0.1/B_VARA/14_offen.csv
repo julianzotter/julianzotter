@@ -1,0 +1,7 @@
+﻿punkt
+"C21 (3021): Geometer 7104 weicht 0.600 m von Bestand ab; Mast 1021 bleibt -> Fall A/B nur hier entscheiden"
+Lastfälle: Knotenlast-Listen LF31/LF32/LF33/LF41/LF52 bereinigen (siehe Befund §6)
+"Kombinationsbeiwerte EN 1990/NA prüfen; EK1 um LK200-LK205 erweitern; LK220 = 1.35*LF10 + 1.5*LF43 ergänzen"
+Seil 35: Stablasten Temperatur/Wind/Eis fehlen
+LK220 = 1,35*LF10 + 1,50*LF43 anlegen (Erg. 2)
+Kontrolle nach Patch: 84 Knoten / 68 Seile / 18 Maste

@@ -98,7 +98,7 @@ def loads_from_db(db: sqlite3.Connection, out: Path) -> dict:
         mag = q(f'select * from "{t}_magnitudes" where id=? order by container_order', i)
         mem = sorted(mid[r["reference_id"]] for r in q(f'select * from "{t}_assignedTo" where id=?', i) if r["reference_table"] == "Member")
         kind = "Temperatur_dT_K" if "Temperature" in t else "Streckenlast_kN_m"
-        m0 = mag[0] if mag else {}
+        m0 = dict(mag[0]) if mag else {}
         val = m0.get("temperaturesOrMagnitudeSecondMagnitude") if kind.startswith("Temp") else m0.get("temperaturesOrMagnitudeFirstMagnitude", 0) / 1e3
         lfno = lc[ml["parentModelObject_id"]]
         member.append([lfno, lfname.get(lfno, ""), ml["userID"], kind, round(val, 6) if val is not None else None, d["loadDirection"],

@@ -1,0 +1,7 @@
+﻿knoten;label;x_m;y_m;z_m;basis
+105;A05;122.596;57.411;-0.129;Bestand 5e (VAR-A: Anker unverändert, Abw. Geometer 0.037 m)
+106;A06;151.487;37.125;0.262;Bestand 5e (Abw. Geometer 0.040 m)
+113;A13;172.126;36.292;-0.612;Bestand 5e (Abw. Geometer 7108: 0.089 m)
+114;A14;172.082;11.24;-0.783;Bestand 5e (Abw. Geometer 7106: 0.057 m)
+3006;C06 -> Fassadenanker;142.648;58.743;0.452;Geometer 7101, VAR-A-Trafo
+3007;C07 -> Fassadenanker;161.883;44.239;0.452;Geometer 7102, VAR-A-Trafo

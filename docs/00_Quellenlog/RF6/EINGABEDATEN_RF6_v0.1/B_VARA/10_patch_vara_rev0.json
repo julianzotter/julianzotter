@@ -1,0 +1,26 @@
+{
+ "id": "26_10_06_ID-03-RF6_GEOMETRIE_PATCH_VARA_Rev0",
+ "status": "VORSCHLAG – NICHT FREIGEGEBEN – Anwendung erst nach G3-Revision durch J. Zotter",
+ "ziel_modell": "Arbeitskopie von 26_10_06_SEILSTATIK-MODELL-001.rf6 (SHA256 1286822edbe6c738933e401619b5cd2df0df032b1c62f3306be19c28573db3cd); Original nicht ändern",
+ "koordinatensystem": "RFEM lokal, Z positiv nach unten, [m]",
+ "transformation_varA": {"quelle": "26_09_23_KURZBERICHT_RFEM_VAR-A_LK100 [2] Geometrie", "formel": "x = X - 3500460.605 ; y = -(Y - 5394418.936) ; z = -(Z - 445.472)", "fit": "4 Anker A05/A06/A13/A14, RMS 0.098 m (lt. Kurzbericht)"},
+ "knoten_setzen": [
+  {"knoten": 105, "label": "A05", "x": 122.596, "y": 57.411, "z": -0.129, "basis": "Bestand 5e (VAR-A: Anker unverändert, Abw. Geometer 0.037 m)"},
+  {"knoten": 106, "label": "A06", "x": 151.487, "y": 37.125, "z": 0.262, "basis": "Bestand 5e (Abw. Geometer 0.040 m)"},
+  {"knoten": 113, "label": "A13", "x": 172.126, "y": 36.292, "z": -0.612, "basis": "Bestand 5e (Abw. Geometer 7108: 0.089 m)"},
+  {"knoten": 114, "label": "A14", "x": 172.082, "y": 11.240, "z": -0.783, "basis": "Bestand 5e (Abw. Geometer 7106: 0.057 m)"},
+  {"knoten": 3006, "label": "C06 -> Fassadenanker", "x": 142.648, "y": 58.743, "z": 0.452, "basis": "Geometer 7101, VAR-A-Trafo"},
+  {"knoten": 3007, "label": "C07 -> Fassadenanker", "x": 161.883, "y": 44.239, "z": 0.452, "basis": "Geometer 7102, VAR-A-Trafo"}
+ ],
+ "staebe_loeschen": {"maste_entfallen": [1006, 1007], "hilfsgeometrie_qs14": [158, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193]},
+ "knoten_loeschen": [2006, 2007, 3025, 3026, 3027, 3028, 3057, 3058, 3060, 3061, 3062, 3063, 3064, 3065, 3066, 3067, 3068, 3069, 3070, 3071, 3072, 3095],
+ "lager": {"entfernen": [2006, 2007], "neu_gelenkig_wie_101_106": [3006, 3007], "hinweis": "Lagerachsen/Drehung analog Wandanker festlegen (Auflage J. Zotter)"},
+ "querschnitte_loeschen": [14, 15, 16, 17],
+ "offen_nicht_im_patch": [
+  "C21 (3021): Geometer 7104 weicht 0.600 m von Bestand ab; Mast 1021 bleibt -> Fall A/B nur hier entscheiden",
+  "Lastfälle: Knotenlast-Listen LF31/LF32/LF33/LF41/LF52 bereinigen (siehe Befund §6)",
+  "Kombinationsbeiwerte EN 1990/NA prüfen; EK1 um LK200-LK205 erweitern; LK220 = 1.35*LF10 + 1.5*LF43 ergänzen",
+  "Seil 35: Stablasten Temperatur/Wind/Eis fehlen"
+ ],
+ "kontrollwerte_nach_patch": {"knoten": 84, "seilstaebe": 68, "maste": 18, "quelle": "Kurzbericht VAR-A [2]: 84 Kn | 68 Seile | 18 Maste"}
+}

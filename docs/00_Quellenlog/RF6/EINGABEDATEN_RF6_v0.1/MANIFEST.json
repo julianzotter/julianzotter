@@ -1,0 +1,51 @@
+{
+  "status": "CANDIDATE",
+  "modell_a_quelle": {
+    "path": "G:\\Meine Ablage\\26-03-18_Boeb_Adaptierung\\SANDBOX_RFEM5_COM_20260923_1356\\05_RECHENSTAND\\BOEB_BESTAND-5e_NEUBERECHNET_RFEM529_20260923_1437.rf5",
+    "name": "BOEB_BESTAND-5e_NEUBERECHNET_RFEM529_20260923_1437",
+    "rfem": "5.29.01.161059",
+    "exported": "2026-09-23T14:38:30",
+    "has_results": true,
+    "z_axis": 0
+  },
+  "zeilen": {
+    "01_knoten": 86,
+    "02_staebe": 88,
+    "03_materialien": 6,
+    "04_querschnitte": 13,
+    "05_lager": 27,
+    "06_rechenparameter": 28,
+    "07_knotenlasten": 17,
+    "08_stablasten": 18,
+    "11_knoten_patch": 6,
+    "12_loeschen": 4,
+    "13_lager_patch": 4,
+    "14_offen": 6
+  },
+  "quellen_sha256": {
+    "input_3.json": "394820ebeadac3f64715200d553b8e09320b8fc78b9d7a495ec2937ec2c99675",
+    "lines.csv": "14b77cef43015b48fc8235cc63ce328fa1a234a89b9b6214dae56d32cd6cfaa0",
+    "model.db": "773d7b65de5a9ba28d1be7ec2e1556487c573bc455baf3979e2c64288fb5010b",
+    "patch_vara_rev0.json": "115d7587f0e210ecaad3500a77a04a47946ebcbe812fb58be23b185fbb12bee4"
+  },
+  "ausgaben_sha256": {
+    "A_BESTAND/01_knoten.csv": "77b02c8207e19bf22f2a839bed5f720b7a948548217ac7762b9cb0efb15d5cd5",
+    "A_BESTAND/02_staebe.csv": "eb790c98aaac4edd7cb4f759e3fee72395f58c2792f3e880efc59abec812bdcb",
+    "A_BESTAND/03_materialien.csv": "9f7b4ed132ca63bec2ff4ec9d5c7c27a363170013cf351fb0cb8bd943f70d765",
+    "A_BESTAND/04_querschnitte.csv": "28f94a9f1f5b4f9a62df444b785f130d8d9ec021c437f444a576581aafee3c4b",
+    "A_BESTAND/05_lager.csv": "c09b6350062b345f9c46a75108e3e3eeb500d428b15801cc5d9496b81b277faa",
+    "A_BESTAND/06_rechenparameter.csv": "1d3c6fa2ac81c04795bff92d6fc981221ff6d48549c28630cbe7009e9815f25f",
+    "A_BESTAND/07_knotenlasten.csv": "857a671ba0e204981c5a15d27299e08cf969b294da3a36f2cd7f2ac8df8b8e9a",
+    "A_BESTAND/08_stablasten.csv": "320c201a429800932276b798441b3af95839c70685c60ab37e04c81112e6e717",
+    "B_VARA/11_knoten_patch.csv": "075fab737ee1f7366052e87832be2ba72c636b15b5babf3c897997424fa71000",
+    "B_VARA/12_loeschen.csv": "f541b82c05c55b978a18d712d78365646a77cb99ddac47cb0d298c681c17c024",
+    "B_VARA/13_lager_patch.csv": "acb6a8802c4f4ad3b476e38ac4701f1f6d19b845d5b5c772982bafddefc5d188",
+    "B_VARA/14_offen.csv": "ca803370b8b6f0a7b5e6947679c7703d25808dd1efb6fe6d4dd6a72de10372e8"
+  },
+  "regeln": [
+    "Lasten 1:1 Bestand (LF10 = 30 x 1,000 kN)",
+    "keine Vorspannung",
+    "keine Formfindung",
+    "Modell B = Modell A + B_VARA/*.csv; C21/E3, E4, E6 offen"
+  ]
+}

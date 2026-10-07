@@ -1,0 +1,61 @@
+{
+ "zweck": "Beleg der im Chat eingefügten Fremdskripte für die Sperrliste; Fassung = Chattext, nicht die Dateien der Fremd-Sandbox",
+ "dateien": [
+  {
+   "datei": "boeb_bereinigung.py.txt",
+   "bytes": 10058,
+   "sha256": "54f138449d572633571f70cf004f3ee7516815523b86b3c9801eb54702e4c021",
+   "quelle": "Chat 07.10. 08:23 UTC",
+   "status": "GESPERRT (Sperrliste Rev0), nicht ausführbar (.txt), nur Beleg"
+  },
+  {
+   "datei": "boeb_delta_matrix.py.txt",
+   "bytes": 10993,
+   "sha256": "a1bd085c3b2d0d0fb2bc5d5621ad1b2f3ec28b8602a264fe6d679b981650cb7c",
+   "quelle": "Chat 07.10. 08:23 UTC",
+   "status": "GESPERRT (Sperrliste Rev0), nicht ausführbar (.txt), nur Beleg"
+  },
+  {
+   "datei": "boeb_full_pipeline.py.txt",
+   "bytes": 1167,
+   "sha256": "bf17784be0697f9981e8104c9dfc026d3f907054e5ee112dcb6175dcad246917",
+   "quelle": "Chat 07.10. 08:20 UTC",
+   "status": "GESPERRT (Sperrliste Rev0), nicht ausführbar (.txt), nur Beleg"
+  },
+  {
+   "datei": "boeb_import.py.txt",
+   "bytes": 5382,
+   "sha256": "7ff206880bb3dfb5667a7c3729c66f93c8dc78d7e7539ff4580e53b4ba2439e6",
+   "quelle": "Chat 07.10. 08:09 UTC",
+   "status": "GESPERRT (Sperrliste Rev0), nicht ausführbar (.txt), nur Beleg"
+  },
+  {
+   "datei": "boeb_rf6_generator.py.txt",
+   "bytes": 8066,
+   "sha256": "233c7d325d50423ddd577285828336eb7d36aca2fc7bc293e30fcb77ac6bf825",
+   "quelle": "Chat 07.10. 08:20 UTC",
+   "status": "GESPERRT (Sperrliste Rev0), nicht ausführbar (.txt), nur Beleg"
+  },
+  {
+   "datei": "rf5_export.py.txt",
+   "bytes": 5539,
+   "sha256": "abdb576be8dd3937a1e1a6b43d3fc0eef5b94bc6822dba0eb74fa3db253238d8",
+   "quelle": "Chat 07.10. 08:20 UTC",
+   "status": "GESPERRT (Sperrliste Rev0), nicht ausführbar (.txt), nur Beleg"
+  },
+  {
+   "datei": "boeb_pfeifer_mapping.py",
+   "bytes": 0,
+   "sha256": null,
+   "quelle": "nie als Code übermittelt, nur Name",
+   "status": "NICHT VORHANDEN"
+  },
+  {
+   "datei": "tabellen_generator.py / boeb_rf6_generator_fall_b.py",
+   "bytes": 0,
+   "sha256": null,
+   "quelle": "nie als Code übermittelt (Fremd-Sandbox /mnt/data)",
+   "status": "NICHT VORHANDEN"
+  }
+ ]
+}

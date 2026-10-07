@@ -1,0 +1,209 @@
+"""
+BOEB_RF6_GENERATOR.py — Baut RFEM 6 Modell aus bereinigten CSVs neu auf.
+Pfad: G:\Meine Ablage\_INDEX_LNK\BENCHMARK-SEILSTATIK\
+Input:  Daten/bereinigt/*.csv + Daten/input/transformed_nodes.csv
+Output: 003_NACH_BP_FIX.rf6 + Daten/results/*.csv
+"""
+import csv, logging, pathlib, sys
+
+ROOT = pathlib.Path(__file__).parent.parent
+INPUT = ROOT / "Daten" / "input"
+BEREINIGT = ROOT / "Daten" / "bereinigt"
+RESULTS = ROOT / "Daten" / "results"
+LOG_DIR = ROOT / "Logs"
+MODEL_NAME = "003_NACH_BP_FIX"
+API_KEY = "boeblingen"
+
+RESULTS.mkdir(parents=True, exist_ok=True)
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler(LOG_DIR / "rf6_generate.log", encoding="utf-8"),
+        logging.StreamHandler(sys.stdout),
+    ],
+)
+log = logging.getLogger("RF6Gen")
+
+
+def read_csv(name):
+    p = BEREINIGT / f"{name}.csv"
+    if not p.exists():
+        log.warning(f"Fehlt: {p}")
+        return []
+    with open(p, encoding="utf-8") as f:
+        return list(csv.DictReader(f, delimiter=";"))
+
+
+def read_input(name):
+    p = INPUT / name
+    if not p.exists():
+        return []
+    with open(p, encoding="utf-8") as f:
+        return list(csv.DictReader(f, delimiter=";"))
+
+
+def main():
+    log.info("=" * 60)
+    log.info(f"RF6 GENERATOR — {MODEL_NAME}")
+    log.info("=" * 60)
+
+    try:
+        import dlubal.api.rfem as rfem
+    except ImportError:
+        log.error("dlubal.api fehlt. Bitte: pip install 'dlubal.api==2.11.*'")
+        sys.exit(1)
+
+    # 7 transformierte Knoten
+    transformed = {}
+    for row in read_input("transformed_nodes.csv"):
+        try:
+            transformed[int(row["RFEM"])] = (
+                float(row["X_m"]), float(row["Y_m"]), float(row["Z_m"]))
+        except Exception:
+            pass
+    log.info(f"Transformed: {len(transformed)} Knoten")
+
+    with rfem.Application(api_key_name=API_KEY) as app:
+        log.info(f"Verbunden: {app.get_application_info().name}")
+        app.create_model(name=MODEL_NAME)
+        app.delete_all_objects()
+
+        # 1. Materialien
+        mats = [rfem.structure_core.Material(
+                    no=int(r["No"]), name=r["Name"],
+                    elasticity_modulus=float(r["E_kN_cm2"]) * 100,
+                    shear_modulus=float(r["G_kN_cm2"]) * 100,
+                    poisson_ratio=float(r["nu"]),
+                    specific_weight=float(r["gamma_kN_m3"]),
+                    coefficient_of_thermal_expansion=float(r["alpha_T_1_K"]))
+                for r in read_csv("material")]
+        app.create_object_list(mats)
+        log.info(f"  Materialien: {len(mats)}")
+
+        # 2. Querschnitte (ohne 14-17)
+        qs_rows = [r for r in read_csv("querschnitt")
+                   if int(r["No"]) not in (14, 15, 16, 17)]
+        qss = [rfem.structure_core.CrossSection(
+                    no=int(r["No"]), material=int(r["MaterialNo"]),
+                    name=r["Name"])
+               for r in qs_rows]
+        app.create_object_list(qss)
+        log.info(f"  Querschnitte: {len(qss)} (bp-beleuchtung entfernt)")
+
+        # 3. Knoten — mit 7 überschriebenen
+        nodes = []
+        for r in read_csv("knoten"):
+            no = int(r["No"])
+            if no in transformed:
+                x, y, z = transformed[no]
+            else:
+                x, y, z = float(r["X_m"]), float(r["Y_m"]), float(r["Z_m"])
+            nodes.append(rfem.structure_core.Node(
+                no=no, coordinate_1=x, coordinate_2=y, coordinate_3=z))
+        app.create_object_list(nodes)
+        log.info(f"  Knoten: {len(nodes)} ({len(transformed)} überschrieben)")
+
+        # 4. Linien
+        lines = [rfem.structure_core.Line(
+                    no=int(r["No"]),
+                    definition_nodes=[int(r["NodeStart"]), int(r["NodeEnd"])])
+                 for r in read_csv("linien")
+                 if int(r.get("NodeStart", 0)) and int(r.get("NodeEnd", 0))]
+        app.create_object_list(lines)
+        log.info(f"  Linien: {len(lines)}")
+
+        # 5. Staebe (ohne 158, 178-193)
+        KEEP_MEMBERS = [r for r in read_csv("staebe")
+                        if int(r["No"]) not in list(range(158,159)) +
+                                                list(range(178,194))]
+        members = []
+        for r in KEEP_MEMBERS:
+            m = rfem.structure_core.Member(
+                no=int(r["No"]), line=int(r["LineNo"]),
+                cross_section_start=int(r["SectionStart"]))
+            if int(r["Type"]) == 9:
+                m.member_type = "TYPE_CABLE"
+            members.append(m)
+        app.create_object_list(members)
+        log.info(f"  Staebe: {len(members)} (bp-beleuchtung entfernt)")
+
+        # 6. Lager
+        sups = [rfem.types_for_nodes.NodalSupport(
+                    no=int(r["No"]), nodes=[int(r["NodeNo"])])
+                for r in read_csv("lager")]
+        app.create_object_list(sups)
+        log.info(f"  Lager: {len(sups)}")
+
+        # 7. Lastfaelle
+        lfs = [rfem.loading.LoadCase(no=int(r["No"]), name=r["Name"])
+               for r in read_csv("lastfaelle")]
+        app.create_object_list(lfs)
+        log.info(f"  Lastfaelle: {len(lfs)}")
+
+        # 8. LF10 — Fix auf 14x0.8=11.2 kN Ringlichter
+        # (Knotenlasten aus bereinigter CSV)
+        loads = []
+        for r in read_csv("knotenlasten"):
+            loads.append(rfem.loads.NodalLoad(
+                no=int(r["Load_No"]), load_case=int(r["LF_No"]),
+                nodes=[int(r["NodeNo"])],
+                load_type="LOAD_TYPE_COMPONENTS",
+                components_force_x=float(r.get("P_X_kN", 0) or 0) * 1000,
+                components_force_y=float(r.get("P_Y_kN", 0) or 0) * 1000,
+                components_force_z=float(r.get("P_Z_kN", 0) or 0) * 1000))
+        app.create_object_list(loads)
+        log.info(f"  Knotenlasten: {len(loads)}")
+
+        # 9. Lastkombinationen
+        lks = [rfem.loading.LoadCombination(no=int(r["No"]), name=r["Name"])
+               for r in read_csv("lastkombinationen")]
+        app.create_object_list(lks)
+        log.info(f"  Lastkombinationen: {len(lks)}")
+
+        # 10. Validierung 7 Kernknoten
+        log.info("Validierung Kernknoten:")
+        for no in [105, 106, 113, 114, 3006, 3007, 3021]:
+            try:
+                n = app.get_object(rfem.structure_core.Node(no=no))
+                tx, ty, tz = transformed.get(no, (0, 0, 0))
+                dx = abs(n.coordinate_1 - tx) * 1000
+                dy = abs(n.coordinate_2 - ty) * 1000
+                dz = abs(n.coordinate_3 - tz) * 1000
+                log.info(f"  Node {no}: Δ=({dx:.3f}, {dy:.3f}, {dz:.3f}) mm")
+            except Exception as e:
+                log.error(f"  Node {no}: {e}")
+
+        # 11. Berechnung
+        log.info("Berechnung (III. Ordnung)...")
+        app.calculate_all(skip_warnings=True)
+
+        # 12. Ergebnisse
+        lc1 = rfem.ObjectId(no=1, object_type=rfem.OBJECT_TYPE_LOAD_CASE)
+        if app.has_results(loading=lc1):
+            try:
+                app.get_results(
+                    results_type=rfem.results.STATIC_ANALYSIS_MEMBERS_INTERNAL_FORCES
+                ).data.to_csv(RESULTS / "01_Seilkraefte_N.csv", index=False)
+            except Exception as e: log.warning(f"Seilkraefte: {e}")
+            try:
+                app.get_results(
+                    results_type=rfem.results.STATIC_ANALYSIS_NODES_SUPPORT_FORCES
+                ).data.to_csv(RESULTS / "02_Lagerkraefte_global.csv", index=False)
+            except Exception as e: log.warning(f"Lagerkraefte: {e}")
+            try:
+                app.get_results(
+                    results_type=rfem.results.STATIC_ANALYSIS_NODES_DEFORMATIONS
+                ).data.to_csv(RESULTS / "03_Knotenverformungen.csv", index=False)
+            except Exception as e: log.warning(f"Verformungen: {e}")
+
+        # 13. Speichern
+        model_path = ROOT / f"{MODEL_NAME}.rf6"
+        app.save_model(str(model_path))
+        log.info(f"OK — Modell: {model_path}")
+
+
+if __name__ == "__main__":
+    main()

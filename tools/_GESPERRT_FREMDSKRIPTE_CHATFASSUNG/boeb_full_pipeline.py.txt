@@ -1,0 +1,43 @@
+"""
+BOEB_FULL_PIPELINE.py — Orchestriert RF5-Export → Bereinigung → RF6-Neubau.
+Usage: python boeb_full_pipeline.py [export|generate|all]
+"""
+import subprocess, sys, pathlib, logging
+
+ROOT = pathlib.Path(__file__).parent.parent
+LOG_DIR = ROOT / "Logs"
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler(LOG_DIR / "pipeline.log", encoding="utf-8"),
+        logging.StreamHandler(sys.stdout),
+    ],
+)
+log = logging.getLogger("Pipeline")
+
+
+def run(name):
+    p = ROOT / "Skripte" / name
+    log.info(f"--> {name}")
+    r = subprocess.run([sys.executable, str(p)], cwd=str(ROOT))
+    if r.returncode != 0:
+        log.error(f"FEHLER: {name}")
+        sys.exit(r.returncode)
+    log.info(f"OK: {name}")
+
+
+def main():
+    mode = sys.argv[1] if len(sys.argv) > 1 else "all"
+    log.info(f"PIPELINE — Mode: {mode}")
+    if mode in ("export", "all"):
+        run("rf5_export.py")
+    if mode in ("generate", "all"):
+        run("boeb_rf6_generator.py")
+    log.info("Pipeline abgeschlossen")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,1 @@
+GESPERRT. Chatfassungen der Fremdskripte (Endung .txt, nicht ausfuehrbar). Gruende: Befunde/26_10_07_ID-03_SPERRLISTE_FREMDSKRIPTE_RF5-RF6_Rev0.md und GEGENCHECK-ANTWORT Par.2. Hashes: MANIFEST_GESPERRT.json.

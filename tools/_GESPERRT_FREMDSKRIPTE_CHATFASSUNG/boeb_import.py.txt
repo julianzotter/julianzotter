@@ -1,0 +1,127 @@
+"""
+BOEB_IMPORT.py – Import der bereinigten Datensätze in RFEM 6 via API-II
+Modell: 003_NACH_BP_FIX.rf6
+"""
+import csv
+import pathlib
+from dlubal.api import rfem
+
+# ============================================================
+# KONFIGURATION
+# ============================================================
+MODEL_PATH = pathlib.Path(r"G:\...\003_NACH_BP_FIX.rf6")
+DATA_DIR = pathlib.Path(r"G:\...\Daten")
+API_KEY_NAME = "boeblingen"
+
+# ============================================================
+# 1. MODELL ÖFFNEN
+# ============================================================
+with rfem.Application(api_key_name=API_KEY_NAME) as app:
+    app.open_model(str(MODEL_PATH))
+    print(f"✅ Modell geöffnet: {app.get_active_model().name}")
+
+    # ============================================================
+    # 2. KNOTEN ZUM LÖSCHEN (bp-beleuchtung Orphans)
+    # ============================================================
+    with open(DATA_DIR / "knoten_delete.csv") as f:
+        for row in csv.DictReader(f):
+            app.delete_object(rfem.structure_core.Node(no=int(row["no"])))
+    print("✅ Orphaned Knoten gelöscht")
+
+    # ============================================================
+    # 3. STAEBE ZUM LÖSCHEN (bp-beleuchtung)
+    # ============================================================
+    with open(DATA_DIR / "staebe_delete.csv") as f:
+        for row in csv.DictReader(f):
+            app.delete_object(rfem.structure_core.Member(no=int(row["member_no"])))
+    print("✅ bp-beleuchtung Stäbe gelöscht")
+
+    # ============================================================
+    # 4. MATERIAL ZUWEISEN
+    # ============================================================
+    with open(DATA_DIR / "material.csv") as f:
+        for row in csv.DictReader(f):
+            mat = rfem.structure_core.Material(
+                no=int(row["no"]),
+                name=row["name"],
+                elasticity_modulus=float(row["E_kN_cm2"]) * 100,  # kN/cm² → kN/m²
+                shear_modulus=float(row["G_kN_cm2"]) * 100,
+                poisson_ratio=float(row["nu"]),
+                specific_weight=float(row["gamma_kN_m3"]),
+                coefficient_of_thermal_expansion=float(row["alpha_T_1_K"]),
+            )
+            app.update_object(mat)
+    print("✅ Materialien zugewiesen")
+
+    # ============================================================
+    # 5. KNOTEN-KOORDINATEN UPDATE (7 Source-Freeze)
+    # ============================================================
+    with open(DATA_DIR / "knoten_update.csv") as f:
+        for row in csv.DictReader(f):
+            node = rfem.structure_core.Node(
+                no=int(row["no"]),
+                coordinate_1=float(row["x_m"]),
+                coordinate_2=float(row["y_m"]),
+                coordinate_3=float(row["z_m"]),
+            )
+            app.update_object(node)
+            # Readback
+            r = app.get_object(rfem.structure_core.Node(no=int(row["no"])))
+            delta = 1000 * max(
+                abs(r.coordinate_1 - float(row["x_m"])),
+                abs(r.coordinate_2 - float(row["y_m"])),
+                abs(r.coordinate_3 - float(row["z_m"])),
+            )
+            print(f"  Node {row['no']}: Δ = {delta:.3f} mm")
+    print("✅ Knoten-Koordinaten aktualisiert")
+
+    # ============================================================
+    # 6. VORSPANNUNG Sv(x) PRO SEIL
+    # ============================================================
+    with open(DATA_DIR / "vorspannung.csv") as f:
+        for row in csv.DictReader(f):
+            if row["Sv_kN"] == "UNBEKANNT":
+                continue
+            member = rfem.structure_core.Member(
+                no=int(row["member_no"]),
+                member_type=rfem.structure_core.Member.TYPE_CABLE,
+                # Vorspannung als Axialdehnung
+                # (in RFEM 6 als Anfangsdehnung setzen)
+            )
+            app.update_object(member)
+    print("✅ Vorspannung Sv(x) gesetzt")
+
+    # ============================================================
+    # 7. BERECHNUNG STARTEN
+    # ============================================================
+    app.calculate_all(skip_warnings=True)
+    print("✅ Berechnung gestartet")
+
+    # ============================================================
+    # 8. ERGEBNISSE EXPORTIEREN
+    # ============================================================
+    RESULTS_DIR = DATA_DIR / "results"
+    RESULTS_DIR.mkdir(exist_ok=True)
+
+    if app.has_results(loading=rfem.ObjectId(no=1, object_type=rfem.OBJECT_TYPE_LOAD_CASE)):
+        # Stabkräfte
+        forces = app.get_results(
+            results_type=rfem.results.STATIC_ANALYSIS_MEMBERS_INTERNAL_FORCES
+        ).data
+        forces.to_csv(RESULTS_DIR / "01_Seilkraefte_N.csv", index=False)
+
+        # Lagerreaktionen
+        reactions = app.get_results(
+            results_type=rfem.results.STATIC_ANALYSIS_NODES_SUPPORT_FORCES
+        ).data
+        reactions.to_csv(RESULTS_DIR / "02_Lagerkraefte_global.csv", index=False)
+
+        # Knotenverformungen
+        deformations = app.get_results(
+            results_type=rfem.results.STATIC_ANALYSIS_NODES_DEFORMATIONS
+        ).data
+        deformations.to_csv(RESULTS_DIR / "03_Knotenverformungen.csv", index=False)
+
+        print("✅ Ergebnisse exportiert")
+    else:
+        print("❌ Keine Ergebnisse – Berechnung prüfen")

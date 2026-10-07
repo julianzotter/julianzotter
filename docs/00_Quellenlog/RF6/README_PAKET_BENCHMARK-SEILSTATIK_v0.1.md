@@ -9,7 +9,8 @@ Entpacken nach `G:\Meine Ablage\_INDEX_LNK\` (ergibt `…\BENCHMARK-SEILSTATIK\`
 | `Daten/input/EINGABEDATEN_RF6_v0.1/` | A_BESTAND 01–09 (86 Kn, 88 St, 6 Mat, 13 QS, 27 Lager, 28 Parameter, 17 Knotenlasten, 18 Stablasten, 19 LF + 21 LK), B_VARA 10–14 (Patch E7 Rev0 = Variante B-2) + `10b_patch_fallB_G3_rev0.json` (Variante B-7: 7 Knoten G3, Maste bleiben; gesperrt bis E1/E2 durch ID01), `EINGABETABELLEN_RF6_v0.1.md` (alle Tabellen lesbar, Modell B Varianten B-2/B-7), MANIFEST mit SHA-256 | CANDIDATE, Inhalt belegt (U10, M5, E7) |
 | `Skripte/` | `make_eingabedaten.py` (CSV-Erzeugung), `render_eingabetabellen_md.py` (Markdown), `api_write_check.py` (SDK-Introspektion, zuerst ausführen), `RF6-Ergebnis-Export.py` (E6a, 3 CSV + API_Log), `anpassen_rf6.py` (Phase 2 Delta), `retour_rfem6_patch.py` (Phase 3A, Dry-Run, Gates), `gates.json.example` | CANDIDATE; Schreibzugriffe erst nach WRITE_API_PRESENT und Freigabe ID01 |
 | `00_Quellenlog/` | Ursprung, Vermesser, RF6 (inkl. LF/LK- und Knotenlasten-CSV aus model.db), API_Auszuege | Rev0/Rev1 |
-| `Befunde/` | Loop 1 (Fremddaten „Fall B“), Loop 2 (Docx FERTIGSTELLUNG), Sperrliste Fremdskripte, Befund QS-Optionen (Stab 1001), Modell-Diff QS-14, Delta-Matrix Blatt 6 Vorlage | Rev0 |
+| `Befunde/` | Loop 1 (Fremddaten „Fall B“), Loop 2 (Docx FERTIGSTELLUNG), Sperrliste Fremdskripte, Gegencheck-Antwort, Topologie-Gate C06/C07 (Lampenplan V1), Befund QS-Optionen (Stab 1001), Modell-Diff QS-14, Delta-Matrix Blatt 6 Vorlage | Rev0 |
+| `Skripte/_GESPERRT_FREMDSKRIPTE_CHATFASSUNG/` | Chatfassungen der sechs Fremdskripte als `.py.txt` mit SHA-256 (`MANIFEST_GESPERRT.json`), nur Beleg für die Sperrliste, nicht ausführbar; `boeb_pfeifer_mapping.py`, `tabellen_generator.py`, `boeb_rf6_generator_fall_b.py` wurden nie als Code übermittelt | GESPERRT |
 | `Daten/results/`, `Logs/` | leer (werden durch E6a / Retour gefüllt) | – |
 
 ## Nicht enthalten (bewusst)

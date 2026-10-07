@@ -1,0 +1,156 @@
+"""
+RF5_EXPORT.py — Exportiert alle Tabellen aus RFEM 5 via COM.
+Pfad: G:\Meine Ablage\_INDEX_LNK\BENCHMARK-SEILSTATIK\
+Input:  Daten/input/13bb_ausfuehrungsstatik_1.rf5
+Output: Daten/roh/*.csv
+"""
+import csv, logging, pathlib, sys
+from datetime import datetime
+
+ROOT = pathlib.Path(__file__).parent.parent
+RF5_FILE = ROOT / "Daten" / "input" / "13bb_ausfuehrungsstatik_1.rf5"
+OUT_DIR = ROOT / "Daten" / "roh"
+LOG_DIR = ROOT / "Logs"
+OUT_DIR.mkdir(parents=True, exist_ok=True)
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler(LOG_DIR / "rf5_export.log", encoding="utf-8"),
+        logging.StreamHandler(sys.stdout),
+    ],
+)
+log = logging.getLogger("RF5Export")
+
+
+def write_csv(name, headers, rows):
+    path = OUT_DIR / f"{name}.csv"
+    with open(path, "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, delimiter=";")
+        w.writerow(headers)
+        w.writerows(rows)
+    log.info(f"  OK {name}.csv ({len(rows)} Zeilen)")
+
+
+def get(obj, *attrs, default=None):
+    for a in attrs:
+        try:
+            v = getattr(obj, a)
+            if v is not None:
+                return v
+        except Exception:
+            pass
+    return default
+
+
+def export_all(model):
+    # Knoten
+    rows = []
+    for i in range(1, model.GetObjectCount(1, 0) + 1):
+        n = model.GetNode(i)
+        rows.append([n.No, get(n, "Type", default=1),
+                     round(n.Coordinate1, 6), round(n.Coordinate2, 6),
+                     round(n.Coordinate3, 6), get(n, "Comment", default="") or ""])
+    write_csv("knoten", ["No","Type","X_m","Y_m","Z_m","Comment"], rows)
+
+    # Linien
+    rows = []
+    for i in range(1, model.GetObjectCount(2, 0) + 1):
+        l = model.GetLine(i)
+        rows.append([l.No, get(l, "Type", default=1),
+                     get(l, "NodeStart", "Node1", default=0),
+                     get(l, "NodeEnd", "Node2", default=0),
+                     round(get(l, "Length", default=0.0), 6)])
+    write_csv("linien", ["No","Type","NodeStart","NodeEnd","Length_m"], rows)
+
+    # Materialien
+    rows = []
+    for i in range(1, model.GetObjectCount(3, 0) + 1):
+        m = model.GetMaterial(i)
+        rows.append([m.No, m.Name,
+                     round(get(m, "ElasticityModulus", default=0.0), 2),
+                     round(get(m, "ShearModulus", default=0.0), 2),
+                     round(get(m, "PoissonRatio", default=0.0), 4),
+                     round(get(m, "SpecificWeight", default=0.0), 2),
+                     get(m, "ThermalExpansionCoefficient", default=0.0)])
+    write_csv("material", ["No","Name","E_kN_cm2","G_kN_cm2","nu",
+                           "gamma_kN_m3","alpha_T_1_K"], rows)
+
+    # Querschnitte
+    rows = []
+    for i in range(1, model.GetObjectCount(4, 0) + 1):
+        q = model.GetSection(i)
+        rows.append([q.No, get(q, "MaterialNo", default=0),
+                     get(q, "Name", "Text", default=""),
+                     round(get(q, "Area", default=0.0), 4),
+                     round(get(q, "Iy", default=0.0), 4),
+                     round(get(q, "Iz", default=0.0), 4)])
+    write_csv("querschnitt", ["No","MaterialNo","Name","A_cm2","Iy_cm4","Iz_cm4"], rows)
+
+    # Staebe
+    rows = []
+    for i in range(1, model.GetObjectCount(5, 0) + 1):
+        s = model.GetMember(i)
+        ln = get(s, "LineNo", default=0)
+        rows.append([s.No, ln, get(s, "Type", default=1),
+                     get(s, "SectionStart", default=0),
+                     get(s, "SectionEnd", default=0),
+                     round(get(s, "Length", default=0.0), 6)])
+    write_csv("staebe", ["No","LineNo","Type","SectionStart","SectionEnd","Length_m"], rows)
+
+    # Lager
+    rows = []
+    for i in range(1, model.GetObjectCount(6, 0) + 1):
+        s = model.GetNodalSupport(i)
+        rows.append([s.No, get(s, "NodeNo", default=0),
+                     get(s, "SpringX", default=0), get(s, "SpringY", default=0),
+                     get(s, "SpringZ", default=0)])
+    write_csv("lager", ["No","NodeNo","SpringX","SpringY","SpringZ"], rows)
+
+    # Lastfaelle
+    rows = []
+    for i in range(1, model.GetLoadCaseCount() + 1):
+        lc = model.GetLoadCase(i)
+        rows.append([lc.No, get(lc, "Name", default=""),
+                     get(lc, "Type", default=""),
+                     get(lc, "SelfWeightFactor", default=1.0)])
+    write_csv("lastfaelle", ["No","Name","Type","SelfWeightFactor"], rows)
+
+    # Lastkombinationen
+    rows = []
+    for i in range(1, model.GetLoadCombinationCount() + 1):
+        lk = model.GetLoadCombination(i)
+        rows.append([lk.No, get(lk, "Name", default=""),
+                     get(lk, "Type", default="")])
+    write_csv("lastkombinationen", ["No","Name","Type"], rows)
+
+
+def main():
+    log.info("=" * 60)
+    log.info(f"RF5 EXPORT — {RF5_FILE.name}")
+    log.info("=" * 60)
+    if not RF5_FILE.exists():
+        log.error(f"Modell nicht gefunden: {RF5_FILE}")
+        sys.exit(1)
+
+    import comtypes.client
+    rfem = comtypes.client.CreateObject("RFEM5.Application")
+    rfem.ShowApplication(True)
+    rfem.LockLicense()
+    model = rfem.OpenModel(str(RF5_FILE))
+    log.info(f"Modell geöffnet: {model.GetModelName()}")
+
+    try:
+        export_all(model)
+        log.info("=" * 60)
+        log.info(f"OK — Export nach {OUT_DIR}")
+    finally:
+        model.Close()
+        rfem.UnlockLicense()
+        rfem.CloseApplication()
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,287 @@
+"""
+BOEB_BEREINIGUNG.py — Bereinigt RF5-Export-CSVs nach EN 1990 5.1.3.
+
+Bereinigungsschritte:
+1. LF10-Fix: Ringleuchten-Last korrigieren (30×1.0=30 kN → 14×0.8=11.2 kN)
+2. bp-beleuchtung-Stäbe löschen (158, 178-193)
+3. Orphan-Knoten löschen (3025-3028, 3057-3072, 3095)
+4. bp-beleuchtung-QS löschen (14-17)
+5. Verwaiste Linien entfernen
+6. Konsistenz-Check: Knoten/Stäbe/Linien-Anzahl
+
+Input:  Daten/roh/*.csv
+Output: Daten/bereinigt/*.csv + Bereinigungs-Report
+"""
+import csv, json, logging, pathlib, sys
+from datetime import datetime
+
+ROOT = pathlib.Path(__file__).parent.parent
+ROH = ROOT / "Daten" / "roh"
+BER = ROOT / "Daten" / "bereinigt"
+LOG_DIR = ROOT / "Logs"
+BER.mkdir(parents=True, exist_ok=True)
+LOG_DIR.mkdir(parents=True, exist_ok=True)
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler(LOG_DIR / "bereinigung.log", encoding="utf-8"),
+        logging.StreamHandler(sys.stdout),
+    ],
+)
+log = logging.getLogger("Bereinigung")
+
+
+# ============================================================
+# KONFIGURATION
+# ============================================================
+DELETE_MEMBERS = list(range(158, 159)) + list(range(178, 194))  # bp-beleuchtung
+DELETE_NODES = ([3025, 3026, 3027, 3028] +
+                list(range(3057, 3073)) +
+                [3095])
+DELETE_SECTIONS = [14, 15, 16, 17]
+
+# LF10-Fix: Ringleuchten
+RINGLICHT_ANZAHL_SOLL = 14
+RINGLICHT_LAST_kN = 0.80
+RINGLICHT_SUMME_kN = RINGLICHT_ANZAHL_SOLL * RINGLICHT_LAST_kN  # 11.2 kN
+
+
+# ============================================================
+# HELFER
+# ============================================================
+def read_roh(name):
+    p = ROH / f"{name}.csv"
+    if not p.exists():
+        log.warning(f"Fehlt: {p}")
+        return []
+    with open(p, encoding="utf-8") as f:
+        return list(csv.DictReader(f, delimiter=";"))
+
+
+def write_ber(name, headers, rows):
+    p = BER / f"{name}.csv"
+    with open(p, "w", newline="", encoding="utf-8") as f:
+        w = csv.writer(f, delimiter=";")
+        w.writerow(headers)
+        w.writerows(rows)
+    log.info(f"  OK {name}.csv ({len(rows)} Zeilen)")
+
+
+# ============================================================
+# BEREINIGUNGSSCHRITTE
+# ============================================================
+def bereinige_staebe():
+    """Entfernt bp-beleuchtung-Stäbe."""
+    rows = read_roh("staebe")
+    headers = ["No", "LineNo", "Type", "SectionStart", "SectionEnd", "Length_m"]
+
+    kept, deleted = [], []
+    for r in rows:
+        no = int(r["No"])
+        if no in DELETE_MEMBERS:
+            deleted.append(no)
+        else:
+            kept.append([r["No"], r["LineNo"], r["Type"],
+                         r["SectionStart"], r["SectionEnd"], r["Length_m"]])
+
+    write_ber("staebe", headers, kept)
+    log.info(f"  → {len(deleted)} bp-beleuchtung-Stäbe entfernt: {deleted}")
+    return {"before": len(rows), "after": len(kept), "deleted": deleted}
+
+
+def bereinige_knoten():
+    """Entfernt Orphan-Knoten."""
+    rows = read_roh("knoten")
+    headers = ["No", "Type", "X_m", "Y_m", "Z_m", "Comment"]
+
+    kept, deleted = [], []
+    for r in rows:
+        no = int(r["No"])
+        if no in DELETE_NODES:
+            deleted.append(no)
+        else:
+            kept.append([r["No"], r["Type"], r["X_m"], r["Y_m"],
+                         r["Z_m"], r.get("Comment", "")])
+
+    write_ber("knoten", headers, kept)
+    log.info(f"  → {len(deleted)} Orphan-Knoten entfernt")
+    return {"before": len(rows), "after": len(kept), "deleted": deleted}
+
+
+def bereinige_querschnitte():
+    """Entfernt bp-beleuchtung-Querschnitte (14-17)."""
+    rows = read_roh("querschnitt")
+    headers = ["No", "MaterialNo", "Name", "A_cm2", "Iy_cm4", "Iz_cm4"]
+
+    kept, deleted = [], []
+    for r in rows:
+        no = int(r["No"])
+        if no in DELETE_SECTIONS:
+            deleted.append(no)
+        else:
+            kept.append([r["No"], r["MaterialNo"], r["Name"],
+                         r["A_cm2"], r["Iy_cm4"], r["Iz_cm4"]])
+
+    write_ber("querschnitt", headers, kept)
+    log.info(f"  → {len(deleted)} bp-beleuchtung-QS entfernt: {deleted}")
+    return {"before": len(rows), "after": len(kept), "deleted": deleted}
+
+
+def bereinige_linien():
+    """Entfernt Linien, die auf gelöschte Knoten verweisen."""
+    node_rows = read_roh("knoten")
+    valid_nodes = {int(r["No"]) for r in node_rows if int(r["No"]) not in DELETE_NODES}
+
+    rows = read_roh("linien")
+    headers = ["No", "Type", "NodeStart", "NodeEnd", "Length_m"]
+
+    kept, deleted = [], []
+    for r in rows:
+        ns = int(r.get("NodeStart", 0))
+        ne = int(r.get("NodeEnd", 0))
+        if ns in valid_nodes and ne in valid_nodes:
+            kept.append([r["No"], r["Type"], r["NodeStart"],
+                         r["NodeEnd"], r["Length_m"]])
+        else:
+            deleted.append(int(r["No"]))
+
+    write_ber("linien", headers, kept)
+    log.info(f"  → {len(deleted)} verwaiste Linien entfernt")
+    return {"before": len(rows), "after": len(kept), "deleted": deleted}
+
+
+def fix_lf10_ringlichter():
+    """
+    Fix LF10-Ringlichter: 30×1.0=30 kN → 14×0.8=11.2 kN.
+    Reduziert Knotenlasten proportional.
+    """
+    rows = read_roh("knotenlasten")
+    headers = ["LF_No", "Load_No", "NodeNo", "P_X_kN", "P_Y_kN", "P_Z_kN", "Comment"]
+
+    fixed, removed = [], []
+    for r in rows:
+        lf = int(r["LF_No"])
+        pz = float(r.get("P_Z_kN", 0) or 0)
+
+        # LF10 (Eigengewicht) — nur Ringlichter korrigieren
+        if lf == 10 and pz < 0:  # Ringlicht-Z-Last
+            # Skalierungsfaktor berechnen
+            alt_summe = abs(pz)
+            if alt_summe > 0:
+                faktor = RINGLICHT_SUMME_kN / 30.0  # Soll: 30 Leuchten → 11.2 kN total
+                pz_neu = -RINGLICHT_LAST_kN
+
+                if len(fixed) < RINGLICHT_ANZAHL_SOLL:
+                    fixed.append([r["LF_No"], r["Load_No"], r["NodeNo"],
+                                  r.get("P_X_kN", 0), r.get("P_Y_kN", 0),
+                                  str(pz_neu), "Ringlicht-FIX"])
+                else:
+                    removed.append(r["Load_No"])
+            else:
+                removed.append(r["Load_No"])
+        else:
+            fixed.append([r["LF_No"], r["Load_No"], r["NodeNo"],
+                          r.get("P_X_kN", 0), r.get("P_Y_kN", 0),
+                          r.get("P_Z_kN", 0), r.get("Comment", "")])
+
+    write_ber("knotenlasten", headers, fixed)
+    log.info(f"  → LF10-Fix: {len(fixed)} Lasten (Soll: {RINGLICHT_SUMME_kN} kN)")
+
+    # Validierung: Summe prüfen
+    summe = sum(abs(float(r[5])) for r in fixed if int(r[0]) == 10 and float(r[5] or 0) < 0)
+    log.info(f"  → LF10-Summe Ringlichter: {summe:.2f} kN (Soll: {RINGLICHT_SUMME_kN} kN)")
+    if abs(summe - RINGLICHT_SUMME_kN) > 0.1:
+        log.warning(f"  ⚠ Summe weicht ab! Bitte manuell prüfen.")
+
+    return {"before": len(rows), "after": len(fixed), "summe_kN": summe}
+
+
+def copy_unveraendert():
+    """Kopiert unveränderte Tabellen."""
+    for name, headers in [
+        ("material", ["No", "Name", "E_kN_cm2", "G_kN_cm2", "nu",
+                      "gamma_kN_m3", "alpha_T_1_K"]),
+        ("lager", ["No", "NodeNo", "SpringX", "SpringY", "SpringZ"]),
+        ("lastfaelle", ["No", "Name", "Type", "SelfWeightFactor"]),
+        ("lastkombinationen", ["No", "Name", "Type"]),
+        ("stablasten", ["LF_No", "Load_No", "MemberNo", "Type", "p1", "p2", "Direction"]),
+    ]:
+        rows = read_roh(name)
+        if rows:
+            rows_clean = [[r.get(h, "") for h in headers] for r in rows]
+            write_ber(name, headers, rows_clean)
+
+
+# ============================================================
+# REPORT
+# ============================================================
+def generiere_report(stats):
+    report = {
+        "datum": datetime.now().isoformat(),
+        "regel": "EN 1990 5.1.3 – Bereinigung (keine Modelländerung)",
+        "statistik": stats,
+        "anzahl_final": {
+            "knoten": stats["knoten"]["after"],
+            "staebe": stats["staebe"]["after"],
+            "linien": stats["linien"]["after"],
+            "querschnitte": stats["querschnitt"]["after"],
+        },
+        "erwartete_werte": {
+            "knoten": 86,
+            "staebe": 88,
+        },
+        "check": {
+            "knoten_ok": stats["knoten"]["after"] == 86,
+            "staebe_ok": stats["staebe"]["after"] == 88,
+        },
+    }
+
+    path = LOG_DIR / "bereinigungs_report.json"
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(report, f, indent=2, ensure_ascii=False)
+    log.info(f"Report: {path}")
+
+    log.info("=" * 60)
+    log.info("BEREINIGUNGS-CHECK")
+    log.info(f"  Knoten: {stats['knoten']['after']:3d} / Soll 86 → "
+             f"{'OK' if report['check']['knoten_ok'] else 'FAIL'}")
+    log.info(f"  Stäbe:  {stats['staebe']['after']:3d} / Soll 88 → "
+             f"{'OK' if report['check']['staebe_ok'] else 'FAIL'}")
+    log.info(f"  Linien: {stats['linien']['after']}")
+    log.info(f"  QS:     {stats['querschnitt']['after']}")
+    log.info(f"  LF10:   {stats['lf10_fix']['summe_kN']:.2f} kN (Soll 11.20)")
+
+    return report
+
+
+# ============================================================
+# MAIN
+# ============================================================
+def main():
+    log.info("=" * 60)
+    log.info("BOEB BEREINIGUNG — EN 1990 5.1.3")
+    log.info("=" * 60)
+
+    stats = {
+        "knoten": bereinige_knoten(),
+        "staebe": bereinige_staebe(),
+        "querschnitt": bereinige_querschnitte(),
+        "linien": bereinige_linien(),
+        "lf10_fix": fix_lf10_ringlichter(),
+    }
+    copy_unveraendert()
+
+    report = generiere_report(stats)
+
+    log.info("=" * 60)
+    if report["check"]["knoten_ok"] and report["check"]["staebe_ok"]:
+        log.info("✅ BEREINIGUNG ERFOLGREICH")
+    else:
+        log.warning("⚠ BEREINIGUNG MIT ABWEICHUNGEN — bitte prüfen")
+    log.info(f"Output: {BER}")
+
+
+if __name__ == "__main__":
+    main()

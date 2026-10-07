@@ -106,3 +106,7 @@ Weitere Dateien 07.10.: Gegencheck-Antwort 1qRkkAnHRBxzBbpCpNE2Aw-NTKY9RGKeE (RF
 |---|---|---|
 | SKILL.md (aktiv als `seilstatik-rf5-rf6-neuaufbau`) | `.claude/skills/seilstatik-rf5-rf6-neuaufbau/SKILL.md`, Kopie `docs/26_10_07_ID-03_SKILL_…_Rev0.md` | 1OAeKgo6F0XwMIvL-IQqW4VoPvyjwRA85 |
 | WEGWEISER.md | `.claude/skills/seilstatik-rf5-rf6-neuaufbau/WEGWEISER.md`, Kopie `docs/26_10_07_ID-03_WEGWEISER_…_Rev0.md` | 1uEcT1QsoZ-1jKJC5JfU50MIMEI5trCwx |
+
+### 6c Entscheidung Referenzmodell (ID01, 07.10.2026)
+
+Das RF5-Gesamtmodell `13bb_ausführungsstatik_1.rf5` (U6a) ist als Grundlage mit P. Kneidinger vereinbart und damit Referenz für Eingabedaten (CSV v0.2) und Vergleichsergebnisse. Berichtsmodell 5e (U6, BD77CF83…) nur Querkontrolle. Offen: welche der zwei Fassungen (54 054 912 / 54 075 392 B), SHA-256, Datum der Vereinbarung. Skill Rev0 Schritt 1/2 angepasst (Drive-Kopien ersetzt).

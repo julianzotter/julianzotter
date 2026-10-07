@@ -10,7 +10,7 @@ description: Arbeitsauftrag Seilstatik Böblingen (GZ 26_001, Ergänzung 4). Bes
 1. Aus der Bestandsstatik (RF5-Modell + PDF-Ausdruck) werden **alle** Rechenmodelldaten in CSV extrahiert: Systemgeometrie, Material, Querschnitte, Knoten, Stäbe, Auflager, Lasten, Lastfälle/-kombinationen, Resultate.
 2. Das neue Modell übernimmt diese Daten 1:1. Geändert werden **nur die zwei neuen Auflagerpunkte** (C06/C07 → Fassadenanker: Knoten 3006/3007, Maste 1006/1007 mit Füßen 2006/2007 entfallen). Alles andere bleibt: Knoten, Seile, übrige Maste, Lager, Lasten, Kombinationen, Rechenparameter.
 3. Einspielen nach RFEM 6 über CSV-Tabellen + API (dlubal.api, gRPC).
-4. Verglichen wird **nur** Ausgabe RF5-Bestandsberechnung (Gesamtmodell, ID01: „13bb") gegen Ausgabe RF6-Neuberechnung.
+4. Verglichen wird **nur** Ausgabe RF5-Bestandsberechnung gegen Ausgabe RF6-Neuberechnung. **Referenz = RF5-Gesamtmodell `13bb_ausführungsstatik_1.rf5`** (mit P. Kneidinger vereinbart, ID01 07.10.2026). Das Berichtsmodell 5e dient nur als Querkontrolle.
 5. Nichts anderes: keine Vorspannung als Eingabe, keine Formfindung, keine Laständerung, keine Siebenpunkt-Geometrie, keine Fremdskripte.
 
 ## 1 Ablaufschema
@@ -41,14 +41,14 @@ Regel: Jede Zahl im RF6-Modell stammt aus einer CSV-Zeile; jede CSV-Zeile aus ei
 ## 3 Schritte
 
 ### Schritt 1 — Quellen fixieren
-- Eingabe: RF5-Gesamtmodell (ID01 nennt „13bb"), PDF-Ausdruck der Bestandsberechnung, Geometer-Tabelle V1.
-- Tun: SHA-256 jeder Datei bilden, in `00_Quellenlog/Ursprung` bzw. `RF6 §1` eintragen. Falls Berichtsmodell und Gesamtmodell verschiedene Dateien sind (5e BD77CF83… vs 13bb), **eine** als Referenz festlegen und notieren; Ergebnisse müssen aus derselben Datei stammen wie die Eingabedaten.
-- Gate: ohne Hash kein Weiterarbeiten.
+- Eingabe: RF5-Gesamtmodell `13bb_ausführungsstatik_1.rf5` (Referenz lt. Vereinbarung mit P. Kneidinger; es existieren zwei Fassungen, 54 054 912 und 54 075 392 B → die mit Kneidinger abgestimmte Fassung benennen), PDF-Ausdruck der Bestandsberechnung, Geometer-Tabelle V1.
+- Tun: SHA-256 jeder Datei bilden, in `00_Quellenlog/Ursprung` (U6a) bzw. `RF6 §1` eintragen; Fassung, Datum und Vereinbarungsvermerk notieren. 5e (BD77CF83…) bleibt als Querkontrolle, ist aber nicht die Referenz.
+- Gate: ohne Hash und ohne Fassungsangabe kein Weiterarbeiten. Eingabedaten (Schritt 2) und Vergleichsergebnisse (Schritt 9) müssen aus derselben Datei stammen.
 
 ### Schritt 2 — Extraktion RF5 → CSV (Tabellen 01–10)
-- Werkzeug: COM-Export RF5 (liefert input_3.json-Schema) → `make_eingabedaten.py` → `01_knoten … 09_lastfaelle_lastkombinationen`. Für U10 (5e) liegt das bereits vor (v0.1). Für 13bb: denselben Export erneut laufen lassen, gleiche Tabellen, neuer Ordner `EINGABEDATEN_RF6_v0.2_13bb/`.
+- Werkzeug: COM-Export RF5 (liefert input_3.json-Schema) → `make_eingabedaten.py` → `01_knoten … 09_lastfaelle_lastkombinationen`. **Pflicht: Export aus 13bb** → Ordner `EINGABEDATEN_RF6_v0.2_13bb/`. Die vorhandenen Tabellen v0.1 stammen aus 5e (U10) und gelten nur als Vorlage/Querkontrolle; Unterschiede 13bb ↔ 5e zeilenweise diffen und dokumentieren (gleicher Diff wie Loop 1).
 - Zusätzlich `10_resultate_rf5.csv` aus dem PDF-Ausdruck: je Seil N_min/N_max (LK), Lagerkräfte je Lagerknoten, Verformungen u (LK100/101), mit Seitenangabe.
-- Kontrolle: 86 Knoten, 88 Stäbe (68 Seile + 20 Maste), 6 Materialien, 13 QS, 27 Lagerobjekte, 19 LF, 21 LK (+ LK220 fehlt), LF10 = 30 × 1,000 kN. Weicht 13bb davon ab, Abweichung dokumentieren, nicht „bereinigen".
+- Kontrolle (Erwartung aus 5e): 86 Knoten, 88 Stäbe (68 Seile + 20 Maste), 6 Materialien, 13 QS, 27 Lagerobjekte, 19 LF, 21 LK (+ LK220 fehlt), LF10 = 30 × 1,000 kN. Weicht 13bb davon ab, gilt 13bb; Abweichung dokumentieren, nicht „bereinigen".
 - Ausgabe: CSV + `MANIFEST.json` (SHA-256 aller Ein- und Ausgaben).
 
 ### Schritt 3 — Patch für die zwei Haltepunkte (Modell B)

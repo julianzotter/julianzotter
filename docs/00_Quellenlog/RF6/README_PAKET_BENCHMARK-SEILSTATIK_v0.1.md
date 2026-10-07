@@ -28,7 +28,8 @@ python Skripte\26_10_06_ID-03_api_write_check.py > Logs\API_WRITE_CHECK_$(Get-Da
 # 3  Ergebnis-Export E6a (RFEM 6 läuft, gRPC 127.0.0.1:9000, Bridge E5 im selben Ordner)
 python Skripte\26_10_06_ID-03-RF6-Ergebnis-Export.py --run-id RUN-RF6-000 --out Daten\results
 # 4  Delta (Phase 2) gegen Kalibrierziel U10 (u_Kn17 2,085 m, N_S54 17,47 kN)
-python Skripte\26_10_06_ID-03_anpassen_rf6.py --export Daten\results\RF6_EXPORT_<stamp>_RUN-RF6-000 --out Daten\results
+python Skripte\26_10_06_ID-03_anpassen_rf6.py --export Daten\results\RF6_EXPORT_<stamp>_RUN-RF6-000 --model Daten\results\out_rf6 --mapping 00_Quellenlog\Vermesser\26_10_06_ID-03-AEQUIVALENZ-KNOTEN-GEOMETER-RFEM_Rev0.csv
+#    out_rf6 = Modellexport E4 (26_10_06_ID-03-rf6_model_export.py); Mapping V9 von Drive 1pnPWQTNqXODcQCdJ1NmOFOcybO_eil5G nach 00_Quellenlog\Vermesser\ kopieren
 # 5  Modell B: Entscheidungen E1/E2/E3/E4 in Skripte\gates.json auf FREIGEGEBEN setzen (ID01), erst Dry-Run, dann --apply
 python Skripte\26_10_06_ID-03_retour_rfem6_patch.py --patch Daten\input\EINGABEDATEN_RF6_v0.1\B_VARA\10_patch_vara_rev0.json --gates Skripte\gates.json
 ```

@@ -99,3 +99,10 @@ Loop-Dokumente (07.10.): Loop 1 Fremddaten „Fall B“ Drive 16nR2N7F5OWlQpJ4vP
 | 00_Quellenlog/ (bestehend) | 1kbe5F856ZwxMRybU8ouCpgefjK-Eyck2 |
 
 Weitere Dateien 07.10.: Gegencheck-Antwort 1qRkkAnHRBxzBbpCpNE2Aw-NTKY9RGKeE (RF6-Ordner) · Topologie-Gate C06/C07 (Befunde/) · ZIP `SEILSTATIK_BOEBLINGEN_ERG4_BENCHMARK-SEILSTATIK_v0.1.zip` (50 Dateien, SHA-256 98f39df608a97b4c…) nur im Repo und als Session-Dateiversand; Drive-Connector lädt keine Binärdateien dieser Größe. Die Ordnerstruktur auf Drive ersetzt das ZIP für die lokale Synchronisation.
+
+### 6b Skill-Arbeitsauftrag (07.10. 12:25 UTC, Entscheidung ID01 „RF5 → CSV → RF6, zwei Haltepunkte, Vergleich“)
+
+| Datei | Repo | Drive (BENCHMARK-SEILSTATIK/SKILL, Ordner 1F1xbTixsIAZ4qnTuUuPW0PIdNmvsDu1_) |
+|---|---|---|
+| SKILL.md (aktiv als `seilstatik-rf5-rf6-neuaufbau`) | `.claude/skills/seilstatik-rf5-rf6-neuaufbau/SKILL.md`, Kopie `docs/26_10_07_ID-03_SKILL_…_Rev0.md` | 1OAeKgo6F0XwMIvL-IQqW4VoPvyjwRA85 |
+| WEGWEISER.md | `.claude/skills/seilstatik-rf5-rf6-neuaufbau/WEGWEISER.md`, Kopie `docs/26_10_07_ID-03_WEGWEISER_…_Rev0.md` | 1uEcT1QsoZ-1jKJC5JfU50MIMEI5trCwx |

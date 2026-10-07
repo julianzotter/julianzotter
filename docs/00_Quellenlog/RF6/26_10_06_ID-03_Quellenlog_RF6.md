@@ -79,4 +79,4 @@ E1 Geometriebasis VAR-A statt G3 · E2 Maste 1006/1007 entfallen, 3006/3007 gele
 | P5 | Skripte lokal | `…\BENCHMARK-SEILSTATIK\Skripte\` | nur Skripte aus Repo `tools/` (Hash im Quellenlog); Sperrliste Rev0 gilt |
 | P6 | Ergebnis-/Exportverzeichnis lokal | `…\BENCHMARK-SEILSTATIK\Daten\results\` | E6a-Exporte → zusätzlich `00_Quellenlog/API_Auszuege/RF6_EXPORT_<stamp>_<RUN-ID>/`; schreibgeschützt nach Lauf |
 
-Loop-Dokumente (07.10.): Loop 1 Fremddaten „Fall B“ Drive 16nR2N7F5OWlQpJ4vP6H8aDbXkLxbm2Rj · Loop 2 Docx FERTIGSTELLUNG + Eingabetabellen Repo `docs/26_10_07_ID-03_DELTA-REFINEMENT_LOOP2_FERTIGSTELLUNG-DOCX_Rev0.md` (Drive-ID nach Upload eintragen) · Eingabedaten v0.1 Zip 1-0r03VNC5jV_xm8rALgGfDS40MFn9vs7.
+Loop-Dokumente (07.10.): Loop 1 Fremddaten „Fall B“ Drive 16nR2N7F5OWlQpJ4vP6H8aDbXkLxbm2Rj · Loop 2 Docx FERTIGSTELLUNG + Eingabetabellen Drive 1QZJxf7BR8e9Jud-O0SrBJko2Pw8bq4Bt (Repo `docs/26_10_07_ID-03_DELTA-REFINEMENT_LOOP2_FERTIGSTELLUNG-DOCX_Rev0.md`) · Eingabedaten v0.1 Zip 1-0r03VNC5jV_xm8rALgGfDS40MFn9vs7.

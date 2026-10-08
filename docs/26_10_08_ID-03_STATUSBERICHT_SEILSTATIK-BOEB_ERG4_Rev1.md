@@ -13,7 +13,7 @@
 |---|---|---|
 | **GitHub** `julianzotter/julianzotter`, Branch `claude/seilstatik-doku-overview-rc0lpt` (Stand Commit 0e893cb) | Verträge und Code: `.claude/skills/seilstatik-rf5-rf6-neuaufbau/` (SKILL, WEGWEISER), `tools/` (6 Skripte + Quarantäne), `docs/` (alle Befunde, Loops, Quellenlog, Eingabedaten v0.1 + Teilmodell v0.1, Pakete als ZIP) | versioniert, jede Datei mit Commit |
 | **Google Drive** `_INDEX_LNK/BENCHMARK-SEILSTATIK/` (Ordner-ID 1ZpE9ym5UVEJuiLml0YKXDQl8Qk878sZl) = lokal `G:\Meine Ablage\_INDEX_LNK\BENCHMARK-SEILSTATIK\` | Spiegel des Pakets: `SKILL/`, `Skripte/`, `Daten/input/EINGABEDATEN_RF6_v0.1/` und `…TEILMODELL_v0.1/`, `Befunde/`, `Logs/`, `Daten/results/`, `00_Quellenlog/` (Ursprung, Vermesser, RF6, API_Auszuege), `README_PAKET.md`, `MANIFEST_PAKET.json` | Drive für Desktop synchronisiert nach G:\ |
-| **Quellenlog RF6** `00_Quellenlog/RF6/26_10_06_ID-03_Quellenlog_RF6_Rev1.md` (Drive 1NVDntJwuR3d4aupLzMvi-MqnsA92wIYV) | Register: Modelle + Hashes §1, Exporte §2, Run-Register §3 (noch leer), Entscheidungen §4/§6c, Pfade + Drive-IDs §6/§6a, Skill §6b | Pflege ID01/ID-03; jede neue Datei bekommt hier eine Zeile |
+| **Quellenlog RF6** `00_Quellenlog/RF6/26_10_06_ID-03_Quellenlog_RF6_Rev1.md` (Drive-Ordner RF6 1UllYfuGwqUM5khZyAH4cUyMc60Lo6TrV, jeweils aktuelle Datei `…Quellenlog_RF6_Rev1.md`) | Register: Modelle + Hashes §1, Exporte §2, Run-Register §3 (noch leer), Entscheidungen §4/§6c, Pfade + Drive-IDs §6/§6a, Skill §6b | Pflege ID01/ID-03; jede neue Datei bekommt hier eine Zeile |
 
 Regel: Chat-Entscheidungen werden sofort in das Quellenlog übernommen (zuletzt §6c Referenzmodell 13bb). Ohne Zeile im Quellenlog gilt eine Datei als nicht vorhanden.
 

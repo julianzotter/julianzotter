@@ -24,8 +24,8 @@ echo "╚═══════════════════════�
 echo ""
 
 # ── 0. Verify canonical path ─────────────────────────────────────────────────
-if echo "$WORK_DRIVE" | grep -q "_development[^e]"; then
-    echo "[ERROR] Path contains '_development' without 'e' — VERBOTEN"
+if [[ "$WORK_DRIVE" != *"/_developement/"* ]]; then
+    echo "[ERROR] Path does not contain the canonical '_developement' directory — VERBOTEN"
     exit 1
 fi
 echo "[✓] Path check: KANON path with 'e' confirmed"

@@ -10,7 +10,7 @@ description: Arbeitsauftrag Seilstatik Böblingen (GZ 26_001, Ergänzung 4). Bes
 1. Aus der Bestandsstatik (RF5-Modell + PDF-Ausdruck) werden **alle** Rechenmodelldaten in CSV extrahiert: Systemgeometrie, Material, Querschnitte, Knoten, Stäbe, Auflager, Lasten, Lastfälle/-kombinationen, Resultate.
 2. Das neue Modell übernimmt diese Daten 1:1. Geändert werden **nur die zwei neuen Auflagerpunkte** (C06/C07 → Fassadenanker: Knoten 3006/3007, Maste 1006/1007 mit Füßen 2006/2007 entfallen). Alles andere bleibt: Knoten, Seile, übrige Maste, Lager, Lasten, Kombinationen, Rechenparameter.
 3. Einspielen nach RFEM 6 über CSV-Tabellen + API (dlubal.api, gRPC).
-4. Verglichen wird **nur** Ausgabe RF5-Bestandsberechnung gegen Ausgabe RF6-Neuberechnung. **Referenz = RF5-Gesamtmodell `13bb_ausführungsstatik_1.rf5`** (mit P. Kneidinger vereinbart, ID01 07.10.2026). Das Berichtsmodell 5e dient nur als Querkontrolle.
+4. Verglichen wird **nur** Ausgabe RF5-Bestandsberechnung gegen Ausgabe RF6-Neuberechnung. **Referenz = RF5-Gesamtmodell `13bb_ausführungsstatik_1.rf5`, Fassung 2015** (54 054 912 B, SHA-256 73242E1346AB6556…; mit P. Kneidinger vereinbart, ID01 07.10.2026). Die am 06.10.2026 gespeicherte Fassung (54 075 392 B, C88F7792…) ist verändert und kein Bestand. Befund 08.10. (COM-Vergleich): Geometrie/System 13bb ≡ 5e (nur Knoten 16↔17 anders nummeriert); Lasten/LK/RK sind in 13bb unvollständig und in 5e = Bestandsbericht. **Vorschlag D2a:** Geometrie aus 13bb = 5e, Lasten/LK/RK aus 5e → Modell A = Datensatz v0.1 (Bestätigung ID01).
 5. Nichts anderes: keine Vorspannung als Eingabe, keine Formfindung, keine Laständerung, keine Siebenpunkt-Geometrie, keine Fremdskripte.
 6. **Modellreduktion (ID01 07.10., Nachmittag):** gerechnet wird das Teilmodell um C06/C07 (§6) mit starren oder verschieblichen Randbedingungen an der Modellgrenze. Das Gesamtmodell bleibt Referenz für die Ergebnisse; das Teilmodell muss den Bestand an der Grenze reproduzieren (Gate T-G1), sonst Grenze erweitern.
 
@@ -44,11 +44,12 @@ Regel: Jede Zahl im RF6-Modell stammt aus einer CSV-Zeile; jede CSV-Zeile aus ei
 ### Schritt 1 — Quellen fixieren
 - Eingabe: RF5-Gesamtmodell `13bb_ausführungsstatik_1.rf5` (Referenz lt. Vereinbarung mit P. Kneidinger; es existieren zwei Fassungen, 54 054 912 und 54 075 392 B → die mit Kneidinger abgestimmte Fassung benennen), PDF-Ausdruck der Bestandsberechnung, Geometer-Tabelle V1.
 - Tun: SHA-256 jeder Datei bilden, in `00_Quellenlog/Ursprung` (U6a) bzw. `RF6 §1` eintragen; Fassung, Datum und Vereinbarungsvermerk notieren. 5e (BD77CF83…) bleibt als Querkontrolle, ist aber nicht die Referenz.
-- Gate: ohne Hash und ohne Fassungsangabe kein Weiterarbeiten. Eingabedaten (Schritt 2) und Vergleichsergebnisse (Schritt 9) müssen aus derselben Datei stammen.
+- Stand 08.10.: V1 (Fassung) und V2 (Hash) erledigt, siehe Quellenlog RF6 §6d; V3 (Datum der Vereinbarung) offen.
+- Gate: ohne Hash und ohne Fassungsangabe kein Weiterarbeiten. Eingabedaten (Schritt 2) und Vergleichsergebnisse (Schritt 9) müssen aus derselben Datei stammen; nach D2a ist das 5e (Geometrie ≡ 13bb), die gespeicherten 5e-Ergebnisse 2015 sind die Vergleichswerte.
 
 ### Schritt 2 — Extraktion RF5 → CSV (Tabellen 01–10)
-- Werkzeug: COM-Export RF5 (liefert input_3.json-Schema) → `make_eingabedaten.py` → `01_knoten … 09_lastfaelle_lastkombinationen`. **Pflicht: Export aus 13bb** → Ordner `EINGABEDATEN_RF6_v0.2_13bb/`. Die vorhandenen Tabellen v0.1 stammen aus 5e (U10) und gelten nur als Vorlage/Querkontrolle; Unterschiede 13bb ↔ 5e zeilenweise diffen und dokumentieren (gleicher Diff wie Loop 1).
-- Zusätzlich `10_resultate_rf5.csv` aus dem PDF-Ausdruck: je Seil N_min/N_max (LK), Lagerkräfte je Lagerknoten, Verformungen u (LK100/101), mit Seitenangabe.
+- Werkzeug: COM-Export RF5 (liefert input_3.json-Schema) → `make_eingabedaten.py` → `01_knoten … 09_lastfaelle_lastkombinationen`. Stand 08.10.: Diff 13bb ↔ 5e liegt vor (lokal `09_VERGLEICH_13bb_vs_5e_20261008\VERGLEICH_13bb_vs_5e.md`, Tabellen als JSON/XLSX); Geometrie identisch, Lasten aus 5e. **Damit gilt v0.1 (aus 5e-Export U10) als Modell-A-Datensatz; ein erneuter Export aus 13bb entfällt** (D2a). Die lokalen Vergleichsdateien nach `00_Quellenlog/RF6/` kopieren und hashen.
+- Zusätzlich `10–12_resultate_rf5_*.csv`: aus dem lokalen 5e-Ergebnisexport (`ERGEBNISVERGLEICH_13bb_vs_5e.xlsx`, Roh-CSV `00_BESTAND_KOPIE\RFEM5_2015\5e\*.csv`) je Seil N_min/N_max je LK, Lagerkräfte je Lagerknoten, Verformungen u (LK100/101); PDF-Seite nur als Zweitbeleg. Kontrollwerte 5e: N_max GZT 17,50 kN (CO207), u_max LK100 2 079–2 080 mm.
 - Kontrolle (Erwartung aus 5e): 86 Knoten, 88 Stäbe (68 Seile + 20 Maste), 6 Materialien, 13 QS, 27 Lagerobjekte, 19 LF, 21 LK (+ LK220 fehlt), LF10 = 30 × 1,000 kN. Weicht 13bb davon ab, gilt 13bb; Abweichung dokumentieren, nicht „bereinigen".
 - Ausgabe: CSV + `MANIFEST.json` (SHA-256 aller Ein- und Ausgaben).
 

@@ -6,7 +6,7 @@ Lokal = `G:\Meine Ablage\_INDEX_LNK\BENCHMARK-SEILSTATIK\` (Drive für Desktop, 
 
 | Schritt | Was | Wo (Drive-ID / Pfad) | Status |
 |---|---|---|---|
-| 1 | **Referenz: RF5 Gesamtmodell `13bb_ausführungsstatik_1.rf5`** (zwei Fassungen 54 054 912 / 54 075 392 B; vereinbart mit P. Kneidinger, ID01 07.10.) | EXPORT\…\04 Berechnung Gesamtsystem (lokal) → nach `Daten\input\` kopieren | FOUND, Hash + Fassung fehlen → Schritt 1 |
+| 1 | **Referenz: RF5 Gesamtmodell `13bb_ausführungsstatik_1.rf5` Fassung 2015** (54 054 912 B, SHA-256 73242E1346AB6556…; vereinbart mit P. Kneidinger, ID01 07.10.) | lokal `00_BESTAND_KOPIE\RFEM5_2015\` (= EXPORT\…\statistik-unterlagen-150325) | VERIFIED 08.10.; Fassung 54 075 392 B (EXPORT\…\04 Berechnung Gesamtsystem, geändert 06.10.2026, C88F7792…) **nicht verwenden** |
 | 1 | RF5 Berichtsmodell 5e `…150328_5e.rf5` (SHA BD77CF83…) | EXPORT\…\14_bb\statistik-unterlagen-150325\ (lokal, G:) | VERIFIED, nur Querkontrolle |
 | 1 | PDF Bestandsstatik U1 (62 S.) + Ergänzung 2 (LK220) | EXPORT\00 Bestandstatik fragmentiert\…\13bb-statik-dokumentation\ (lokal) | FOUND, nicht im BENCHMARK-Ordner |
 | 1 | RF5-Ausdruck V01 (20 S., Lager §1.7, QS §1.13, LF, LK) | Drive 1QAhMcR2hvvTk3Wt3rS7955cjfJhARaOK | gelesen (BEFUND Rev0) |
@@ -14,9 +14,10 @@ Lokal = `G:\Meine Ablage\_INDEX_LNK\BENCHMARK-SEILSTATIK\` (Drive für Desktop, 
 | 1 | Geometer V1 `7864Halterungen_mit_Lampenplan_Boardinghouse.xlsx` (7100–7108, Landeskoordinaten, Zuordnung RFEM) | Drive 1j-GHSEH7x_JsUppBplMaQYvcwje6EhKe | PRIMARY |
 | 2 | RF5-COM-Export U10 (`input_3.json`, Knoten/Stäbe/Mat/QS/Lager/Parameter) + `lines.csv`, `members.csv` | Drive TEILABGLEICH.zip 1o_GYZlL59GwJtw6_RfSLPsusJGep5PwL (sources/) | gelesen, SHA 394820eb… |
 | 2 | Lasten/LK aus RF6-Arbeitskopie `model.db` (M5, .rf6bak SHA 903093dd…) | Drive-Ordner 1opSMplUY91rtVnztdlam9ZbhVA3FgMOf | gelesen |
-| 2 | CSV v0.1 aus 5e (01–09, B_VARA 10–14, MANIFEST) | `Daten\input\EINGABEDATEN_RF6_v0.1\` · Drive 1ZPr8x8H81DXt6qQAHICKe8huZ1-nMmuO · Zip 1-0r03VNC5jV_xm8rALgGfDS40MFn9vs7 | Vorlage/Querkontrolle; Referenz-CSV v0.2 aus 13bb **fehlt** → Schritt 2 |
+| 2 | CSV v0.1 aus 5e (01–09, B_VARA 10–14, MANIFEST) | `Daten\input\EINGABEDATEN_RF6_v0.1\` · Drive 1ZPr8x8H81DXt6qQAHICKe8huZ1-nMmuO · Zip 1-0r03VNC5jV_xm8rALgGfDS40MFn9vs7 | **gültiger Modell-A-Datensatz** nach D2a (Geometrie 13bb ≡ 5e, Lasten 5e = Bericht); Export v0.2 aus 13bb entfällt |
+| 2 | Vergleich 13bb ↔ 5e (Eingaben Feld für Feld, Ergebnisse je LK/Stab/Anker, RFEM-CSV-Export 21 Blätter je Modell, Skripte) | lokal `09_VERGLEICH_13bb_vs_5e_20261008\`, `00_BESTAND_KOPIE\RFEM5_2015\<modell>\*.csv`, `04_SKRIPTE_REPRO\` → nach `00_Quellenlog\RF6\` kopieren | vorhanden lokal 08.10., Drive-Kopie + Hash offen |
 | 2 | Lesbare Tabellen `EINGABETABELLEN_RF6_v0.1.md` | Drive 13UTLAfnGGE1VP1iQt5iOnOaej6gSYFRz | CANDIDATE |
-| 2 | `10_resultate_rf5.csv` (N, Lager, u aus PDF) | **fehlt** → aus U1/RF5-Ausdruck erzeugen | OFFEN |
+| 2 | `10–12_resultate_rf5_*.csv` (N, Lager, u je LK) | aus lokalem 5e-Ergebnisexport (`ERGEBNISVERGLEICH_13bb_vs_5e.xlsx`, Roh-CSV 5e) nach Vertrag §5 ableiten | Quelle vorhanden, Tabelle noch zu erzeugen |
 | 3 | Patch zwei Haltepunkte `10_patch_vara_rev0.json` | `Daten\input\EINGABEDATEN_RF6_v0.1\B_VARA\` · Drive 1_4Xn1lhGCt5F0iU7HDKTFWTg-vC6d3jp | Rev0 |
 | 3 | Zuordnung Geometer ↔ RFEM (V9) `…AEQUIVALENZ-KNOTEN…Rev0.csv` | Drive 1pnPWQTNqXODcQCdJ1NmOFOcybO_eil5G | DERIVED-KANON |
 | 3 | Topologie-Gate C06/C07 (Plan + Höhenkontrolle) | `Befunde\26_10_07_ID-03_TOPOLOGIE-GATE_C06-C07_LAMPENPLAN_Rev0.md` · Drive 1Fx_VzssiwtKoq-kv9CDZ5R01m1IesfM5 | ERFÜLLT |
@@ -36,7 +37,7 @@ Lokal = `G:\Meine Ablage\_INDEX_LNK\BENCHMARK-SEILSTATIK\` (Drive für Desktop, 
 | Objekt | Wofür | Von wem |
 |---|---|---|
 | U1 PDF Bestandsstatik Teil I–III (62 S.) in den BENCHMARK-Ordner kopieren | Schritt 2 Resultate, Schritt 10 | lokal EXPORT-Ordner |
-| 13bb.rf5: abgestimmte Fassung benennen, Hash bilden, nach `Daten\input\` kopieren; COM-Export daraus (v0.2) | Schritt 1/2 | ID01 (Vereinbarung P. Kneidinger liegt vor) |
+| 13bb: Datum der Vereinbarung mit P. Kneidinger (V3); Bestätigung D2a (Geometrie 13bb = 5e, Lasten 5e) | Schritt 1 | ID01 |
 | U9 PFEIFER K15.105 (Lsys, Beschläge) | Seillängen S19/S22, F7 | PFEIFER / Archiv |
 | VF1 Lochmitte 7101/7102 (Bolzenachse) | Nulllage 3006/3007 | Geometer |
 | Prüfberichte PB00–PB03 | Vergleichswerte Bestand | Prüfstatiker |

@@ -110,3 +110,15 @@ Weitere Dateien 07.10.: Gegencheck-Antwort 1qRkkAnHRBxzBbpCpNE2Aw-NTKY9RGKeE (RF
 ### 6c Entscheidung Referenzmodell (ID01, 07.10.2026)
 
 Das RF5-Gesamtmodell `13bb_ausführungsstatik_1.rf5` (U6a) ist als Grundlage mit P. Kneidinger vereinbart und damit Referenz für Eingabedaten (CSV v0.2) und Vergleichsergebnisse. Berichtsmodell 5e (U6, BD77CF83…) nur Querkontrolle. Offen: welche der zwei Fassungen (54 054 912 / 54 075 392 B), SHA-256, Datum der Vereinbarung. Skill Rev0 Schritt 1/2 angepasst (Drive-Kopien ersetzt).
+
+### 6d Befund 13bb vs. 5e (lokale Session RFEM 5.29.01/COM, 08.10.2026, nur lesend) — Konsequenz für Referenzmodell
+
+| Modell | Pfad (lokal) | Datum | Bytes | SHA-256 | Status |
+|---|---|---|---|---|---|
+| 13bb 2015 (**Referenz**) | `00_BESTAND_KOPIE\RFEM5_2015\13bb_ausführungsstatik_1.rf5` | 01.04.2015 | 54 054 912 | 73242E1346AB6556… | = Original EXPORT\…\statistik-unterlagen-150325 · VERIFIED |
+| 13bb (verändert) | `EXPORT\…\04 Berechnung Gesamtsystem\13bb_ausführungsstatik_1.rf5` | 06.10.2026 19:39 | 54 075 392 | C88F779233B26ED4… | **nicht Bestand**, nicht verwenden |
+| 5e | `00_BESTAND_KOPIE\RFEM5_2015\leuchtenabspannung_gesamt_nachaufmassgeometer_150328_5e.rf5` | 14.04.2015 | 69 345 280 | BD77CF839C98210E… | = Original (U6) · VERIFIED |
+
+Eingabevergleich (alle COM-Tabellen): Materialien/QS/Stäbe/Lager 6/13/88/27 identisch; Knoten 86 / Linien 88 identisch bis auf vertauschte Nummern 16↔17 (Linien 44, 46–49 entsprechend); Rechenparameter identisch. Lasten: 13bb unvollständig (Kabel 2,0 statt 1,48 N/m; Leuchten-Wind/Eis/Schnee fehlen; LF33 −0,8 kN Fehler); 13bb nur 16 LK (CO100–213), 1 RK; 5e 21 LK, 2 RK = Bestandsbericht 17.04.2015. Ergebnisse 2015: 5e max N GZT 17,50 kN (CO207) = Bericht (< 20,45 kN); u_max LK100 2 079/2 080 mm; 13bb Anker 111 / Stab 56 lokal unterschätzt, LF43 = 0.
+
+**Konsequenz (Vorschlag D2a, Bestätigung ID01):** Geometrie/System 13bb ≡ 5e → Vereinbarung Kneidinger ist mit 5e-Geometrie erfüllt; Lasten, LK, RK aus 5e (= Bericht). Damit ist `EINGABEDATEN_RF6_v0.1` (aus 5e-Export U10, geprüft gegen diesen Befund: 86/88/6/13/27, 19 LF, 21 LK, Kabel 0,00148 kN/m, Leuchtenlasten 0,021/0,065/0,029/1,5/0,0235/0,0106 kN) der gültige Modell-A-Datensatz; ein COM-Export aus 13bb ist für die Geometrie nicht mehr nötig. Gates V1/V2 erledigt, V3 (Vereinbarungsdatum) offen. Knotennummern 16/17: v0.1 folgt 5e (Kn 16 = 205,154/113,761/−0,400; Kn 17 = 203,032/130,830/−0,600); Teilmodell enthält 16/17 nicht. Lokale Befunddateien (`09_VERGLEICH_13bb_vs_5e_20261008\`, `00_BESTAND_KOPIE\RFEM5_2015\<modell>\*.csv`, `04_SKRIPTE_REPRO\*.py`) nach `BENCHMARK-SEILSTATIK\00_Quellenlog\RF6\` bzw. `Daten\input\` kopieren und hier mit Hash eintragen.

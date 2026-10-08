@@ -37,14 +37,14 @@ def detect_scope(text: str) -> str:
     t = text.lower()
     if any(k in t for k in ["holz","gl24","gl28","c24","c16","ec5","brettschicht","kerto","clt","bsp"]):
         return "HOLZBAU"
+    if any(k in t for k in ["fertigteil","precast","elementdecke","doppelwand"]):
+        return "FERTIGTEIL"
     if any(k in t for k in ["beton","stahlbeton","c30","c40","c25","ec2","durchstanz"]):
         return "BETONBAU"
     if any(k in t for k in ["stahl","s355","s275","ipe","hea","heb","ec3"]):
         return "STAHLBAU"
     if any(k in t for k in ["ifc","bim","revit","allplan","speckle","glTF"]):
         return "BIM"
-    if any(k in t for k in ["fertigteil","precast","elementdecke","doppelwand"]):
-        return "FERTIGTEIL"
     if any(k in t for k in ["ki","llm","agent","gpt","claude","deepseek","rag","embedding"]):
         return "KI-WERKZEUG"
     return "ALLGEMEIN"

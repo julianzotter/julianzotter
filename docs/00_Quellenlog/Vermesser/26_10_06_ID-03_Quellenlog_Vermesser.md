@@ -46,7 +46,7 @@
 
 | # | Frage | Blockiert |
 |---|---|---|
-| VF1 | Sind 7101/7102 die Lochmitten der neuen Fassadenanker (Bolzenachse)? | Lsys S19/S22 (F2, TP-05) |
+| VF1 | Sind 7101/7102 die Lochmitten der neuen Fassadenanker (Bolzenachse)? **Geschlossen 08.10.: Auftragsanfrage nennt das Aufmaß ausdrücklich „Halterungen (Mitte Loch)“, `7864Halterungen.dwg`.** | Lsys S19/S22 nur noch F7 Beschlagmaß (U9) |
 | VF2 | Höhenbezug Z (Landeshöhe → RFEM-Z): Einzelhöhen je Punkt, kein pauschaler Offset (z − 443,0 gesperrt, RMSE 1,366 m) | Z-Festlegung 3006/3007 (0,452) |
 | VF3 | C21 (7104): reale Verschiebung 0,60 m oder Messtoleranz? | E3 Fall A/B, S63 |
 | VF4 | A13/A14: welcher der zwei Punkte ist die Lochmitte? | Fit-Residuen 157/104 mm |

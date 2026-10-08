@@ -16,7 +16,7 @@ jobs:
         with:
           python-version: "3.11"
       - name: Run secret_scan.py
-        run: python nexus-workbench/scripts/secret_scan.py .
+        run: python nexus-workbench/scripts/secret_scan.py --root . --out "$RUNNER_TEMP/secret_findings.csv"
 
   validate-config:
     name: Validate Config Files
